@@ -1,0 +1,496 @@
+---
+title: A01-02 R的对象和类型
+subtitle: R Analyst Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A01_02_type_files/figure-html/")
+```
+
+## 目录
+
+- [类型](#3)
+- [对象](#10)
+- [向量和矩阵](#14)
+- [列表和数据框](#22)
+
+<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
+
+# 类型
+
+## R对象的类型 {.smaller} 
+
+|   | 数据对象 | | 其他对象 | |  R内部对象 |  |
+|--:|----------|-|----------|-|------------|--|
+| 1 | <crb>logical</crb> | 逻辑向量 | <crb>list</crb> | 列表 | symbol | 变量名 |
+| 2 | <crb>integer</crb> | 整数向量 | NULL | 空   | pairlist | 成对列表对象 |
+| 3 | <crb>double</crb> | 实数向量  | <crb>closure</crb> | 函数(闭包) | promise | 用于实现悠闲赋值的对象 |
+| 4 | complex | 复数向量 | special | 不可针对参数求值的内置函数 | language | R语言构建 |
+| 5 | <crb>character</crb> | 字符向量 | builtin | 可针对参数求值的内置函数  | any | 可以匹配任何类型的特殊类型 |
+| 6 | raw | 字节值向量  | environment | 环境  | expression | 表达式对象 |
+| 7 |  |  | | | externalptr | 外表指针对象 |
+| 8 |  |  | | | weakref | 弱引用对象 |
+| 9 |  |  | | | char | 字符 |
+| 10|  |  | | | bytecode | 二进制 |
+
+-- R源代码src/main/util.c的TypeTable内的定义
+
+## 常见的数据对象
+
+类型 | 举例 | 要点 | 判别方法 | `typeof()` | `class()` 
+-----|------|------|----------|----------|-----------
+逻辑 | TRUE, FALSE, T, F | 注意大写 | `is.logical()` | logical | logical
+整数 | 0L, 1L | 数字后面跟个L | `is.integer()` | integer | integer
+实数 | 1, -1, 1E3 | | `is.double()` | double | numeric
+复数 | 1+2i, 1-2i | | `is.complex()` | complex | complex
+字符 | "a", "1" | 用单引号或双引号括起来 | `is.character()` | character | character
+
+## 类型转换
+
+> 用`as.<type>()`函数进行类型转换，会发生什么？
+
+类型 | 实例 | 逻辑<br> `as.logical` | 整数<br> `as.integer` | 实数<br> `as.double` | 复数<br> `as.complex` | 字符<br> `as.character`
+-----|------|------|------|------|------|-------
+逻辑 | TRUE | --- | 1   | 1   | 1+0i | "TRUE"
+整数 | 0L   | FALSE | --- | 0   | 0+0i | "0"
+实数 | 2E2  | TRUE | 200 | --- | 200+0i | "200"
+复数 | 1+2i | TRUE | ~~1~~ | ~~1~~ | --- |  "1+2i"
+字符 | "a"  | ~~NA~~ | ~~NA~~ | ~~NA~~ | ~~NA~~ | ---
+
+最常用的是文本(character)和数值(numeric)型(整数和实数)。
+
+## 特殊的数值 {.columns-2  .smaller}
+
+#### NA(缺失/Not applicable) 
+
+```r
+> as.numeric('a')
+[1] NA
+
+> length(NA)
+[1] 1
+
+> is.na(NA)
+[1] TRUE
+```
+
+特例NaN (非数值/Not a number)
+
+```r
+> 0/0
+[1] NaN
+
+> is.na(NaN)
+[1] TRUE
+
+> is.nan(NaN)
+[1] TRUE
+```
+
+<p class="forceBreak"></p>
+
+##### 计算黑洞
+
+```r
+> 1 + NA  # Cannot + - * /
+[1] NA
+
+> 2 * NaN  # NaN, too...
+[1] NaN
+
+> NA + NaN  # Coerced to NA
+[1] NA
+
+> as.character(NA)  # cannot transforme
+[1] NA
+
+> NA < 1  # cannot compare
+[1] NA
+```
+
+**但是!**
+
+```r
+> paste(NA, NA)
+[1] "NA NA"
+```
+
+## 特殊的数值(续) {.columns-2}
+
+#### Inf (无穷大)
+
+```r
+> 1/0
+[1] Inf
+
+> -2/Inf
+[1] 0
+
+> length(-Inf)
+[1] 0
+
+> is.infinite(Inf)
+[1] TRUE
+```
+<p class="forceBreak"></p>
+
+#### NULL (空值)
+
+```r
+> length(NULL)
+[1] 0
+
+> is.null(NULL)
+[1] TRUE
+```
+
+**超级计算黑洞**
+
+```r
+> as.character(NULL)
+[1] character(0)
+
+> paste(NULL, NULL)
+[1] character(0)
+```
+
+## 日期和时间 (巨坑) {.columns-2 .smaller}
+
+#### Date 日期
+- 本质上是double
+- 默认以1970-01-01为起算日
+
+```r
+> Sys.Date()
+[1] "2016-12-01"
+
+> class(Sys.Date())
+[1] "Date"
+
+> typeof(Sys.Date())
+[1] "double"
+
+> as.numeric(Sys.Date())
+[1] 17136
+```
+
+<p class="forceBreak"></p>
+
+#### Time 时间
+- POSIXct: 本质是integer向量
+    - 表示距离1970-01-01 00:00:00 UTC的秒数
+- POSIXlt: 本质上是个named list
+    - 更便于数据处理
+    
+```r
+> as.numeric(as.POSIXct(Sys.time()))
+[1] 1480587443
+
+> unlist(as.POSIXlt(Sys.time()))
+               sec            min           hour 
+"31.2764060497284"           "14"           "18" 
+              mday            mon           year 
+               "1"           "11"          "116" 
+              wday           yday          isdst 
+               "4"          "335"            "0" 
+              zone         gmtoff 
+             "CST"        "28800"
+
+> as.POSIXlt(Sys.time())$mon
+[1] 11
+```
+
+# 对象
+
+## 基本对象
+
+- 最基本的对象是向量(vector)
+- 列表是向量的特例，可以由不同类型的元素构成
+- 数据框是列表的特例，每一列为一个列表，每个列表长度相同
+
+| 维数 |  同类型 | 不同类型 |
+|-----:|---------|----------|
+| 1    | 向量(vector) | 列表(list) |
+| 2    | 矩阵(matrix) | 列表、数据框(data.frame) |
+| >2   | 数组(array)  | 列表 |
+
+## 对象的构成
+
+- 取值 (value): 对象的实际数值
+- 属性 (attributes): 
+    - 名称: `names`, `dimnames`
+    - 维度: `dimensions` (如矩阵、数组)
+    - 类型: `class`
+    - 长度: `length`
+    - 其它: 如自定义`attributes`/metadata
+
+```r
+> structure(1, 'info'='hello!')
+[1] 1
+attr(,"info")
+[1] "hello!"
+```
+## 对象的操作
+
+- 对象生成后被分配入内存
+    - 注意预估对象的大小，以免内存溢出
+    - 及时删除(`rm()`)无用的对象
+- 用赋值号(`=`, `<-`)给对象分配一个符号
+- 调用方法(method)来查看、变换、删除对象
+- 方法以函数(function)形式存在 (R的灵魂是函数)
+- R会根据对象的类型自动适配方法(**为懒而生**)
+    - 控制台输入`x`则自动适配`print(x)`
+    - 泛型函数(如`plot`, `predict`)自动根据对象类型调用特定的函数程序
+
+# 向量和矩阵
+
+## 向量的构造
+
+- 粘合函数`c()`
+
+```r
+> x <- c(0.5, 0.6)       ## numeric
+> x <- c(TRUE, FALSE)    ## logical
+> x <- c(T, F)           ## logical
+> x <- c("a", "b", "c")  ## character
+> x <- 9L:29L            ## integer
+> x <- c(1+0i, 2+4i)     ## complex
+```
+- 构造函数`vector()`
+
+```r
+> x <- vector("numeric", length = 10) 
+> x
+[1] 0 0 0 0 0 0 0 0 0 0
+```
+
+## 向量的注意事项
+
+- 向量没有维数属性
+- 标量被看作长度为1的向量
+- 打印向量时，行首显示的[n]即元素序号
+- 向量必须是同一类型，混搭多种类型的向量会被兼容转换
+    - **文本 > 复数 > 实数 > 整数 > 逻辑**
+        - 逻辑 + 数值 --> 数值
+        - 整数 + 实数 --> 实数
+        - 实数 + 复数 --> 复数
+        - 文本 + 其它 --> 文本
+    - NaN, NA 不被兼容转换
+    - 向量中不能含有空值(如NULL、numeric(0))
+
+## 特殊向量: 因子 (factor) {.smaller}
+
+因子 = integer取值 + character标签属性
+
+```r
+> f = factor(c('A', 'A', 'B', 'C', 'B'))
+> f
+[1] A A B C B
+Levels: A B C
+
+> attributes(f)
+$levels
+[1] "A" "B" "C"
+
+$class
+[1] "factor"
+
+> typeof(f)
+[1] "integer"
+
+> unclass(f)
+[1] 1 1 2 3 2
+attr(,"levels")
+[1] "A" "B" "C"
+```
+
+## 名称 (names)
+
+向量可以有名称(`names`)属性，便于快速索引。
+
+```r
+> x <- 1:3
+> names(x)
+NULL
+
+> names(x) <- c("foo", "bar", "norf") 
+> x
+foo bar norf 
+  1   2    3
+  
+> names(x)
+[1] "foo"  "bar"  "norf"
+```
+
+## 矩阵的构造 {.smaller}
+
+- 矩阵 = 多个向量堆起来
+- 矩阵具有**`dim`**`ension`属性，该属性本身是一个长度为2的向量(`c(nrow, ncol)`)
+- 矩阵默认是按**列** (维)构造的
+
+<div class="columns-2">
+```r
+> m <- matrix(1:6, nrow = 2, ncol = 3) 
+> m
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+> dim(m)
+[1] 2 3
+> attributes(m)
+$dim
+[1] 2 3
+```
+
+```r
+> m <- 1:10 
+> m
+[1] 1 2 3 4 5 6 7 8 9 10 
+> dim(m) <- c(2, 5)
+> m
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    3    5    7    9
+[2,]    2    4    6    8   10
+```
+</div>
+
+## 矩阵的行列名
+
+矩阵可以通过`dimnames()`赋予行名和列名，便于索引
+
+```r
+> m <- matrix(1:4, nrow = 2, ncol = 2)
+> dimnames(m) <- list(c("R1", "R2"), c("C1", "C2")) 
+> m
+   C1 C2 
+R1 1  3 
+R2 2  4
+```
+
+## `cbind`和`rbind`
+
+矩阵可以横向拼接(`cbind()`)或纵向拼接(`rbind()`)
+
+```r
+> x <- 1:3
+> y <- 10:12
+> cbind(x, y)
+     x  y 
+[1,] 1 10 
+[2,] 2 11 
+[3,] 3 12
+
+> rbind(x, y) 
+  [,1] [,2] [,3]
+x    1    2    3
+y   10   11   12
+```
+
+# 列表和数据框
+
+## 列表
+
+- 列表是特殊的向量，组成元素可以是不同类型
+- 打印列表时，元素序号用[[n]]表示
+
+```r
+> x <- list(1, "a", TRUE, 1 + 4i) 
+> x
+[[1]]
+[1] 1
+
+[[2]] 
+[1] "a"
+
+[[3]]
+[1] TRUE
+
+[[4]]
+[1] 1+4i
+```
+
+## 列表的名称
+
+与向量一样，列表可以有names属性。
+
+```r
+> x <- list(a = 1, b = "a", c = TRUE, d = 1 + 4i) 
+> x
+$a
+[1] 1
+
+$b 
+[1] "a"
+
+$c 
+[1] TRUE
+
+$d
+[1] 1 + 4i
+```
+
+## 数据框 {.smaller}
+
+- 数据框是特殊的列表，每个列表长度相等
+- 数据框用于存放表格数据，是数据分析的基础
+    - 每一列就是一个列表
+    - 每一行分布在所有列表的同一位元素
+- 计算速度上，矩阵明显快于数据框，可通过`data.matrix()`转换
+
+```r
+> x <- data.frame(foo = 1:4, bar = c(T, T, F, F)) 
+> x
+  foo   bar
+1   1  TRUE
+2   2  TRUE
+3   3 FALSE
+4   4 FALSE
+> nrow(x)
+[1] 4
+> ncol(x)
+[1] 2
+```
+
+## 数据框的行列名
+
+数据框和矩阵一样，可以通过`row.names`和`names`赋予行名和列名
+
+```r
+> x <- data.frame(1:4, c(T, T, F, F))
+> names(x) <- c("foo", "bar")
+> x
+  foo   bar
+1   1  TRUE
+2   2  TRUE
+3   3 FALSE
+4   4 FALSE
+
+> row.names(x) <- c("r1", "r2", "r3", "r4")
+   foo   bar
+r1   1  TRUE
+r2   2  TRUE
+r3   3 FALSE
+r4   4 FALSE
+```
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

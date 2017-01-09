@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A02-07 日期和时间处理</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A02-07 日期和时间处理',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A02_07_date_time_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A02_07_date_time_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A02_07_date_time_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-26 13:58:52</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>基本处理</a></li>
+<li><a href='#15' title=''>lubridate包</a></li>
+<li><a href='#23' title=''>timeDate包</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>基本处理</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2><a href='../A01%20R%20Basics/A01_02_type.html#9' title=''>复习一下</a></h2></hgroup><article >
+
+<ul>
+<li>获取系统日期和系统时间</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">命令</th>
+<th align="left">结果</th>
+<th align="left"><code>typeof()</code></th>
+<th align="left"><code>class()</code></th>
+</tr>
+<tr class="odd">
+<td align="left"><code>Sys.Date()</code></td>
+<td align="left">&quot;2016-12-23&quot;</td>
+<td align="left">&quot;double&quot;</td>
+<td align="left">&quot;Date&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"><code>Sys.time()</code></td>
+<td align="left">&quot;2016-12-23 13:39:56 CST&quot;</td>
+<td align="left">&quot;double&quot;</td>
+<td align="left">&quot;POSIXct&quot; &quot;POSIXt&quot;</td>
+</tr>
+</table>
+
+<ul>
+<li><code>Date</code>和<code>POSIXct</code>本质上就是double，是距离1970-1-1的天数和秒数</li>
+<li>转为<code>POSIXlt</code>就形成一个list</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t &lt;- as.POSIXlt(Sys.Date())
+&gt; t
+[1] &quot;2016-12-23 UTC&quot;
+&gt; unlist(t)
+sec   min  hour  mday   mon  year  wday  yday isdst 
+  0     0     0    23    11   116     5   357     0 </pre>
+
+</article></slide><slide class=''><hgroup><h2>转换为日期/时间</h2></hgroup><article >
+
+<ul>
+<li>判断是否为日期/时间: <code>inherits</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t &lt;- &quot;2010-01-02 11:12:59&quot;  # 实际是个文本
+&gt; inherits(t, c(&#39;Date&#39;, &#39;POSIXt&#39;))
+[1] FALSE</pre>
+
+<ul>
+<li>不是日期/时间的话，先要转换: <code>strptime</code>, <code>as.Date</code>, <code>as.POSIXlt</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t &lt;- as.POSIXlt(t, format=&quot;%Y-%m-%d %H:%M:%S&quot;)
+&gt; t
+[1] &quot;2010-01-02 CST&quot;</pre>
+
+<ul>
+<li>推荐用<code>strptime</code>转换，结果为POSIXlt类型</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>时间/日期样式掩码</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>转换日期需要指定format，要用到一套掩码，如%Y, %m</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">类型</th>
+<th align="left">掩码</th>
+<th align="left">含义</th>
+<th align="left">例子</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">完整日/时</td>
+<td align="left"><code>%c</code></td>
+<td align="left">&quot;%a %b %e %H:%M:%S %Y&quot;</td>
+<td align="left"><code>format(t, &quot;%c&quot;)</code></td>
+<td align="left">&quot;Sat Jan 2 11:12:59 2010&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%D</code></td>
+<td align="left">日期格式%m/%d/%y</td>
+<td align="left"><code>format(t, &quot;%D&quot;)</code></td>
+<td align="left">&quot;01/02/10&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%F</code></td>
+<td align="left">%Y-%m-%d</td>
+<td align="left"><code>format(t, &quot;%F&quot;)</code></td>
+<td align="left">&quot;2010-01-02&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%x</code></td>
+<td align="left">日期格式&quot;%y/%m/%d&quot;(系统语境)</td>
+<td align="left"><code>format(t, &quot;%x&quot;)</code></td>
+<td align="left">&quot;01/02/2010&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%X</code></td>
+<td align="left">时间 &quot;%H:%M:%S&quot;</td>
+<td align="left"><code>format(t, &quot;%X&quot;)</code></td>
+<td align="left">&quot;11:12:59 AM&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%r</code></td>
+<td align="left">12-小时制时间(某些语境可用)</td>
+<td align="left"><code>format(t, &quot;%r&quot;)</code></td>
+<td align="left">&quot;11:12:59 AM&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%T</code></td>
+<td align="left">等价于%H:%M:%S</td>
+<td align="left"><code>format(t, &quot;%T&quot;)</code></td>
+<td align="left">&quot;11:12:59&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%R</code></td>
+<td align="left">等价于%H:%M</td>
+<td align="left"><code>format(t, &quot;%R&quot;)</code></td>
+<td align="left">&quot;11:12&quot;</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>时间/日期样式掩码 (续)</h2></hgroup><article  id="-" class="smaller">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">类型</th>
+<th align="left">掩码</th>
+<th align="left">含义</th>
+<th align="left">例子</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">世纪</td>
+<td align="left"><code>%C</code></td>
+<td align="left">世纪(00–99)</td>
+<td align="left"><code>format(t, &quot;%C&quot;)</code></td>
+<td align="left">&quot;20&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">年</td>
+<td align="left"><code>%y</code></td>
+<td align="left">年份，不含世纪(00–99)</td>
+<td align="left"><code>format(t, &quot;%y&quot;)</code></td>
+<td align="left">&quot;10&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%Y</code></td>
+<td align="left">年份，含世纪</td>
+<td align="left"><code>format(t, &quot;%Y&quot;)</code></td>
+<td align="left">&quot;2010&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%g</code></td>
+<td align="left">当周属于的年份末两位(see %V)</td>
+<td align="left"><code>format(t, &quot;%g&quot;)</code></td>
+<td align="left">&quot;09&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%G</code></td>
+<td align="left">当周属于的年份(see %V)</td>
+<td align="left"><code>format(t, &quot;%G&quot;)</code></td>
+<td align="left">&quot;2009&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">月</td>
+<td align="left"><code>%b</code></td>
+<td align="left">月名简称(系统语境)</td>
+<td align="left"><code>format(t, &quot;%b&quot;)</code></td>
+<td align="left">&quot;Jan&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%B</code></td>
+<td align="left">月份全名(系统语境)</td>
+<td align="left"><code>format(t, &quot;%B&quot;)</code></td>
+<td align="left">&quot;January&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%h</code></td>
+<td align="left">等价于 %b</td>
+<td align="left"><code>format(t, &quot;%h&quot;)</code></td>
+<td align="left">&quot;Jan&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%m</code></td>
+<td align="left">月份 (01–12)</td>
+<td align="left"><code>format(t, &quot;%m&quot;)</code></td>
+<td align="left">&quot;01&quot;</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>时间/日期样式掩码 (续)</h2></hgroup><article  id="--1" class="smaller">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">类型</th>
+<th align="left">掩码</th>
+<th align="left">含义</th>
+<th align="left">例子</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">周</td>
+<td align="left"><code>%a</code></td>
+<td align="left">星期名简称(系统语境)</td>
+<td align="left"><code>format(t, &quot;%a&quot;)</code></td>
+<td align="left">&quot;Sat&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%A</code></td>
+<td align="left">星期全名(系统语境)</td>
+<td align="left"><code>format(t, &quot;%A&quot;)</code></td>
+<td align="left">&quot;Saturday&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%u</code></td>
+<td align="left">星期几(1–7, 周一为1)</td>
+<td align="left"><code>format(t, &quot;%u&quot;)</code></td>
+<td align="left">&quot;6&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%U</code></td>
+<td align="left">当年的第几周(00–53)(周日为首日)</td>
+<td align="left"><code>format(t, &quot;%U&quot;)</code></td>
+<td align="left">&quot;00&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%V</code></td>
+<td align="left">当年的第几周(01–53) (ISO 8601)</td>
+<td align="left"><code>format(t, &quot;%V&quot;)</code></td>
+<td align="left">&quot;53&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%w</code></td>
+<td align="left">星期几(0–6, 周日为0)</td>
+<td align="left"><code>format(t, &quot;%w&quot;)</code></td>
+<td align="left">&quot;6&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%W</code></td>
+<td align="left">当年的第几周(00–53) (周一为首日)</td>
+<td align="left"><code>format(t, &quot;%w&quot;)</code></td>
+<td align="left">&quot;6&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">日</td>
+<td align="left"><code>%d</code></td>
+<td align="left">当月第几天 (01–31)</td>
+<td align="left"><code>format(t, &quot;%d&quot;)</code></td>
+<td align="left">&quot;02&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%e</code></td>
+<td align="left">当月第几天 (1–31)</td>
+<td align="left"><code>format(t, &quot;%e&quot;)</code></td>
+<td align="left">&quot; 2&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%j</code></td>
+<td align="left">当年的第几天(001–366)</td>
+<td align="left"><code>format(t, &quot;%j&quot;)</code></td>
+<td align="left">&quot;002&quot;</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>时间/日期样式掩码 (续)</h2></hgroup><article  id="--2" class="smaller">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">类型</th>
+<th align="left">掩码</th>
+<th align="left">含义</th>
+<th align="left">例子</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">小时</td>
+<td align="left"><code>%H</code></td>
+<td align="left">小时(00–23)</td>
+<td align="left"><code>format(t, &quot;%H&quot;)</code></td>
+<td align="left">&quot;11&quot;</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><code>%I</code></td>
+<td align="left">小时(01–12)</td>
+<td align="left"><code>format(t, &quot;%h&quot;)</code></td>
+<td align="left">&quot;11&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left">分</td>
+<td align="left"><code>%M</code></td>
+<td align="left">分钟 (00–59)</td>
+<td align="left"><code>format(t, &quot;%M&quot;)</code></td>
+<td align="left">&quot;12&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">秒</td>
+<td align="left"><code>%S</code></td>
+<td align="left">秒数(00–61)</td>
+<td align="left"><code>format(t, &quot;%S&quot;)</code></td>
+<td align="left">&quot;59&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left">上午/下午</td>
+<td align="left"><code>%p</code></td>
+<td align="left">上午/下午(系统语境)</td>
+<td align="left"><code>format(t, &quot;%p&quot;)</code></td>
+<td align="left">&quot;AM&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">时区</td>
+<td align="left"><code>%z</code></td>
+<td align="left">时差</td>
+<td align="left"><code>format(t, &quot;%z&quot;)</code></td>
+<td align="left">&quot;+0000&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%Z</code></td>
+<td align="left">时区，仅用于输出</td>
+<td align="left"><code>format(t, &quot;%Z&quot;)</code></td>
+<td align="left">&quot;CST&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">占位</td>
+<td align="left"><code>%n</code></td>
+<td align="left">空行</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><code>%t</code></td>
+<td align="left">制表符</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>日期/时间格式化: <code>format</code>函数</h2></hgroup><article  id="-format" class="smaller">
+
+<p>当前系统语境是:</p>
+
+<pre class = 'prettyprint lang-r'>&gt; Sys.getlocale(&quot;LC_ALL&quot;)
+[1] &quot;LC_COLLATE=English_United States.1252;LC_CTYPE=Chinese (Simplified)_People&#39;s Republic of China.936;
+LC_MONETARY=English_United States.1252;LC_NUMERIC=C;LC_TIME=English_United States.1252&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>&gt; t
+[1] &quot;2010-01-02 11:12:59 CST&quot;  # POSIXlt格式
+
+&gt; format(t, &quot;%A %B %e, %Y %I:%M:%S %p, Week %V&quot;)  # 完整格式
+[1] &quot;Saturday January  2, 2010 11:12:59 AM, Week 53&quot;
+
+&gt; format(t, &quot;%Y年%m月%d日（第%V周）%H点%M分%S秒&quot;)  # 中文化
+[1] &quot;2010年01月02日（第53周）11点12分59秒&quot;
+
+&gt; format(t, &quot;%d%b%y&quot;)
+[1] &quot;02Jan10&quot;  # SAS格式
+
+&gt; format(t, &quot;%Y%m%d&quot;)
+[1] &quot;20100102&quot;  # 八位格式</pre>
+
+</article></slide><slide class=''><hgroup><h2>读取并识别日期/时间</h2></hgroup><article >
+
+<ul>
+<li>从<code>readr</code>的内置数据中读取example.log，时间戳X4是文本格式</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; log &lt;- readr::read_log(system.file(&quot;extdata/example.log&quot;, package=&quot;readr&quot;))
+&gt; log$X4
+[1] &quot;08/Apr/2001:17:39:04 -0800&quot; &quot;10/Oct/2000:13:55:36 -0700&quot;</pre>
+
+<ul>
+<li>进行格式化，转为时间</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; strptime(log$X4, &quot;%d/%b/%Y:%H:%M:%S %z&quot;, tz=&quot;UTC&quot;)  # UTC即格林威治时间
+[1] &quot;2001-04-09 01:39:04 UTC&quot; &quot;2000-10-10 20:55:36 UTC&quot;
+&gt; strptime(log$X4, &quot;%d/%b/%Y:%H:%M:%S %z&quot;)  # 默认为本地时区，
+                                            # 上海是&quot;Asia/Shanghai&quot;或&quot;Etc/GMT-8&quot;
+[1] &quot;2001-04-09 09:39:04&quot; &quot;2000-10-11 04:55:36&quot;</pre>
+
+<ul>
+<li>注意：转换后，修正了时差</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>日期/时间部件的截取</h2></hgroup><article >
+
+<ul>
+<li>POSIXlt类型的日期/时间可以很容易地截取部件: sec, min, hour, mday, mon, year, wday, yday, isdst, zone, gmtoff</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; c(t$mday, t$hour)  # 日和小时部分
+[1] 2 11</pre>
+
+<ul>
+<li>在data.frame中，POSIXlt会被转为POSIXct</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; df &lt;- data.frame(x=rep(t,2), y=3:4)
+&gt; time &lt;- sapply(df$x, function(v) unlist(as.POSIXlt(v)))
+&gt; df &lt;- cbind(df, t(time), stringsAsFactors=FALSE)
+&gt; df
+                    x y sec min hour mday mon year wday yday isdst zone gmtoff
+1 2010-01-02 11:12:59 3  59  12   11    2   0  110    6    1     0  CST  28800
+2 2010-01-02 11:12:59 4  59  12   11    2   0  110    6    1     0  CST  28800</pre>
+
+</article></slide><slide class=''><hgroup><h2>日期/时间的拼接</h2></hgroup><article >
+
+<ul>
+<li>有了部件，就可以很容易地拼接出日期/时间</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; head(airquality, 2)  # New York May - Sep 1973
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+
+&gt; airquality$Date &lt;- as.Date(with(airquality, paste(&#39;1973&#39;, Month, Day, sep=&quot;/&quot;)))
+# 将&quot;1973&quot;, &quot;5&quot;, &quot;1&quot;用&quot;/&quot;拼接起来形成字符串，再as.Date转换
+
+&gt; head(airquality, 2)
+  Ozone Solar.R Wind Temp Month Day       Date
+1    41     190  7.4   67     5   1 1973-05-01
+2    36     118  8.0   72     5   2 1973-05-02
+&gt; str(airquality$Date)
+Date[1:153], format: &quot;1973-05-01&quot; &quot;1973-05-02&quot; &quot;1973-05-03&quot; ...</pre>
+
+</article></slide><slide class=''><hgroup><h2>时区问题 (时区代码查询<code>?timezones</code>)</h2></hgroup><article  id="-timezones">
+
+<ul>
+<li>R转换日期/时间时，tz默认为系统当前时区。如本机为&quot;CST&quot; (China Standard Time)。</li>
+<li>从外部导入数据(尤其是Excel)时不带时区信息，会被识别为&quot;UTC&quot;，即格林威治时间。</li>
+<li>此类外部数据在R中运算时，可能被转为本地时区，从而产生时差。
+
+<ul>
+<li><code>openxlsx</code>包的readTest.xlsx Var5为&quot;02/07/2015&quot; &quot;02/06/2015&quot;, &#8230;</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; xl &lt;- readxl::read_excel(system.file(&quot;readTest.xlsx&quot;, package=&quot;openxlsx&quot;))
+&gt; xl$Var5[1:2]
+[1] &quot;2015-02-07 UTC&quot; &quot;2015-02-06 UTC&quot;
+&gt; xl$Var5[1] - as.POSIXct(&quot;2015-2-7&quot;)
+Time difference of 8 hours</pre></li>
+<li>解决办法：导入后显式转换时区(<code>lubridate::force_tz</code>)，或将本机时区改为UTC</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>lubridate包</h2></hgroup><article  id="lubridate">
+
+</article></slide><slide class=''><hgroup><h2>lubridate</h2></hgroup><article  id="lubridate-1">
+
+<ul>
+<li>又是<em>Hadley Wickham</em>开发的</li>
+<li>基于POSIX，内建高速POSIX解析器</li>
+<li>重要的基本概念:
+
+<ul>
+<li>时点(instants)
+
+<ul>
+<li>兼容函数: <code>now</code>, <code>yday</code>, <code>week</code>, &#8230;</li>
+<li>日期取整: <code>round_date</code>, <code>ceiling_date</code>, &#8230;</li>
+</ul></li>
+<li>时段(Timespan类)(包括Duration, Period, Interval类)
+
+<ul>
+<li>Duration: 绝对时长: <code>duration</code>, <code>ddays</code>, &#8230;</li>
+<li>Period: 相对(钟面)时长: <code>period</code>, <code>days</code>, <code>years</code>, &#8230;</li>
+<li>Interval: 起止于特定时点的时长(完整信息): <code>int_shift</code>, <code>int_overlaps</code>, &#8230;</li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>时点函数</h2></hgroup><article >
+
+<ul>
+<li>系统日期、时间</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(lubridate)
+&gt; today()
+[1] &quot;2016-12-23&quot;
+&gt; now()
+[1] &quot;2016-12-23 17:39:35 CST&quot;</pre>
+
+<ul>
+<li>提取部件</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; year(t)
+[1] 2010
+&gt; mday(t)
+[1] 2
+&gt; minute(t)
+[1] 12</pre>
+
+</article></slide><slide class=''><hgroup><h2>时点函数 (续)</h2></hgroup><article  id="-">
+
+<ul>
+<li><code>ymd</code>, <code>mdy</code>, &#8230;, <code>hms</code>, &#8230;</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; ymd(&quot;20100102&quot;)  # 无间隔文本
+[1] &quot;2010-01-02&quot;
+&gt; dmy(&quot;10.05-2016&quot;)  # 带间隔文本
+[1] &quot;2016-05-10&quot;
+&gt; mdy(050614)  # 纯数字
+[1] &quot;2014-05-06&quot;
+&gt; hms(&quot;08:15:00&quot;)
+[1] &quot;8H 15M 0S&quot;</pre>
+
+<ul>
+<li><code>parse_date_time</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; parse_date_time(c(&#39;12/17/1996 04:00:00&#39;,&#39;4/18/1950 0130&#39;),
++        c(&#39;%m/%d/%Y %I:%M:%S&#39;,&#39;%m/%d/%Y %H%M&#39;), exact = TRUE)
+[1] &quot;1996-12-17 04:00:00 UTC&quot; &quot;1950-04-18 01:30:00 UTC&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>时点函数 (续)</h2></hgroup><article  id="--1">
+
+<ul>
+<li>日期取整</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; ceiling_date(now(), unit=&quot;day&quot;)
+[1] &quot;2016-12-24 CST&quot;
+&gt; floor_date(now(), unit=&quot;hour&quot;)
+[1] &quot;2016-12-23 17:00:00 CST&quot;</pre>
+
+<ul>
+<li>时区
+
+<ul>
+<li>利用<code>force_tz</code>强制变更时区（但不转时值）</li>
+<li>利用<code>with_tz</code>转换时区（同时变更时值）</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; force_tz(now(), tzone=&quot;UTC&quot;)
+[1] &quot;2016-12-23 17:46:42 UTC&quot;
+&gt; with_tz(now(), tzone=&quot;UTC&quot;)
+[1] &quot;2016-12-23 09:48:05 UTC&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>Duration类函数</h2></hgroup><article  id="duration">
+
+<ul>
+<li>创建一个Duration类对象</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; duration(day=-1)
+[1] &quot;86400s (~1 days)&quot;</pre>
+
+<ul>
+<li>绝对时长操作 (<code>?duration</code>)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; at.present &lt;- now()
+&gt; at.present + ddays(2)
+[1] &quot;2016-12-25 17:54:03 CST&quot;
+&gt; at.present + dweeks(1)
+[1] &quot;2016-12-30 17:54:03 CST&quot;</pre>
+
+<ul>
+<li>但没有dmonths，因为月的时长是有弹性的，不能作为duration对象</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Period类函数</h2></hgroup><article  id="period">
+
+<ul>
+<li>创建一个Period类对象</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; period(c(90, 5), c(&quot;second&quot;, &quot;minute&quot;))
+[1] &quot;5M 90S</pre>
+
+<ul>
+<li>钟面时长操作 (<code>?period</code>)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; at.present &lt;- now()
+&gt; at.present + days(2)
+[1] &quot;2016-12-25 17:54:03 CST&quot;
+&gt; at.present + months(1)
+[1] &quot;2017-01-23 17:54:03 CST&quot;
+
+&gt; as.Date(&quot;2016-1-31&quot;) + months(1)
+[1] NA
+&gt; as.Date(&quot;2016-1-31&quot;) %m+% months(1)
+[1] &quot;2016-02-29&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>Interval类函数</h2></hgroup><article  id="interval">
+
+<ul>
+<li>创建一个Interval类对象</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; interval(as.Date(&quot;2016-10-1&quot;), now())
+[1] 2016-10-01 08:00:00 CST--2016-12-23 18:02:28 CST
+&gt; as.Date(&quot;2016-10-1&quot;) %--% now()
+[1] 2016-10-01 08:00:00 CST--2016-12-23 18:05:15 CST</pre>
+
+<ul>
+<li>计算时间差 (<code>?interval</code>)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; int_length(interval(as.Date(&quot;2016-10-1&quot;), now()))
+[1] 7207406  # 秒数</pre>
+
+<ul>
+<li>时间段是否有重叠</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; int1 &lt;- as.Date(&quot;2016-1-1&quot;) %--% as.Date(&quot;2016-1-31&quot;)
+&gt; int2 &lt;- as.Date(&quot;2016-1-15&quot;) %--% as.Date(&quot;2016-2-14&quot;)
+&gt; int_overlaps(int1, int2)
+[1] TRUE</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>timeDate包</h2></hgroup><article  id="timedate">
+
+</article></slide><slide class=''><hgroup><h2>timeDate包</h2></hgroup><article  id="timedate-1">
+
+<ul>
+<li>量化投资分析工具<a href='https://www.rmetrics.org' title=''>Rmetrics</a>开发组发布，与Rmetrics包搭配使用</li>
+<li>timeDate类兼容POSIXt，作为S4类型，也基本兼容SPlus的timeDate类</li>
+<li>内建大量时区、节假日信息，便于跨时区转换</li>
+<li>包括绝对的时区(zone)概念，和相对的金融中心(FinCenter)概念</li>
+<li>能精细调整夏令时、节假日等</li>
+<li>可利用timeDate类对象实现便捷的日期、时间操作</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>生成timeDate类对象</h2></hgroup><article  id="timedate" class="smaller">
+
+<ul>
+<li><code>timeDate</code>函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; dates &lt;- c(&quot;1989-09-28&quot;,&quot;2001-01-15&quot;,&quot;2004-08-30&quot;
+&gt; times &lt;- c(  &quot;23:12:55&quot;,  &quot;10:34:02&quot;,  &quot;08:30:00&quot;)
+&gt; charvec = paste(dates, times)
+&gt; timeDate(charvec)
+GMT
+[1] [1989-09-28 23:12:55] [2001-01-15 10:34:02] [2004-08-30 08:30:00]</pre>
+
+<ul>
+<li><code>timeSequence</code>函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; timeSequence(from = &quot;2008-01-01&quot;, to = &quot;2008-01-31&quot;, by = &quot;week&quot;)
+GMT
+[1] [2008-01-01] [2008-01-08] [2008-01-15] [2008-01-22] [2008-01-29]</pre>
+
+<ul>
+<li><code>timeCalendar</code>函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; timeCalendar(2008, m=1, d=1:5, h=16, zone=&quot;London&quot;, FinCenter=&quot;Shanghai&quot;)
+Shanghai
+[1] [2008-01-02] [2008-01-03] [2008-01-04] [2008-01-05] [2008-01-06]
+&gt; timeCalendar(2008, m=1, d=1:5, h=16, zone=&quot;London&quot;, FinCenter=&quot;London&quot;)
+London
+[1] [2008-01-01 16:00:00] [2008-01-02 16:00:00] [2008-01-03 16:00:00] ...</pre>
+
+</article></slide><slide class=''><hgroup><h2>timeDate类对象的操作</h2></hgroup><article  id="timedate" class="smaller">
+
+<ul>
+<li>向量化推移</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t &lt;- timeCalendar(m=1:4)
+&gt; t + 86400  # 顺推1天(86400s)
+GMT
+[1] [2016-01-02] [2016-02-02] [2016-03-02] [2016-04-02]</pre>
+
+<ul>
+<li>计算时差</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; Sys.timeDate() - t  # Sys.timeDate()返回当前系统时间
+Time differences in days
+[1] 360.1743 329.1743 300.1743 269.176</pre>
+
+<ul>
+<li>取整</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t + 123456
+[1] [2016-01-02 10:17:36] [2016-02-02 10:17:36] [2016-03-02 10:17:36] [2016-04-02 10:17:36]
+&gt; trunc(t + 123456, &#39;h&#39;)
+[1] [2016-01-02 10:00:00] [2016-02-02 10:00:00] [2016-03-02 10:00:00] [2016-04-02 10:00:00]</pre>
+
+</article></slide><slide class=''><hgroup><h2>特殊日期查询</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>区段首日/尾日</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; timeFirstDayInMonth(Sys.timeDate())
+[1] [2016-12-01]
+&gt; timeLastDayInMonth(Sys.timeDate())
+[1] [2016-12-31]
+&gt; timeFirstDayInQuarter(Sys.timeDate())
+[1] [2016-10-01]
+&gt; timeLastDayInQuarter(Sys.timeDate())
+[1] [2016-12-31]</pre>
+
+<ul>
+<li>区段特定日（0 (周日) - 6 (周六)）</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; timeNdayOnOrAfter(Sys.timeDate(), 6)    # Sat
+[1] [2016-12-31]
+&gt; timeNdayOnOrBefore(Sys.timeDate(), 0)   # Sun
+[1] [2016-12-25]
+&gt; timeNthNdayInMonth(Sys.timeDate(), 1)   # Mon
+[1] [2016-12-26]
+&gt; timeLastNdayInMonth(Sys.timeDate(), 2)  # Tue
+[1] [2017-01-03]</pre>
+
+</article></slide><slide class=''><hgroup><h2>查找FinCenter</h2></hgroup><article  id="fincenter" class="smaller">
+
+<ul>
+<li>支持正则表达式</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; listFinCenter()
+  [1] &quot;Africa/Abidjan&quot;  &quot;Africa/Accra&quot;   &quot;Africa/Addis_Ababa&quot;  &quot;Africa/Algiers&quot;                
+  [5] &quot;Africa/Asmara&quot;   &quot;Africa/Bamako&quot;  &quot;Africa/Bangui&quot;       &quot;Africa/Banjul&quot;  ...
+  
+&gt; listFinCenter(&quot;Asia/S.*&quot;)
+[1] &quot;Asia/Saigon&quot;    &quot;Asia/Sakhalin&quot;   &quot;Asia/Samarkand&quot;   &quot;Asia/Seoul&quot; 
+[5] &quot;Asia/Shanghai&quot;  &quot;Asia/Singapore&quot;</pre>
+
+<ul>
+<li><code>FinCenter</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t1 &lt;- timeDate(&quot;2016-01-01&quot;, zone=&quot;GMT&quot;, FinCenter=&quot;Shanghai&quot;); t1
+Shanghai
+[1] [2016-01-01 08:00:00]
+&gt; t2 &lt;- timeDate(&quot;2016-01-01&quot;, zone=&quot;GMT&quot;, FinCenter=&quot;Zurich&quot;); t2
+Zurich
+[1] [2016-01-01 01:00:00]
+&gt; t1 - t2
+Time difference of 0 secs</pre>
+
+</article></slide><slide class=''><hgroup><h2>查看夏令时和时区规则历史</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>&gt; Shanghai()
+              Shanghai offSet isdst TimeZone     numeric
+1  1901-12-14 20:45:52  29152     0      LMT -2147397248
+2  1927-12-31 15:54:08  28800     0      CST -1325491552
+......
+17 1991-04-13 16:00:00  32400     1      CDT   671558400
+18 1991-09-14 15:00:00  28800     0      CST   684860400
+
+&gt; Hong_Kong()
+             Hong_Kong offSet isdst TimeZone     numeric
+1  1901-12-14 20:45:52  27396     0      LMT -2147397248
+2  1904-10-29 16:23:24  28800     0      HKT -2056692996
+......
+71 1979-05-12 19:30:00  32400     1     HKST   295385400
+72 1979-10-20 18:30:00  28800     0      HKT   309292200</pre>
+
+</article></slide><slide class=''><hgroup><h2>节假日规则历史</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>&gt; listHolidays()
+ [1] &quot;Advent1st&quot; &quot;Advent2nd&quot;     &quot;Advent3rd&quot;  &quot;Advent4th&quot;     &quot;AllSaints&quot;               
+ [6] &quot;AllSouls&quot;  &quot;Annunciation&quot;  &quot;Ascension&quot;  &quot;AshWednesday&quot;  &quot;AssumptionOfMary&quot; ...
+ 
+&gt; Christmas()
+            Christmas offSet isdst TimeZone     numeric
+1 1901-12-14 20:45:52  25200     0      CXT -2147397248
+
+&gt; ChristmasDay(year=2016)
+GMT
+[1] [2016-12-25]</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A02-03 数据框的分合排转</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A02-03 数据框的分合排转',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A02_03_df_ops_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A02_03_df_ops_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A02_03_df_ops_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-21 14:30:59</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>索引和定位</a></li>
+<li><a href='#9' title=''>分割和合并</a></li>
+<li><a href='#17' title=''>排序</a></li>
+<li><a href='#21' title=''>转换</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>索引和定位</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>获得索引号</h2></hgroup><article >
+
+<ul>
+<li>序号即索引号: [2] (向量), [[2]] (列表), [3, 4] (矩阵), &#8230;</li>
+<li>向量名(names)为索引代称，也可用来索引</li>
+<li>获得索引号(元素所在位置): 动手数，或用条件命令<code>which()</code></li>
+<li>必须在正确的维度索引: [1:4, ]</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str(euro)
+Named num [1:11] 13.76 40.34 1.96 166.39 5.95 ...
+ - attr(*, &quot;names&quot;)= chr [1:11] &quot;ATS&quot; &quot;BEF&quot; &quot;DEM&quot; &quot;ESP&quot; ...
+
+&gt; which(euro &gt; 100)  # 返回索引代称和索引序号
+ESP ITL PTE 
+  4   8  11</pre>
+
+</article></slide><slide class=''><hgroup><h2>一维对象切片: &quot;[&quot;(向量)和&quot;[[&quot;(列表)</h2></hgroup><article  id="-">
+
+<ul>
+<li>用索引序号向量切片</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; euro[c(3, 6)]   # 某条街道euro，3号和6号住的是谁？
+    DEM     FRF 
+1.95583 6.55957   # 该地址住户为名为&quot;DEM&quot;的1.96和名为&quot;FRF&quot;的6.56</pre>
+
+<ul>
+<li>用索引代称切片</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; euro[&#39;ITL&#39;]   # 此街道1-11号为ATS, BEF等大厦。ITL大厦的门牌8号
+    ITL 
+1936.27         # 返回该地址住户</pre>
+
+</article></slide><slide class=''><hgroup><h2>多维数组切片</h2></hgroup><article  class="smaller">
+
+<ul>
+<li><p>有n维，就要有n-1个逗号</p></li>
+<li><p>二维数组(如data.frame): <code>data.frame[row.indices, col.indices]</code></p></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; mtcars[&#39;Mazda RX4&#39;, &#39;mpg&#39;]
+[1] 21
+
+&gt; mtcars[1:3, 1]
+[1] 21.0 21.0 22.8</pre>
+
+<ul>
+<li>高维数组: <code>array[indices on dim 1, indices on dim 2, ...]</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str(Titanic)
+table [1:4, 1:2, 1:2, 1:2] 0 0 35 0 0 0 17 0 118 154 ...
+ - attr(*, &quot;dimnames&quot;)=List of 4
+  ..$ Class   : chr [1:4] &quot;1st&quot; &quot;2nd&quot; &quot;3rd&quot; &quot;Crew&quot;
+  ..$ Sex     : chr [1:2] &quot;Male&quot; &quot;Female&quot;
+  ..$ Age     : chr [1:2] &quot;Child&quot; &quot;Adult&quot;
+  ..$ Survived: chr [1:2] &quot;No&quot; &quot;Yes&quot;
+ 
+&gt; Titanic[&#39;1st&#39;, &#39;Male&#39;, &#39;Adult&#39;, &#39;Yes&#39;]  # 四个维度都作唯一索引 ==&gt; 单个元素
+[1] 57</pre>
+
+</article></slide><slide class=''><hgroup><h2>条件切片</h2></hgroup><article >
+
+<ul>
+<li>一维对象</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; euro[euro &gt; 100]
+    ESP      ITL      PTE 
+ 166.386 1936.270  200.482 </pre>
+
+<ul>
+<li>多维对象</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; mtcars[mtcars$mpg &gt; 30, ]
+                mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Fiat 128       32.4   4 78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4 75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla 33.9   4 71.1  65 4.22 1.835 19.90  1  1    4    1
+Lotus Europa   30.4   4 95.1 113 3.77 1.513 16.90  1  1    5    2</pre>
+
+</article></slide><slide class=''><hgroup><h2>切片原理</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>条件表达式 euro&gt;100 =&gt; 逻辑向量 c(F, F, F T, F, F, F, T, F, F, T)</li>
+<li>逻辑向量 =&gt; 定位TRUE所在的索引 c(4, 8, 11)</li>
+<li>索引=&gt; 切片 euro[c(4, 8, 11)]</li>
+</ul>
+
+<img src='A02_03_df_ops_files/figure-html/slicing.png' title='fig:'/>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>分割和合并</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2><code class="smaller">split</code></h2></hgroup><article  id="split">
+
+<ul>
+<li>语法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>split(x, f, drop = FALSE, ...)</pre>
+
+<pre >- x: 向量或数据框
+- f: 分组因子，将x按f因子分组切割。要与x等长。
+- drop: 逻辑值，分割时找不到的因子水平是否被弃去</pre>
+
+<ul>
+<li>例子</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; split(1:10, rep(c(1,2), 5))
+$`1`
+[1] 1 3 5 7 9
+$`2`
+[1] 2 4 6 8 10
+
+&gt; str(split(morley, morley$Expt))</pre>
+
+</article></slide><slide class=''><hgroup><h2>纵向合并 - <code>rbind</code></h2></hgroup><article  id="---rbind">
+
+<ul>
+<li><strong>各列结构完全一致</strong>的数据框可以<code>rbind</code>纵向合并</li>
+<li>列名和列的<strong>次序要完全相同</strong></li>
+<li>更多用于矩阵</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; rbind(data.frame(A=c(1, 3), B=c(2, 4)), 
+        data.frame(A=c(5, 7), B=c(6, 8)))
+  A B
+1 1 2
+2 3 4
+3 5 6
+4 7 8</pre>
+
+</article></slide><slide class=''><hgroup><h2>纵向合并 - <code>data.table</code>包的<code>rbind</code></h2></hgroup><article  id="---data.tablerbind">
+
+<ul>
+<li>更灵活的合并(参数use.names, fill, idcol, &#8230;)</li>
+<li>速度更快(数据框要先转为data.table类)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(data.table)
+&gt; DT1 = data.table(A=1:2, B=letters[1:2])
+&gt; DT2 = data.table(B=letters[4:5], A=4:5, C=c(TRUE, FALSE))
+&gt; rbind(DT1, DT2, use.names=TRUE, fill=TRUE)
+   A  B     C
+1: 1  a    NA
+2: 2  b    NA
+3: 4  d  TRUE
+4: 5  e FALSE</pre>
+
+</article></slide><slide class=''><hgroup><h2>纵向合并 - <code>dplyr</code>包的<code>bind_rows</code></h2></hgroup><article  id="---dplyrbind_rows">
+
+<ul>
+<li>速度更快(数据框要先转为tbl_df类)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(dplyr)
+&gt; DT1 = tbl_df(data.frame(A=1:2, B=letters[1:2]))
+&gt; DT2 = tbl_df(data.frame(B=letters[4:5], A=4:5, C=c(TRUE, FALSE)))
+&gt; bind_rows(list(DT1, DT2), .id=&quot;from&quot;)
+# A tibble: 4 × 4
+   from     A     B     C
+  &lt;chr&gt; &lt;int&gt; &lt;chr&gt; &lt;lgl&gt;
+1     1     1     a    NA
+2     1     2     b    NA
+3     2     4     d  TRUE
+4     2     5     e FALSE</pre>
+
+</article></slide><slide class=''><hgroup><h2>横向合并 - <code>cbind</code></h2></hgroup><article  id="---cbind">
+
+<ul>
+<li><strong>行数相等</strong>的数据框可以用<code>cbind</code></li>
+<li>不能识别主键。如行的次序有错误，会造成错行</li>
+<li>更多用于矩阵</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; cbind(data.frame(A=c(1, 3), B=c(2, 4)), 
+        data.frame(A=c(5, 7), B=c(6, 8)))
+  A B A B
+1 1 2 5 6
+2 3 4 7 8</pre>
+
+</article></slide><slide class=''><hgroup><h2>横向合并 - <code>data.table</code>包的<code>merge</code></h2></hgroup><article  id="---data.tablemerge">
+
+<ul>
+<li>有公用主键的数据框，可以用<code>merge</code>匹配后合并</li>
+<li>可自定义两个数据集的匹配一个或多个主键（by, 或by.x, by.y）</li>
+<li>需先将数据框转为data.table类，最好设定key</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; d1 &lt;- data.table(a=rep(1:2, each=3), b=1:6, key=&quot;a,b&quot;)
+&gt; d2 &lt;- data.table(a=0:1, b=0:1, bb=10:11, key=&quot;a,b&quot;)
+&gt; merge(d1, d2, by=c(&#39;a&#39;, &#39;b&#39;), all=TRUE)
+   a  b bb
+1: 0 NA 10
+2: 1  1 11
+3: 1  2 11
+4: 1  3 11
+5: 2  4 NA
+6: 2  5 NA
+7: 2  6 NA</pre>
+
+</article></slide><slide class=''><hgroup><h2>横向合并 - <code>dplyr</code>包的<code>join</code>家族</h2></hgroup><article  id="---dplyrjoin" class="smaller">
+
+<ul>
+<li>更灵活的类SQL合并(<code>inner_join</code>, <code>left_join</code>, <code>right_join</code>, <code>full_join</code> &#8230;)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(dplyr)
+&gt; DT1 = tbl_df(data.frame(a=rep(1:2, each=3), b=1:6))
+&gt; DT2 = tbl_df(data.frame(a=0:1, b=0:1, bb=10:11))
+&gt; inner_join(DT1, DT2, by=c(&quot;a&quot;, &quot;b&quot;))
+# A tibble: 1 × 3
+      a     b    bb
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;
+1     1     1    11
+&gt; left_join(DT1, DT2, by=c(&quot;a&quot;, &quot;b&quot;))
+# A tibble: 6 × 3
+      a     b    bb
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;
+1     1     1    11
+2     1     2    NA
+3     1     3    NA
+4     2     4    NA
+5     2     5    NA
+6     2     6    NA</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>排序</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>返回排序结果 - <code>sort</code></h2></hgroup><article  id="---sort">
+
+<ul>
+<li><p>语法</p>
+
+<pre class = 'prettyprint lang-r'>sort(x, decreasing = FALSE, na.last = NA, ...)</pre></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; sort(BOD$demand, decreasing = TRUE)  # 逆序
+[1] 19.8 19.0 16.0 15.6 10.3  8.3</pre></li>
+<li><p>只能用于向量或因子，不能对数据框排序</p></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>返回排序索引号 - <code>order</code></h2></hgroup><article  id="---order">
+
+<ul>
+<li><p>语法</p>
+
+<pre class = 'prettyprint lang-r'>order(..., na.last = TRUE, decreasing = FALSE, method = c(&quot;shell&quot;, &quot;radix&quot;))</pre></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; order(BOD$demand, decreasing = TRUE)  # 逆序
+[1] 6 3 4 5 2 1
+&gt; BOD[order(BOD$demand, dec=TRUE), ]
+  Time demand
+6    7   19.8
+3    3   19.0
+4    4   16.0
+5    5   15.6
+2    2   10.3
+1    1    8.3</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>更高效的排序法 - <code class="smaller">data.table::setorder</code></h2></hgroup><article  id="---data.tablesetorder">
+
+<ul>
+<li>语法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>setorder(x, ..., na.last=FALSE)
+setorderv(x, cols, order=1L, na.last=FALSE)</pre>
+
+<ul>
+<li>示例</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; DT &lt;- data.table(
++   A=sample(3, 4, TRUE), 
++   B=sample(letters[1:3], 4, TRUE),
++   C=sample(4))
+&gt; DT
+   A B C
+1: 2 b 1
+2: 2 a 4
+3: 3 b 3
+4: 1 c 2</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>&gt; setorder(DT, A, -B)
+&gt; DT
+   A B C
+1: 1 c 2
+2: 2 b 1
+3: 2 a 4
+4: 3 b 3</pre>
+
+<ul>
+<li>等价于<code>setorderv(DT, c(&quot;A&quot;, &quot;B&quot;), c(1, -1))</code></li>
+</ul></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>转换</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>行的增删插改</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<h4>增行</h4>
+
+<ul>
+<li><p>增加一行，直接录值</p>
+
+<pre class = 'prettyprint lang-r'>&gt; BOD[nrow(BOD)+1, ] &lt;- c(8, 11)
+&gt; BOD
+  Time demand
+1    1    8.3
+2    2   10.3
+3    3   19.0
+4    4   16.0
+5    5   15.6
+6    7   19.8
+7    8   11.0</pre></li>
+<li><p>搭个新数据框，rbind进旧数据框</p></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>删行</h4>
+
+<ul>
+<li><p>切片取</p>
+
+<pre class = 'prettyprint lang-r'>&gt; BOD &lt;- BOD[1:6, ]</pre></li>
+<li><p>切片弃:</p>
+
+<pre class = 'prettyprint lang-r'>&gt; BOD &lt;- BOD[-7, ]
+&gt; BOD
+  Time demand
+1    1    8.3
+2    2   10.3
+3    3   19.0
+4    4   16.0
+5    5   15.6
+6    7   19.8</pre></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<div class="columns-2">
+<h4>插入 (没有专门的插入函数)</h4>
+
+<ul>
+<li>从插入点切成两部分Df1, Df2</li>
+<li><code>data.table::rbindlist</code>合并list(Df1, Df.new, Df2)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; newBOD &lt;- data.frame(Time=6, demand=15)
+&gt; BOD &lt;- data.table::rbindlist(list(
++   BOD[1:5, ], newBOD, BOD[6, ]), use.names=TRUE)
+&gt; BOD
+   Time demand
+1:    1    8.3
+2:    2   10.3
+3:    3   19.0
+4:    4   16.0
+5:    5   15.6
+6:    6   15.0
+7:    7   19.8</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>重排</h4>
+
+<ul>
+<li>定义新的行索引号向量</li>
+<li>重新索引数据框</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; index &lt;- c(1, 2, 5, 4, 3, 6)
+&gt; BOD &lt;- BOD[index, ]
+&gt; BOD
+   Time demand
+1:    1    8.3
+2:    2   10.3
+3:    5   15.6
+4:    4   16.0
+5:    3   19.0
+6:    7   19.8</pre>
+
+<ul>
+<li>在末尾添加新行，然后重排，也可实现插入</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>列的增删插改</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<h4>增列</h4>
+
+<ul>
+<li><p>直接录值</p>
+
+<pre class = 'prettyprint lang-r'>&gt; BOD$newCol &lt;- TRUE
+&gt; BOD
+   Time demand newCol
+1:    1    8.3   TRUE
+2:    2   10.3   TRUE
+3:    3   19.0   TRUE
+4:    4   16.0   TRUE
+5:    5   15.6   TRUE
+6:    7   19.8   TRUE</pre></li>
+<li><p>搭个新数据框，merge或cbind进旧数据框</p></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>删列</h4>
+
+<ul>
+<li><p>切片取:</p>
+
+<pre class = 'prettyprint lang-r'>&gt; BOD &lt;- BOD[, c(&quot;Time&quot;, &quot;demand&quot;)]</pre></li>
+<li><p>切片弃:</p>
+
+<pre class = 'prettyprint lang-r'>BOD &lt;- BOD[, -3]</pre></li>
+<li><p>设为NULL:</p>
+
+<pre class = 'prettyprint lang-r'>BOD$newCol &lt;- NULL</pre></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="smaller">
+
+<div class="columns-2">
+<h4>插入 (没有专门的插入函数)</h4>
+
+<ul>
+<li>从插入点切成两部分Df1, Df2</li>
+<li><code>do.call(&quot;cbind&quot;)</code>合并Df1, 插入的数据框, Df2</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; newDf &lt;- data.frame(newCol=TRUE)
+&gt; do.call(&#39;cbind&#39;, list(BOD[,1], newDf, BOD[,2]))
+   Time newCol demand
+1:    1   TRUE    8.3
+2:    2   TRUE   10.3
+3:    3   TRUE   19.0
+4:    4   TRUE   16.0
+5:    5   TRUE   15.6
+6:    7   TRUE   19.8</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>重排</h4>
+
+<ul>
+<li>定义新的列索引号向量</li>
+<li>重新索引数据框</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; newCol &lt;- c(&quot;demand&quot;, &quot;Time&quot;)
+&gt; BOD &lt;- BOD[, newCol]
+&gt; BOD
+   demand Time
+1:    8.3    1
+2:   10.3    2
+3:   19.0    3
+4:   16.0    4
+5:   15.6    5
+6:   19.8    7</pre>
+
+<ul>
+<li>在末尾添加新列，然后重排，也可实现插入</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-2" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+---
+title: A02-01 目录和文件
+subtitle: R Analyst Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A02_01_file_files/figure-html")
+```
+
+## 目录
+
+- [目录](#3)
+- [文件](#6)
+- [相对路径](#12)
+
+<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
+
+
+# 目录
+
+## 列出目录 `list.dirs`
+
+- 语法
+
+```r
+list.dirs(path = ".", full.names = TRUE, recursive = TRUE)
+```
+
+- 示例
+
+```r
+> list.dirs(".", recursive = FALSE)
+[1] "./A02_02_io_files" "./libs" 
+```
+
+- 当前工作目录: "."
+- 用户文档目录: "~"
+- 上级目录: ".."
+- **注意: 路径分割符用"/"或"\\\\"，不用"\\"**
+
+## GUI选目录 `utils::choose.dirs`
+
+- 语法 (仅Windows)
+
+```r
+choose.dirs(default = "", caption = "Select folder")
+```
+
+- 示例
+
+![](A02_01_file_files/figure-html/choose_dir.png)
+
+## 验证/创建/删除目录 {.smaller}
+
+- 某个目录是否存在
+
+```r
+dir.exists(<paths>)
+```
+
+- 创建目录
+
+```r
+dir.create(<path>, showWarnings = TRUE, recursive = FALSE, mode = "0777")
+```
+
+mode '0777' 代表最高权限
+
+<table class="rmdtable">
+<thead>
+<tr><th>第一位数</th><th colspan='3>第二位数 (owner)</th><th colspan='3>第三位数 (group)</th><th colspan='3>第四位数 (others)</th>
+<tr><th>-</th><th>读(4)</th><th>写(2)</th><th>执行(1)</th><th>读(4)</th><th>写(2)</th><th>执行(1)</th><th>读(4)</th><th>写(2)</th><th>执行(1)</th></tr>
+</thead>
+<tbody align='center'><tr><td>0</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td></tr></tbody>
+</table>
+
+- 删除目录
+
+```r
+file.remove(<path>)
+```
+
+# 文件
+
+## 列出文件 `list.files`
+
+- 语法
+
+```r
+list.files(path = ".", pattern = NULL, all.files = FALSE,
+           full.names = FALSE, recursive = FALSE,
+           ignore.case = FALSE, include.dirs = FALSE, no.. = FALSE)
+
+       dir(path = ".", pattern = NULL, all.files = FALSE,
+           full.names = FALSE, recursive = FALSE,
+           ignore.case = FALSE, include.dirs = FALSE, no.. = FALSE)
+```
+
+- 示例
+
+```r
+> list.files(".", recursive = FALSE)
+[1] "A02_01_file.Rmd"   "A02_01_file_files" "A02_02_io.html"    "A02_02_io.Rmd" 
+[4] "A02_02_io_files"   "libs"              "ProvCity.accdb"
+```
+
+## GUI选文件 `utils::choose.files`
+
+- 语法 (仅Windows)
+
+```r
+choose.files(default = "", caption = "Select files", multi = TRUE, 
+            filters = Filters, index = nrow(Filters))
+```
+
+- 示例
+
+![](A02_01_file_files/figure-html/choose_file.png)
+
+
+## 验证/创建/拷贝/删除文件
+
+- 某个文件是否存在
+
+```r
+file.exists(<paths>)
+```
+
+- 创建文件
+
+```r
+file.create(..., showWarnings = TRUE)
+```
+
+- 拷贝文件
+
+```r
+file.copy(from, to, overwrite = recursive, recursive = FALSE,
+          copy.mode = TRUE, copy.date = FALSE)
+```
+
+- 删除文件
+
+```r
+file.remove(...)
+```
+
+## 文件/目录信息
+
+- 语法
+
+```r
+file.info(..., extra_cols = TRUE)
+```
+
+- 示例
+
+```r
+> info <- file.info(list.files("."))   # 当前目录下的所有文件和目录
+> str(info)
+'data.frame':	7 obs. of  7 variables:
+ $ size : num  3209 0 26666 15522 0 ...
+ $ isdir: logi  FALSE TRUE FALSE FALSE TRUE TRUE ...
+ $ mode :Class 'octmode'  int [1:7] 438 511 438 438 511 511 438
+ $ mtime: POSIXct, format: "2016-12-09 17:38:29" "2016-12-09 17:17:23" ...
+ $ ctime: POSIXct, format: "2016-12-09 15:01:13" "2016-12-09 17:17:13" ...
+ $ atime: POSIXct, format: "2016-12-09 15:01:13" "2016-12-09 17:17:23" ...
+ $ exe  : chr  "no" "no" "no" "no" ...
+```
+# 相对路径
+
+## 设定工作目录
+
+利用层级目录来管理分析项目
+
+- 每个独立项目都设定工作目录
+- 路径"."即指向当前环境指定的工作目录，等价于"getwd()"
+
+工作目录(work directory)可以在固化的工作设定下简化路径书写
+
+- 每次工作，用`setwd()`设定工作目录
+- 在RStudio的Global setting里设定工作目录
+- 将工作目录写入Rprofile文件
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

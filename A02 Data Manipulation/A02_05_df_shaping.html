@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A02-05 数据框整形</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A02-05 数据框整形',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A02_05_df_shaping_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A02_05_df_shaping_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A02_05_df_shaping_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-21 13:45:56</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>数据整形</a></li>
+<li><a href='#6' title=''>dplyr+tidyr包</a></li>
+<li><a href='#21' title=''>data.table包</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>数据整形</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>Raw data 和 tidy data</h2></hgroup><article  id="raw-data--tidy-data">
+
+<p><a href='http://en.wikipedia.org/wiki/Raw_data' title=''>Raw data</a></p>
+
+<ul>
+<li>数据的原始来源</li>
+<li>通常不易用来分析</li>
+<li>数据分析包括了数据处理</li>
+<li>原始数据往往只处理一次</li>
+</ul>
+
+<p><a href='http://en.wikipedia.org/wiki/Computer_data_processing' title=''>Processed data</a></p>
+
+<ul>
+<li>可直接用于分析的数据</li>
+<li>处理过程包括合并、拆分、变形等</li>
+<li>处理过程应有标准可循</li>
+<li>处理的所有步骤都应当记录下来</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>常见的整形操作</h2></hgroup><article >
+
+<ul>
+<li>数据集归集
+
+<ul>
+<li>拆分 split/ 合并 merge</li>
+</ul></li>
+<li>工作数据集的精选
+
+<ul>
+<li>切片（筛选行） slice/filter</li>
+<li>选维（筛选列） select</li>
+<li>排序 arrange</li>
+</ul></li>
+<li>工作数据集的优化
+
+<ul>
+<li>生成新列 mutate</li>
+<li>熔解 melt /重铸 cast</li>
+<li>缺失处理 missing handling</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>dplyr+tidyr包 (A Grammar of Data Manipulation)</h2></hgroup><article  id="dplyrtidyr-a-grammar-of-data-manipulation">
+
+</article></slide><slide class=''><hgroup><h2>dplyr的处理哲学</h2></hgroup><article  id="dplyr">
+
+<p>dplyr的处理思路来源于化整为零和SQL，提供了数据整理的统一框架</p>
+
+<ul>
+<li>利用几个核心动作函数实现数据整形的主要步骤
+
+<ul>
+<li>select：<strong>选取</strong>一列或者多<strong>列</strong></li>
+<li>filter：<strong>选取</strong>特定条件下的某些<strong>行</strong></li>
+<li>arrange：数据一列或多列升降<strong>排序</strong></li>
+<li>mutate：在数据集中<strong>添加列</strong></li>
+<li>summarise：数据<strong>汇总</strong></li>
+</ul></li>
+<li>利用<code>magrittr</code>包的pipe算符<code>%&gt;%</code>将整形步骤串联为单句命令</li>
+<li>利用<code>DBI</code>包将<code>dplyr</code>语法套用到关系型数据库</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>tbl_df</code>函数</h2></hgroup><article  id="tbl_df" class="smaller">
+
+<ul>
+<li>tbl_df类是
+
+<ul>
+<li>dplyr的工作类型</li>
+<li>data.frame子类tbl的一个子类，继承data.frame及tbl的所有属性</li>
+</ul></li>
+<li>tbl_df的优势
+
+<ul>
+<li>print显示效果更友好</li>
+<li>默认最多只打印前10行，避免不小心打印过多行</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; tbl_df(iris)
+# A tibble: 150 × 5
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;  &lt;fctr&gt;
+1           5.1         3.5          1.4         0.2  setosa
+2           4.9         3.0          1.4         0.2  setosa
+3           4.7         3.2          1.3         0.2  setosa
+4           4.6         3.1          1.5         0.2  setosa
+5           5.0         3.6          1.4         0.2  setosa
+6           5.4         3.9          1.7         0.4  setosa
+7           4.6         3.4          1.4         0.3  setosa
+8           5.0         3.4          1.5         0.2  setosa
+9           4.4         2.9          1.4         0.2  setosa
+10          4.9         3.1          1.5         0.1  setosa
+# ... with 140 more rows</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>select</code>函数选列</h2></hgroup><article  id="select" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>保留某些列</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; select(tbl_df(iris), starts_with(&quot;Petal&quot;))
+# A tibble: 150 × 2
+   Petal.Length Petal.Width
+          &lt;dbl&gt;       &lt;dbl&gt;
+1           1.4         0.2
+2           1.4         0.2
+3           1.3         0.2
+4           1.5         0.2
+5           1.4         0.2
+6           1.7         0.4
+7           1.4         0.3
+8           1.5         0.2
+9           1.4         0.2
+10          1.5         0.1
+# ... with 140 more rows</pre>
+
+<ul>
+<li>舍弃某些列</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; select(tbl_df(iris), -contains(&quot;Petal&quot;))
+# A tibble: 150 × 3
+   Sepal.Length Sepal.Width Species
+          &lt;dbl&gt;       &lt;dbl&gt;  &lt;fctr&gt;
+1           5.1         3.5  setosa
+2           4.9         3.0  setosa
+3           4.7         3.2  setosa
+4           4.6         3.1  setosa
+5           5.0         3.6  setosa
+6           5.4         3.9  setosa
+7           4.6         3.4  setosa
+8           5.0         3.4  setosa
+9           4.4         2.9  setosa
+10          4.9         3.1  setosa
+# ... with 140 more rows</pre></div>
+
+</article></slide><slide class=''><hgroup><h2><code>select</code>函数选列(续)</h2></hgroup><article  id="select" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>重命名某些列</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; select(tbl_df(iris), `Petal_Len`=Petal.Length)
+# A tibble: 150 × 1
+   Petal_Len
+       &lt;dbl&gt;
+1        1.4
+2        1.4
+3        1.3
+4        1.5
+5        1.4
+6        1.7
+7        1.4
+8        1.5
+9        1.4
+10       1.5
+# ... with 140 more rows</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>重组列的次序</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; select(tbl_df(iris), `Petal_Len`=Petal.Length, 
++      everything())
+# A tibble: 150 × 5
+ Petal_Len Sepal.Length Sepal.Width Petal.Width Species
+     &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;fctr&gt;
+1      1.4          5.1         3.5         0.2  setosa
+2      1.4          4.9         3.0         0.2  setosa
+3      1.3          4.7         3.2         0.2  setosa
+4      1.5          4.6         3.1         0.2  setosa
+5      1.4          5.0         3.6         0.2  setosa
+6      1.7          5.4         3.9         0.4  setosa
+7      1.4          4.6         3.4         0.3  setosa
+8      1.5          5.0         3.4         0.2  setosa
+9      1.4          4.4         2.9         0.2  setosa
+10     1.5          4.9         3.1         0.1  setosa
+# ... with 140 more rows</pre></div>
+
+</article></slide><slide class=''><hgroup><h2><code>select_helpers</code>函数</h2></hgroup><article  id="select_helpers">
+
+<p>根据变量名选择</p>
+
+<ul>
+<li><code>starts_with()</code>: starts with a prefix</li>
+<li><code>ends_with()</code>: ends with a prefix</li>
+<li><code>contains()</code>: contains a literal string</li>
+<li><code>matches()</code>: matches a regular expression</li>
+<li><code>num_range()</code>: a numerical range like x01, x02, x03.</li>
+<li><code>one_of()</code>: variables in character vector.</li>
+<li><code>everything()</code>: all variables.</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>filter</code>函数筛行</h2></hgroup><article  id="filter" class="smaller">
+
+<ul>
+<li><code>filter(.data, ...)</code>
+
+<ul>
+<li>&#8230;可填入逻辑表达式</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; filter(tbl_df(iris), Petal.Width &gt; 2 &amp; Species == &#39;virginica&#39;)
+# A tibble: 23 × 5
+ Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;    &lt;fctr&gt;
+1         6.3         3.3          6.0         2.5 virginica
+2         7.1         3.0          5.9         2.1 virginica
+3         6.5         3.0          5.8         2.2 virginica
+4         7.6         3.0          6.6         2.1 virginica
+5         7.2         3.6          6.1         2.5 virginica
+6         6.8         3.0          5.5         2.1 virginica
+7         5.8         2.8          5.1         2.4 virginica
+8         6.4         3.2          5.3         2.3 virginica
+9         7.7         3.8          6.7         2.2 virginica
+10        7.7         2.6          6.9         2.3 virginica
+# ... with 13 more rows</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>slice</code>函数切片</h2></hgroup><article  id="slice" class="smaller">
+
+<ul>
+<li><code>slice(.data, ...)</code>
+
+<ul>
+<li>&#8230;可填入数值型行号列表</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; slice(tbl_df(iris), 1:2)
+# A tibble: 2 × 5
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+         &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;  &lt;fctr&gt;
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+
+&gt; slice(group_by(iris, Species), 1:2)
+Source: local data frame [6 x 5]
+Groups: Species [3]
+
+  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+         &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;     &lt;fctr&gt;
+1          5.1         3.5          1.4         0.2     setosa
+2          4.9         3.0          1.4         0.2     setosa
+3          7.0         3.2          4.7         1.4 versicolor
+4          6.4         3.2          4.5         1.5 versicolor
+5          6.3         3.3          6.0         2.5  virginica
+6          5.8         2.7          5.1         1.9  virginica</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>arrange</code>函数排序</h2></hgroup><article  id="arrange" class="smaller">
+
+<ul>
+<li><code>arrange(.data, ...)</code>
+
+<ul>
+<li>&#8230;可填入所有要排序的变量</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; arrange(tbl_df(iris), Sepal.Length, desc(Sepal.Width))
+# A tibble: 150 × 5
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;  &lt;fctr&gt;
+1           4.3         3.0          1.1         0.1  setosa
+2           4.4         3.2          1.3         0.2  setosa
+3           4.4         3.0          1.3         0.2  setosa
+4           4.4         2.9          1.4         0.2  setosa
+5           4.5         2.3          1.3         0.3  setosa
+6           4.6         3.6          1.0         0.2  setosa
+7           4.6         3.4          1.4         0.3  setosa
+8           4.6         3.2          1.4         0.2  setosa
+9           4.6         3.1          1.5         0.2  setosa
+10          4.7         3.2          1.3         0.2  setosa
+# ... with 140 more rows</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>mutate</code>函数创建变量</h2></hgroup><article  id="mutate" class="smaller">
+
+<ul>
+<li><code>mutate(.data, ...)</code>
+
+<ul>
+<li>&#8230;可填入所有的目标变量计算式</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; mutate(tbl_df(iris), Sepal.LWR = Sepal.Length/Sepal.Width)
+# A tibble: 150 × 6
+ Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.LWR
+        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;  &lt;fctr&gt;     &lt;dbl&gt;
+1         5.1         3.5          1.4         0.2  setosa  1.457143
+2         4.9         3.0          1.4         0.2  setosa  1.633333
+3         4.7         3.2          1.3         0.2  setosa  1.468750
+4         4.6         3.1          1.5         0.2  setosa  1.483871
+5         5.0         3.6          1.4         0.2  setosa  1.388889
+6         5.4         3.9          1.7         0.4  setosa  1.384615
+7         4.6         3.4          1.4         0.3  setosa  1.352941
+8         5.0         3.4          1.5         0.2  setosa  1.470588
+9         4.4         2.9          1.4         0.2  setosa  1.517241
+10        4.9         3.1          1.5         0.1  setosa  1.580645
+# ... with 140 more rows</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>summarise</code>函数汇总</h2></hgroup><article  id="summarise" class="smaller">
+
+<ul>
+<li><code>summarize(.data, ...)</code>
+
+<ul>
+<li>&#8230;可填入所有的目标汇总函数</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; summarise(iris, n=n(), sepal_width=median(Sepal.Width))
+      n sepal_width
+1   150           3
+
+&gt; summarise(group_by(iris, Species), 
++       m=mean(Sepal.Length), sd=sd(Sepal.Length))
+# A tibble: 3 × 3
+     Species     m        sd
+      &lt;fctr&gt; &lt;dbl&gt;     &lt;dbl&gt;
+1     setosa 5.006 0.3524897
+2 versicolor 5.936 0.5161711
+3  virginica 6.588 0.6358796</pre>
+
+</article></slide><slide class=''><hgroup><h2>前向管道算符<code>%&gt;%</code></h2></hgroup><article >
+
+<ul>
+<li><code>magrittr::</code>%&gt;%``</li>
+<li>把函数的第一个参数抽出前置，用%&gt;%连接，可构成一个连续的前向命令管道
+
+<ul>
+<li><code>x %&gt;% f</code> ==&gt; <code>f(x)</code></li>
+<li><code>x %&gt;% f(y)</code> ==&gt; <code>f(x, y)</code></li>
+<li><code>y %&gt;% f(x, .)</code> ==&gt; <code>f(x, y)</code></li>
+<li><code>z %&gt;% f(x, y, arg = .)</code> ==&gt; <code>f(x, y, arg = z)</code></li>
+</ul></li>
+<li>利用<code>%&gt;%</code>，将数据整形步骤一体化</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; iris %&gt;% head(1)  # head(iris, 1)
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+&gt;  1:10 %&gt;% {c(min(.), max(.))}  # c(min(1:10), max(1:10))
+[1]  1 10</pre>
+
+</article></slide><slide class=''><hgroup><h2>熔解 melt/gather</h2></hgroup><article  id="-meltgather" class="smaller">
+
+<ul>
+<li>将宽表降维整理成长表</li>
+<li>长表可用于描述分析、构建交叉表</li>
+</ul>
+
+<div class="columns-2">
+<ul>
+<li><code>reshape2::melt</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(reshape2)
+&gt; iris.new1 &lt;- melt(iris, id.var=&#39;Species&#39;)
+&gt; head(iris.new1)
+  Species     variable value
+1  setosa Sepal.Length   5.1
+2  setosa Sepal.Length   4.9
+3  setosa Sepal.Length   4.7
+4  setosa Sepal.Length   4.6
+5  setosa Sepal.Length   5.0
+6  setosa Sepal.Length   5.4</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li><code>tidyr::gather</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(tidyr)
+&gt; iris.new2 &lt;- gather(iris, Measure, Value, -Species)
+&gt; head(iris.new2)
+  Species      Measure Value
+1  setosa Sepal.Length   5.1
+2  setosa Sepal.Length   4.9
+3  setosa Sepal.Length   4.7
+4  setosa Sepal.Length   4.6
+5  setosa Sepal.Length   5.0
+6  setosa Sepal.Length   5.4</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>重铸 cast/spread</h2></hgroup><article  id="-castspread" class="smaller">
+
+<ul>
+<li>将长表整合成宽表</li>
+<li>宽表可直接用于建模分析</li>
+</ul>
+
+<div class="columns-2">
+<ul>
+<li><code>reshape2::dcast</code>是<code>melt</code>的逆算法，也可用于汇总分析。</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(reshape2)
+&gt; iris.new1$id &lt;- rep(1:50, 12)
+&gt; iris.cast1 &lt;- dcast(iris.new1, id+Species~variable, mean)
+&gt; head(iris.cast1)
+ id    Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+1 1     setosa          5.1         3.5          1.4         0.2
+2 1 versicolor          7.0         3.2          4.7         1.4
+3 1  virginica          6.3         3.3          6.0         2.5
+4 2     setosa          4.9         3.0          1.4         0.2
+5 2 versicolor          6.4         3.2          4.5         1.5
+6 2  virginica          5.8         2.7          5.1         1.9</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li><code>tidyr::spread</code>是<code>gather</code>的逆算法，但要求key:value pair的唯一性</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(tidyr)
+&gt; iris.new2$Species &lt;- paste(rep(1:50, 12),
++      iris.new2$Species, sep=&quot;.&quot;)
+&gt; iris.cast2 &lt;- spread(iris.new2, Measure, Value)
+&gt; iris.cast2$Species &lt;- gsub(&quot;^\\d+\\.(.+)$&quot;, &quot;\\1&quot;, 
++      iris.cast2$Species)
+&gt; head(iris.cast2)
+     Species Petal.Length Petal.Width Sepal.Length Sepal.Width
+1     setosa          1.4         0.2          5.1         3.5
+2 versicolor          4.7         1.4          7.0         3.2
+3  virginica          6.0         2.5          6.3         3.3
+4     setosa          1.5         0.1          4.9         3.1
+5 versicolor          3.9         1.4          5.2         2.7
+6  virginica          6.1         2.5          7.2         3.6</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>一体化案例</h2></hgroup><article  class="smaller">
+
+<blockquote>
+<p>选取iris数据集Sepal.Length &gt; 6的记录，构造一个指标SPWR (Sepal.Width与Petal.Width之比)。 按Species分组，分析SPWR的均数及标准差。</p>
+</blockquote>
+
+<ul>
+<li><code>group_by(Species)</code>，构造分组tbl_df</li>
+<li><code>filter(Sepal.Length &gt; 6)</code>，筛选合格的记录</li>
+<li><code>mutate(SPWR=Sepal.Width / Petal.Width)</code>，构造次生变量</li>
+<li><code>summarise(mean(SPWR), sd(SPWR))</code>，计算指标</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; iris %&gt;% group_by(Species) %&gt;% filter(Sepal.Length &gt; 6) %&gt;% 
++     select(contains(&#39;Width&#39;)) %&gt;% mutate(SPWR=Sepal.Width / Petal.Width) %&gt;% 
++     summarise(m=mean(SPWR), sd=sd(SPWR))
+# A tibble: 2 × 3
+     Species        m        sd
+      &lt;fctr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 versicolor 2.044987 0.2271170
+2  virginica 1.494320 0.1874827</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>data.table包</h2></hgroup><article  id="data.table">
+
+</article></slide><slide class=''><hgroup><h2>data.table的处理哲学</h2></hgroup><article  id="data.table">
+
+<ul>
+<li>data.table的优势
+
+<ul>
+<li>处理速度更快(上千倍)</li>
+<li>更善于处理大规模数据</li>
+</ul></li>
+<li>数据集DT的通用格式<code>DT[i, j, by]</code>: 对于数据集DT，选取子集i行，通过by对j列分组计算</li>
+<li>处理框架的一致性不如dplyr，但同样可完成全流程数据整理</li>
+<li>一般用data.table完成较大数据集的分合排转，然后管道化操作实现汇总、制图等</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>data.table函数</h2></hgroup><article  id="data.table" class="smaller">
+
+<ul>
+<li>data.table类是
+
+<ul>
+<li>data.table的工作类型</li>
+<li>data.frame的一个子类，继承data.frame的所有属性</li>
+</ul></li>
+<li>data.table类的优势
+
+<ul>
+<li>默认最多只打印前后各5行，避免不小心打印过多行</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(data.table)
+&gt; data.table(iris)
+     Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+  1:          5.1         3.5          1.4         0.2    setosa
+  2:          4.9         3.0          1.4         0.2    setosa
+  3:          4.7         3.2          1.3         0.2    setosa
+  4:          4.6         3.1          1.5         0.2    setosa
+  5:          5.0         3.6          1.4         0.2    setosa
+ ---                                                            
+146:          6.7         3.0          5.2         2.3 virginica
+147:          6.3         2.5          5.0         1.9 virginica
+148:          6.5         3.0          5.2         2.0 virginica
+149:          6.2         3.4          5.4         2.3 virginica
+150:          5.9         3.0          5.1         1.8 virginica</pre>
+
+</article></slide><slide class=''><hgroup><h2>定位/筛取行列</h2></hgroup><article >
+
+<ul>
+<li>和data.frame的定位方式一致</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[1:2, 1:2]
+   Sepal.Length Sepal.Width
+1:          5.1         3.5
+2:          4.9         3.0</pre>
+
+<ul>
+<li>利用<code>on</code>: 筛选Sepal.Width == 3.1, Species == &#39;setosa&#39;的记录</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[.(3.1, &#39;setosa&#39;), on=.(Sepal.Width, Species)]
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1:          4.6         3.1          1.5         0.2  setosa
+2:          4.9         3.1          1.5         0.1  setosa
+3:          4.8         3.1          1.6         0.2  setosa
+4:          4.9         3.1          1.5         0.2  setosa</pre>
+
+</article></slide><slide class=''><hgroup><h2>选列</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>data.frame操作 或 <code>subset</code></li>
+</ul>
+
+<div class="columns-2">
+<ul>
+<li>保留某些列</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; subset(data.table(iris), select = startsWith(
++     names(iris), &quot;Petal&quot;))
+&gt; data.table(iris)[, .(Petal.Length, Petal.Width)]
+     Petal.Length Petal.Width
+  1:          1.4         0.2
+  2:          1.4         0.2
+  3:          1.3         0.2
+  4:          1.5         0.2
+  5:          1.4         0.2
+ ---                         
+146:          5.2         2.3
+147:          5.0         1.9
+148:          5.2         2.0
+149:          5.4         2.3
+150:          5.1         1.8</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>舍弃某些列</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; subset(data.table(iris), select = !grepl(
++     &quot;Petal&quot;, names(iris)))
+&gt; data.table(iris)[, -(3:4)]
+&gt; data.table(iris)[, c(&quot;Petal.Width&quot;, 
++     &quot;Petal.Length&quot;) :=NULL]
+     Sepal.Length Sepal.Width   Species
+  1:          5.1         3.5    setosa
+  2:          4.9         3.0    setosa
+  3:          4.7         3.2    setosa
+  4:          4.6         3.1    setosa
+  5:          5.0         3.6    setosa
+ ---                                   
+146:          6.7         3.0 virginica
+147:          6.3         2.5 virginica
+148:          6.5         3.0 virginica
+149:          6.2         3.4 virginica
+150:          5.9         3.0 virginica</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>选列(续)</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<ul>
+<li><p>重命名某些列</p>
+
+<ul>
+<li>data.frame操作或<code>setnames</code></li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; d &lt;- data.table(iris)
+&gt; setnames(d, 1:4, c(&quot;SL&quot;, &quot;SW&quot;, &quot;PL&quot;, &quot;PW&quot;))
+&gt; d
+      SL  SW  PL  PW   Species
+  1: 4.3 3.0 1.1 0.1    setosa
+  2: 4.4 3.2 1.3 0.2    setosa
+  3: 4.4 3.0 1.3 0.2    setosa
+  4: 4.4 2.9 1.4 0.2    setosa
+  5: 4.5 2.3 1.3 0.3    setosa
+ ---                          
+146: 7.7 3.8 6.7 2.2 virginica
+147: 7.7 3.0 6.1 2.3 virginica
+148: 7.7 2.8 6.7 2.0 virginica
+149: 7.7 2.6 6.9 2.3 virginica
+150: 7.9 3.8 6.4 2.0 virginica</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li><p>重组列的次序</p>
+
+<ul>
+<li>data.frame操作或<code>setcolorder</code></li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; setcolorder(d, c(5, 1:4))
+&gt; d
+       Species  PW  SL  SW  PL
+  1:    setosa 0.1 4.3 3.0 1.1
+  2:    setosa 0.2 4.4 3.2 1.3
+  3:    setosa 0.2 4.4 3.0 1.3
+  4:    setosa 0.2 4.4 2.9 1.4
+  5:    setosa 0.3 4.5 2.3 1.3
+ ---                          
+146: virginica 2.2 7.7 3.8 6.7
+147: virginica 2.3 7.7 3.0 6.1
+148: virginica 2.0 7.7 2.8 6.7
+149: virginica 2.3 7.7 2.6 6.9
+150: virginica 2.0 7.9 3.8 6.4</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>选行</h2></hgroup><article >
+
+<ul>
+<li>与data.frame的切片法类似</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[Petal.Width &gt; 2 &amp; Species == &#39;virginica&#39;]
+    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+ 1:          6.3         3.3          6.0         2.5 virginica
+ 2:          7.1         3.0          5.9         2.1 virginica
+ 3:          6.5         3.0          5.8         2.2 virginica
+ 4:          7.6         3.0          6.6         2.1 virginica
+ 5:          7.2         3.6          6.1         2.5 virginica
+......
+19:          6.9         3.1          5.1         2.3 virginica
+20:          6.8         3.2          5.9         2.3 virginica
+21:          6.7         3.3          5.7         2.5 virginica
+22:          6.7         3.0          5.2         2.3 virginica
+23:          6.2         3.4          5.4         2.3 virginica
+    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species</pre>
+
+</article></slide><slide class=''><hgroup><h2>排序</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>data.frame操作 或<code>setorder</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[order(Sepal.Length, -Sepal.Width)]
+&gt; setorder(iris, Sepal.Length, -Sepal.Width)
+     Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+  1:          4.3         3.0          1.1         0.1    setosa
+  2:          4.4         3.2          1.3         0.2    setosa
+  3:          4.4         3.0          1.3         0.2    setosa
+  4:          4.4         2.9          1.4         0.2    setosa
+  5:          4.5         2.3          1.3         0.3    setosa
+ ---                                                            
+146:          7.7         3.8          6.7         2.2 virginica
+147:          7.7         3.0          6.1         2.3 virginica
+148:          7.7         2.8          6.7         2.0 virginica
+149:          7.7         2.6          6.9         2.3 virginica
+150:          7.9         3.8          6.4         2.0 virginica</pre>
+
+</article></slide><slide class=''><hgroup><h2>次生变量</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>data.frame操作或用<code>:=</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; d &lt;- data.table(iris)
+&gt; d[, Sepal.LWR := Sepal.Length/Sepal.Width]
+&gt; d
+     Sepal.Length Sepal.Width Petal.Length Petal.Width   Species Sepal.LWR
+  1:          4.3         3.0          1.1         0.1    setosa  1.433333
+  2:          4.4         3.2          1.3         0.2    setosa  1.375000
+  3:          4.4         3.0          1.3         0.2    setosa  1.466667
+  4:          4.4         2.9          1.4         0.2    setosa  1.517241
+  5:          4.5         2.3          1.3         0.3    setosa  1.956522
+ ---                                                                      
+146:          7.7         3.8          6.7         2.2 virginica  2.026316
+147:          7.7         3.0          6.1         2.3 virginica  2.566667
+148:          7.7         2.8          6.7         2.0 virginica  2.750000
+149:          7.7         2.6          6.9         2.3 virginica  2.961538
+150:          7.9         3.8          6.4         2.0 virginica  2.078947</pre>
+
+</article></slide><slide class=''><hgroup><h2>熔解和重铸</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>data.table改写了reshape2的<code>melt</code>和<code>dcast</code></li>
+<li><code>library(data.table)</code>后调用，如为data.table类则直接调用改写后的函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; iris.new1 &lt;- melt(data.table(iris), id.var=&#39;Species&#39;)
+&gt; head(iris.new1, 4)
+   Species     variable value
+1:  setosa Sepal.Length   4.3
+2:  setosa Sepal.Length   4.4
+3:  setosa Sepal.Length   4.4
+4:  setosa Sepal.Length   4.4</pre>
+
+<pre class = 'prettyprint lang-r'>&gt; iris.cast1 &lt;- dcast(iris.new1, Species~variable, mean)
+&gt; iris.cast1
+      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+1:     setosa        5.006       3.428        1.462       0.246
+2: versicolor        5.936       2.770        4.260       1.326
+3:  virginica        6.588       2.974        5.552       2.026</pre>
+
+</article></slide><slide class=''><hgroup><h2>相同的一体化案例</h2></hgroup><article  class="smaller">
+
+<blockquote>
+<p>选取iris数据集Sepal.Length &gt; 6的记录，构造一个指标SPWR (Sepal.Width与Petal.Width之比)。 按Species分组，分析SPWR的均数及标准差。</p>
+</blockquote>
+
+<ul>
+<li>不如dplyr那样管道化，可能需要创建中间体</li>
+<li>向量化计算的精神贯彻得相当彻底</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; d &lt;- data.table(iris)
+&gt; d.sel &lt;- d[Sepal.Length &gt; 6, SPWR := Sepal.Width / Petal.Width]
+&gt; d.agg &lt;- d.sel[, list(m = mean(SPWR, na.rm=TRUE), 
++                       sd = sd(SPWR, na.rm=TRUE)), by=Species]
+&gt; d.agg
+      Species        m        sd
+1:     setosa      NaN        NA
+2:  virginica 1.494320 0.1874827
+3: versicolor 2.044987 0.2271170</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

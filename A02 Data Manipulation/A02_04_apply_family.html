@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A02-04 apply家族函数</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A02-04 <code>apply</code>家族函数',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A02_04_apply_family_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A02_04_apply_family_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A02_04_apply_family_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-19 11:58:32</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>化整为零策略</a></li>
+<li><a href='#6' title=''>迭代循环</a></li>
+<li><a href='#13' title=''>维度分组</a></li>
+<li><a href='#16' title=''>分组整合</a></li>
+<li><a href='#23' title=''>遍历环境</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>化整为零策略</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>Split-Apply-Combine 化整为零计算策略</h2></hgroup><article  id="split-apply-combine-">
+
+<ul>
+<li>R的精髓是<strong>向量化计算</strong>和<strong>函数式编程</strong></li>
+<li><a href='https://www.jstatsoft.org/article/view/v040i01/v40i01.pdf' title=''>SAC策略</a>的精神 (单机map-reduce)：
+
+<ul>
+<li>把一个问题拆成若干个可并行处理的<strong>同结构小片</strong></li>
+<li>把并行处理子过程写成<strong>可复用函数</strong></li>
+<li><strong>并行化处理</strong>这些小片</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; system.time(1:999999 + 1)                         # 向量化计算
+   user  system elapsed 
+   0.00    0.02    0.01 
+&gt; system.time(sapply(1:999999, function(i) i + 1))  # 隐式循环
+   user  system elapsed 
+   0.87    0.01    0.89 
+&gt; system.time({v &lt;- vector(length=999999)
++             for (i in 1:999999) v[i] &lt;- i + 1})   # 显式循环
+   user  system elapsed 
+   1.08    0.00    1.08 </pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>apply</code>家族成员</h2></hgroup><article  id="apply">
+
+<p>apply函数族是R菜鸟和入门的分野</p>
+
+<img src='A02_04_apply_family_files/figure-html/apply_family.png' title='fig:'/>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>循环迭代: lapply, sapply, mapply, vapply和rapply</h2></hgroup><article  id="-lapply-sapply-mapply-vapplyrapply">
+
+</article></slide><slide class=''><hgroup><h2><code>lapply</code></h2></hgroup><article  id="lapply">
+
+<ul>
+<li><p>语法 (<strong>l</strong>ist-<strong>apply</strong>)</p>
+
+<pre class = 'prettyprint lang-r'>lapply(X, FUN, ...)  # 返回一个list</pre>
+
+<ul>
+<li>X: 向量或列表，或表达式</li>
+<li>FUN: 子过程函数</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; lst &lt;- split(mtcars$mpg, mtcars$gear)  # 分拆成gear 3|4|5 三个list
+&gt; lapply(lst, mean)  # 对这三个list，并行使用函数mean
+$`3`
+[1] 16.10667
+$`4`
+[1] 24.53333
+$`5`
+[1] 21.38</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>sapply</code>: <code>lapply</code>的扩展版</h2></hgroup><article  id="sapply-lapply">
+
+<ul>
+<li><p>语法 (<strong>s</strong>implified-<strong>apply</strong>)</p>
+
+<pre class = 'prettyprint lang-r'>sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)  # 返回列表或向量</pre>
+
+<ul>
+<li>simplify: 逻辑值，是否简化结果</li>
+<li>USE.NAMES: 逻辑值，结果是否用X名称命名</li>
+</ul></li>
+<li><code>sapply</code>是<code>lapply</code>的扩展版。simplify和USE.NAMES都为FALSE时，sapply与lapply等价。</li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; lst &lt;- split(mtcars$mpg, mtcars$gear)
+&gt; sapply(lst, mean)
+       3        4        5 
+16.10667 24.53333 21.38000 </pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>mapply</code>: <code>lapply</code>的多参数版</h2></hgroup><article  id="mapply-lapply">
+
+<ul>
+<li><p>语法 (<strong>m</strong>ultiple-<strong>apply</strong>)</p>
+
+<pre class = 'prettyprint lang-r'>mapply(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)</pre>
+
+<ul>
+<li>MoreArgs: 其他参数，以列表形式提供</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; mapply(rep, times = 1:3, MoreArgs = list(x = 42))
+[[1]]
+[1] 42
+[[2]]
+[1] 42 42
+[[3]]
+[1] 42 42 42
+
+&gt; mapply(round, digits=0:5, list(x=pi))
+[1] 3.00000 3.10000 3.14000 3.14200 3.14160 3.14159</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>vapply</code>: <code>sapply</code>的可定制返回值版</h2></hgroup><article  id="vapply-sapply" class="smaller">
+
+<ul>
+<li><p>语法 (<strong>v</strong>alue-<strong>apply</strong>)</p>
+
+<pre class = 'prettyprint lang-r'>vapply(X, FUN, FUN.VALUE, ..., USE.NAMES = TRUE)</pre>
+
+<ul>
+<li>FUN.VALUE: 扩展向量，FUN返回值的模板。</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; vapply(lst, fivenum, c(
++   Min.=0, &quot;1st Qu.&quot;=0, Median=0, &quot;3rd Qu.&quot;=0, Max.=0))
+           3     4    5
+Min.    10.4 17.80 15.0
+1st Qu. 14.5 21.00 15.8
+Median  15.5 22.80 19.7
+3rd Qu. 18.4 28.85 26.0
+Max.    21.5 33.90 30.4</pre></li>
+<li><p>也可以sapply后再<code>row.names()</code>赋值</p></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>rapply</code>: <code>lapply</code>的递归版</h2></hgroup><article  id="rapply-lapply" class="smaller">
+
+<ul>
+<li><p>语法 (<strong>r</strong>ecursive-<strong>apply</strong>)</p>
+
+<pre class = 'prettyprint lang-r'>rapply(object, f, classes = &quot;ANY&quot;, deflt = NULL,
+   how = c(&quot;unlist&quot;, &quot;replace&quot;, &quot;list&quot;), ...)</pre>
+
+<ul>
+<li>object: 列表</li>
+<li>f: 函数或某个参数</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; X &lt;- list(list(a = pi, b = list(c = 1:1)), d = &quot;a test&quot;)
+&gt; rapply(X, sqrt, classes = &quot;numeric&quot;, how = &quot;replace&quot;)
+[[1]]
+[[1]]$a
+[1] 1.772454
+
+[[1]]$b
+[[1]]$b$c
+[1] 1
+
+$d
+[1] &quot;a test&quot;</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Farewell, 显式循环</h2></hgroup><article  id="farewell-">
+
+<ul>
+<li>所有显示循环(<code>for</code>, <code>while</code>, &#8230;)都可以用隐式循环<code>lapply</code>或<code>sapply</code>替代</li>
+<li>为效率计，很多R设计准则中都明令禁止使用显式循环
+
+<ul>
+<li>向量化计算是最快的</li>
+<li>隐式循环次之</li>
+<li>虽然隐式循环不那么直观，但代码效率更高，长度也更短</li>
+</ul></li>
+<li>例外
+
+<ul>
+<li>几乎不会复用的探索性临时代码，可以用显示循环</li>
+<li><strong>人比机器重要得多</strong>：对于临时性的工作，宁可3分钟写出代码，跑30分钟，也不要花30分钟优化代码，跑3分钟。</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>维度分组: apply</h2></hgroup><article  id="-apply">
+
+</article></slide><slide class=''><hgroup><h2>二维对象 (数据框)</h2></hgroup><article  id="-" class="smaller">
+
+<ul>
+<li><p>语法</p>
+
+<pre class = 'prettyprint lang-r'>apply(X, MARGIN, FUN, ...)</pre>
+
+<ul>
+<li>MARGIN: 函数FUN将被用在哪些维度。对于数据框，1代表行，2代表列。</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; apply(mtcars, 2, mean)
+       mpg        cyl       disp         hp       drat         wt       qsec
+ 20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750
+        vs         am       gear       carb 
+  0.437500   0.406250   3.687500   2.812500 
+
+&gt; apply(mtcars, 1, mean)
+          Mazda RX4       Mazda RX4 Wag          Datsun 710      Hornet 4 Drive 
+           29.90727            29.98136            23.59818            38.73955 
+  Hornet Sportabout             Valiant          Duster 360           Merc 240D 
+           53.66455            35.04909            59.72000            24.63455 
+...</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>高维对象</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>&gt; apply(Titanic, 3, sum)  # 第三维是Age
+Child Adult 
+  109  2092 
+
+&gt; apply(Titanic, 4, sum)  # 第四维是Survived
+  No  Yes 
+1490  711
+
+&gt; apply(Titanic, c(1, 3), sum)
+      Age
+Class  Child Adult
+  1st      6   319
+  2nd     24   261
+  3rd     79   627
+  Crew     0   885</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>分组整合: tapply, by和aggregate</h2></hgroup><article  id="-tapply-byaggregate">
+
+</article></slide><slide class=''><hgroup><h2><code>tapply</code>函数</h2></hgroup><article  id="tapply" class="smaller">
+
+<ul>
+<li><p>语法 (<strong>t</strong>able-<strong>apply</strong>)</p>
+
+<pre class = 'prettyprint lang-r'>tapply(X, INDEX, FUN = NULL, ..., simplify = TRUE)</pre>
+
+<ul>
+<li>X: 原子对象，通常是向量</li>
+<li>INDEX: 列表，一或多个因子，长度均与X相同</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; str(warpbreaks)
+&#39;data.frame&#39;:   54 obs. of  3 variables:
+ $ breaks : num  26 30 54 25 70 52 51 26 67 18 ...
+ $ wool   : Factor w/ 2 levels &quot;A&quot;,&quot;B&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+ $ tension: Factor w/ 3 levels &quot;L&quot;,&quot;M&quot;,&quot;H&quot;: 1 1 1 1 1 1 1 1 1 2 ...
+&gt; tapply(warpbreaks$breaks, warpbreaks[,-1], sum)
+    tension
+wool   L   M   H
+   A 401 216 221
+   B 254 259 169</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>by</code>函数</h2></hgroup><article  id="by">
+
+<ul>
+<li><p>语法</p>
+
+<pre class = 'prettyprint lang-r'>by(data, INDICES, FUN, ..., simplify = TRUE)</pre>
+
+<ul>
+<li>data: R对象，数据框或矩阵</li>
+<li>INDICES: 一个因子或一列表的因子，每个引资长度都与data的行数相等</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; by(warpbreaks[, c(1,2)], warpbreaks[,&quot;wool&quot;], summary)
+## 获得两个水平的小结列表</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>warpbreaks[, &quot;wool&quot;]: A
+     breaks      wool  
+ Min.   :10.00   A:27  
+ 1st Qu.:19.50   B: 0  
+ Median :26.00         
+ Mean   :31.04         
+ 3rd Qu.:36.00         
+ Max.   :70.00         
+---------------------------------------------------------------------------------------------------------- 
+warpbreaks[, &quot;wool&quot;]: B
+     breaks      wool  
+ Min.   :13.00   A: 0  
+ 1st Qu.:18.00   B:27  
+ Median :24.00         
+ Mean   :25.26         
+ 3rd Qu.:29.00         
+ Max.   :44.00</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>aggregate</code>: 一步完成分组、运算、整合</h2></hgroup><article  id="aggregate-">
+
+<ul>
+<li><code>stats::aggregate</code></li>
+<li>基本语法
+
+<ul>
+<li><code>aggregate(x, ...)</code></li>
+<li>数据框 (data.frame)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>aggregate(x, by, FUN, ..., simplify = TRUE, drop = TRUE)</pre>
+
+<ul>
+<li>公式 (formula)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>aggregate(formula, data, FUN, ..., subset, na.action = na.omit)</pre>
+
+<ul>
+<li>时间序列 (ts)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>aggregate(x, nfrequency = 1, FUN = sum, ndeltat = 1,
+      ts.eps = getOption(&quot;ts.eps&quot;), ...)</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>aggregate.data.frame</code>方法</h2></hgroup><article  id="aggregate.data.frame" class="smaller">
+
+<ul>
+<li><code>by</code> 必须是列表</li>
+<li><code>FUN</code>函数的补充参数可直接列在<code>aggregate</code>表达式里(&#8230;传入)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; aggregate(state.x77, list(Region = state.region), mean)
+         Region Population   Income Illiteracy Life Exp    Murder  HS Grad    Frost      Area
+1     Northeast   5495.111 4570.222   1.000000 71.26444  4.722222 53.96667 132.7778  18141.00
+2         South   4208.125 4011.938   1.737500 69.70625 10.581250 44.34375  64.6250  54605.12
+3 North Central   4803.000 4611.083   0.700000 71.76667  5.275000 54.51667 138.8333  62652.00
+4          West   2915.308 4702.615   1.023077 71.23462  7.215385 62.00000 102.1538 134463.00
+
+&gt; aggregate(airquality[, 1:4], list(Month=airquality$Month), mean, na.rm=TRUE)
+  Month    Ozone  Solar.R      Wind     Temp
+1     5 23.61538 181.2963 11.622581 65.54839
+2     6 29.44444 190.1667 10.266667 79.10000
+3     7 59.11538 216.4839  8.941935 83.90323
+4     8 59.96154 171.8571  8.793548 83.96774
+5     9 31.44828 167.4333 10.180000 76.90000</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>aggregate.formula</code>方法</h2></hgroup><article  id="aggregate.formula" class="smaller">
+
+<ul>
+<li><code>formula</code>: <code>~</code>连接的表达式，可以是一/多对一/多</li>
+<li><code>subset</code>: 子集向量</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; aggregate(.~Month, data=airquality[, -6], mean, na.rm=TRUE)
+  Month    Ozone  Solar.R      Wind     Temp
+1     5 24.12500 182.0417 11.504167 66.45833
+2     6 29.44444 184.2222 12.177778 78.22222
+3     7 59.11538 216.4231  8.523077 83.88462
+4     8 60.00000 173.0870  8.860870 83.69565
+5     9 31.44828 168.2069 10.075862 76.89655
+
+&gt; aggregate(cbind(Ozone, Temp) ~ Month, data = airquality, mean)
+  Month    Ozone     Temp
+1     5 23.61538 66.73077
+2     6 29.44444 78.22222
+3     7 59.11538 83.88462
+4     8 59.96154 83.96154
+5     9 31.44828 76.89655</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>遍历环境: eapply</h2></hgroup><article  id="-eapply">
+
+</article></slide><slide class=''><hgroup><h2><code>eapply</code>函数</h2></hgroup><article  id="eapply" class="smaller">
+
+<ul>
+<li><p>语法 (<strong>e</strong>nvironment-<strong>apply</strong>)</p>
+
+<pre class = 'prettyprint lang-r'>eapply(env, FUN, ..., all.names = FALSE, USE.NAMES = TRUE)</pre>
+
+<ul>
+<li>env: 环境</li>
+<li>all.names: 是否将FUN应用到所有值</li>
+<li>USE.NAMES: 返回结果列表是否有名称</li>
+</ul></li>
+<li><p>示例</p>
+
+<pre class = 'prettyprint lang-r'>&gt; env &lt;- new.env(hash = FALSE)
+&gt; env$a &lt;- 1:10
+&gt; env$beta &lt;- exp(-3:3)
+&gt; utils::ls.str(env)
+a :  int [1:10] 1 2 3 4 5 6 7 8 9 10
+beta :  num [1:7] 0.0498 0.1353 0.3679 1 2.7183 ...
+&gt; unlist(eapply(env, mean))
+    beta        a 
+4.535125 5.500000</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

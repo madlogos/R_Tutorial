@@ -1,0 +1,718 @@
+---
+title: A02-05 数据框整形
+subtitle: R Analyst Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A02_05_df_shaping_files/figure-html")
+```
+
+## 目录
+
+- [数据整形](#3)
+- [dplyr+tidyr包](#6)
+- [data.table包](#21)
+
+<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
+
+# 数据整形
+
+## Raw data 和 tidy data
+
+[Raw data](http://en.wikipedia.org/wiki/Raw_data)
+
+- 数据的原始来源
+- 通常不易用来分析
+- 数据分析包括了数据处理
+- 原始数据往往只处理一次
+
+[Processed data](http://en.wikipedia.org/wiki/Computer_data_processing)
+
+- 可直接用于分析的数据
+- 处理过程包括合并、拆分、变形等
+- 处理过程应有标准可循
+- 处理的所有步骤都应当记录下来
+
+
+## 常见的整形操作
+
+- 数据集归集
+    - 拆分 split/ 合并 merge
+- 工作数据集的精选
+    - 切片（筛选行） slice/filter
+    - 选维（筛选列） select
+    - 排序 arrange
+- 工作数据集的优化
+    - 生成新列 mutate
+    - 熔解 melt /重铸 cast
+    - 缺失处理 missing handling
+
+# dplyr+tidyr包 (A Grammar of Data Manipulation)
+
+## dplyr的处理哲学
+
+dplyr的处理思路来源于化整为零和SQL，提供了数据整理的统一框架
+
+- 利用几个核心动作函数实现数据整形的主要步骤
+    - select：**选取**一列或者多**列**
+    - filter：**选取**特定条件下的某些**行**
+    - arrange：数据一列或多列升降**排序**
+    - mutate：在数据集中**添加列**
+    - summarise：数据**汇总**
+- 利用`magrittr`包的pipe算符`%>%`将整形步骤串联为单句命令
+- 利用`DBI`包将`dplyr`语法套用到关系型数据库
+
+## `tbl_df`函数 {.smaller}
+
+- tbl_df类是
+    - dplyr的工作类型
+    - data.frame子类tbl的一个子类，继承data.frame及tbl的所有属性
+- tbl_df的优势
+    - print显示效果更友好
+    - 默认最多只打印前10行，避免不小心打印过多行
+
+```r
+> tbl_df(iris)
+# A tibble: 150 × 5
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          <dbl>       <dbl>        <dbl>       <dbl>  <fctr>
+1           5.1         3.5          1.4         0.2  setosa
+2           4.9         3.0          1.4         0.2  setosa
+3           4.7         3.2          1.3         0.2  setosa
+4           4.6         3.1          1.5         0.2  setosa
+5           5.0         3.6          1.4         0.2  setosa
+6           5.4         3.9          1.7         0.4  setosa
+7           4.6         3.4          1.4         0.3  setosa
+8           5.0         3.4          1.5         0.2  setosa
+9           4.4         2.9          1.4         0.2  setosa
+10          4.9         3.1          1.5         0.1  setosa
+# ... with 140 more rows
+```
+
+## `select`函数选列 {.smaller}
+
+<div class='columns-2'>
+
+- 保留某些列
+
+```r
+> select(tbl_df(iris), starts_with("Petal"))
+# A tibble: 150 × 2
+   Petal.Length Petal.Width
+          <dbl>       <dbl>
+1           1.4         0.2
+2           1.4         0.2
+3           1.3         0.2
+4           1.5         0.2
+5           1.4         0.2
+6           1.7         0.4
+7           1.4         0.3
+8           1.5         0.2
+9           1.4         0.2
+10          1.5         0.1
+# ... with 140 more rows
+```
+
+- 舍弃某些列
+
+```r
+> select(tbl_df(iris), -contains("Petal"))
+# A tibble: 150 × 3
+   Sepal.Length Sepal.Width Species
+          <dbl>       <dbl>  <fctr>
+1           5.1         3.5  setosa
+2           4.9         3.0  setosa
+3           4.7         3.2  setosa
+4           4.6         3.1  setosa
+5           5.0         3.6  setosa
+6           5.4         3.9  setosa
+7           4.6         3.4  setosa
+8           5.0         3.4  setosa
+9           4.4         2.9  setosa
+10          4.9         3.1  setosa
+# ... with 140 more rows
+```
+</div>
+
+## `select`函数选列(续) {.smaller}
+
+<div class='columns-2'>
+
+- 重命名某些列
+
+```r
+> select(tbl_df(iris), `Petal_Len`=Petal.Length)
+# A tibble: 150 × 1
+   Petal_Len
+       <dbl>
+1        1.4
+2        1.4
+3        1.3
+4        1.5
+5        1.4
+6        1.7
+7        1.4
+8        1.5
+9        1.4
+10       1.5
+# ... with 140 more rows
+```
+<p class='forceBreak'></p>
+
+- 重组列的次序
+
+```r
+> select(tbl_df(iris), `Petal_Len`=Petal.Length, 
++      everything())
+# A tibble: 150 × 5
+ Petal_Len Sepal.Length Sepal.Width Petal.Width Species
+     <dbl>        <dbl>       <dbl>       <dbl>  <fctr>
+1      1.4          5.1         3.5         0.2  setosa
+2      1.4          4.9         3.0         0.2  setosa
+3      1.3          4.7         3.2         0.2  setosa
+4      1.5          4.6         3.1         0.2  setosa
+5      1.4          5.0         3.6         0.2  setosa
+6      1.7          5.4         3.9         0.4  setosa
+7      1.4          4.6         3.4         0.3  setosa
+8      1.5          5.0         3.4         0.2  setosa
+9      1.4          4.4         2.9         0.2  setosa
+10     1.5          4.9         3.1         0.1  setosa
+# ... with 140 more rows
+```
+</div>
+
+## `select_helpers`函数
+
+根据变量名选择
+
+- `starts_with()`: starts with a prefix
+- `ends_with()`: ends with a prefix
+- `contains()`: contains a literal string
+- `matches()`: matches a regular expression
+- `num_range()`: a numerical range like x01, x02, x03.
+- `one_of()`: variables in character vector.
+- `everything()`: all variables.
+
+## `filter`函数筛行 {.smaller}
+
+- `filter(.data, ...)`
+    - ...可填入逻辑表达式
+    
+```r
+> filter(tbl_df(iris), Petal.Width > 2 & Species == 'virginica')
+# A tibble: 23 × 5
+ Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+        <dbl>       <dbl>        <dbl>       <dbl>    <fctr>
+1         6.3         3.3          6.0         2.5 virginica
+2         7.1         3.0          5.9         2.1 virginica
+3         6.5         3.0          5.8         2.2 virginica
+4         7.6         3.0          6.6         2.1 virginica
+5         7.2         3.6          6.1         2.5 virginica
+6         6.8         3.0          5.5         2.1 virginica
+7         5.8         2.8          5.1         2.4 virginica
+8         6.4         3.2          5.3         2.3 virginica
+9         7.7         3.8          6.7         2.2 virginica
+10        7.7         2.6          6.9         2.3 virginica
+# ... with 13 more rows
+```
+
+## `slice`函数切片 {.smaller}
+
+- `slice(.data, ...)`
+    - ...可填入数值型行号列表
+
+```r
+> slice(tbl_df(iris), 1:2)
+# A tibble: 2 × 5
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+         <dbl>       <dbl>        <dbl>       <dbl>  <fctr>
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+
+> slice(group_by(iris, Species), 1:2)
+Source: local data frame [6 x 5]
+Groups: Species [3]
+
+  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+         <dbl>       <dbl>        <dbl>       <dbl>     <fctr>
+1          5.1         3.5          1.4         0.2     setosa
+2          4.9         3.0          1.4         0.2     setosa
+3          7.0         3.2          4.7         1.4 versicolor
+4          6.4         3.2          4.5         1.5 versicolor
+5          6.3         3.3          6.0         2.5  virginica
+6          5.8         2.7          5.1         1.9  virginica
+```
+
+## `arrange`函数排序 {.smaller}
+
+- `arrange(.data, ...)`
+    - ...可填入所有要排序的变量
+
+```r
+> arrange(tbl_df(iris), Sepal.Length, desc(Sepal.Width))
+# A tibble: 150 × 5
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          <dbl>       <dbl>        <dbl>       <dbl>  <fctr>
+1           4.3         3.0          1.1         0.1  setosa
+2           4.4         3.2          1.3         0.2  setosa
+3           4.4         3.0          1.3         0.2  setosa
+4           4.4         2.9          1.4         0.2  setosa
+5           4.5         2.3          1.3         0.3  setosa
+6           4.6         3.6          1.0         0.2  setosa
+7           4.6         3.4          1.4         0.3  setosa
+8           4.6         3.2          1.4         0.2  setosa
+9           4.6         3.1          1.5         0.2  setosa
+10          4.7         3.2          1.3         0.2  setosa
+# ... with 140 more rows
+```
+
+## `mutate`函数创建变量 {.smaller}
+
+- `mutate(.data, ...)`
+    - ...可填入所有的目标变量计算式
+
+```r
+> mutate(tbl_df(iris), Sepal.LWR = Sepal.Length/Sepal.Width)
+# A tibble: 150 × 6
+ Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.LWR
+        <dbl>       <dbl>        <dbl>       <dbl>  <fctr>     <dbl>
+1         5.1         3.5          1.4         0.2  setosa  1.457143
+2         4.9         3.0          1.4         0.2  setosa  1.633333
+3         4.7         3.2          1.3         0.2  setosa  1.468750
+4         4.6         3.1          1.5         0.2  setosa  1.483871
+5         5.0         3.6          1.4         0.2  setosa  1.388889
+6         5.4         3.9          1.7         0.4  setosa  1.384615
+7         4.6         3.4          1.4         0.3  setosa  1.352941
+8         5.0         3.4          1.5         0.2  setosa  1.470588
+9         4.4         2.9          1.4         0.2  setosa  1.517241
+10        4.9         3.1          1.5         0.1  setosa  1.580645
+# ... with 140 more rows
+```
+
+## `summarise`函数汇总 {.smaller}
+
+- `summarize(.data, ...)`
+    - ...可填入所有的目标汇总函数
+
+```r
+> summarise(iris, n=n(), sepal_width=median(Sepal.Width))
+      n sepal_width
+1   150           3
+
+> summarise(group_by(iris, Species), 
++       m=mean(Sepal.Length), sd=sd(Sepal.Length))
+# A tibble: 3 × 3
+     Species     m        sd
+      <fctr> <dbl>     <dbl>
+1     setosa 5.006 0.3524897
+2 versicolor 5.936 0.5161711
+3  virginica 6.588 0.6358796
+```
+
+## 前向管道算符`%>%`
+
+- `magrittr::`%>%``
+- 把函数的第一个参数抽出前置，用%>%连接，可构成一个连续的前向命令管道
+    - `x %>% f` ==> `f(x)`
+    - `x %>% f(y)` ==> `f(x, y)`
+    - `y %>% f(x, .)` ==> `f(x, y)`
+    - `z %>% f(x, y, arg = .)` ==> `f(x, y, arg = z)`
+- 利用`%>%`，将数据整形步骤一体化
+
+```r
+> iris %>% head(1)  # head(iris, 1)
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+>  1:10 %>% {c(min(.), max(.))}  # c(min(1:10), max(1:10))
+[1]  1 10
+```
+
+## 熔解 melt/gather {.smaller}
+
+- 将宽表降维整理成长表
+- 长表可用于描述分析、构建交叉表
+
+<div class='columns-2'>
+- `reshape2::melt`
+
+```r
+> library(reshape2)
+> iris.new1 <- melt(iris, id.var='Species')
+> head(iris.new1)
+  Species     variable value
+1  setosa Sepal.Length   5.1
+2  setosa Sepal.Length   4.9
+3  setosa Sepal.Length   4.7
+4  setosa Sepal.Length   4.6
+5  setosa Sepal.Length   5.0
+6  setosa Sepal.Length   5.4
+```
+
+<p class='forceBreak'></p>
+
+- `tidyr::gather`
+
+```r
+> library(tidyr)
+> iris.new2 <- gather(iris, Measure, Value, -Species)
+> head(iris.new2)
+  Species      Measure Value
+1  setosa Sepal.Length   5.1
+2  setosa Sepal.Length   4.9
+3  setosa Sepal.Length   4.7
+4  setosa Sepal.Length   4.6
+5  setosa Sepal.Length   5.0
+6  setosa Sepal.Length   5.4
+```
+</div>
+
+## 重铸 cast/spread {.smaller}
+
+- 将长表整合成宽表
+- 宽表可直接用于建模分析
+
+<div class='columns-2'>
+- `reshape2::dcast`是`melt`的逆算法，也可用于汇总分析。
+
+```r
+> library(reshape2)
+> iris.new1$id <- rep(1:50, 12)
+> iris.cast1 <- dcast(iris.new1, id+Species~variable, mean)
+> head(iris.cast1)
+ id    Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+1 1     setosa          5.1         3.5          1.4         0.2
+2 1 versicolor          7.0         3.2          4.7         1.4
+3 1  virginica          6.3         3.3          6.0         2.5
+4 2     setosa          4.9         3.0          1.4         0.2
+5 2 versicolor          6.4         3.2          4.5         1.5
+6 2  virginica          5.8         2.7          5.1         1.9
+```
+<p class='forceBreak'></p>
+
+- `tidyr::spread`是`gather`的逆算法，但要求key:value pair的唯一性
+
+```r
+> library(tidyr)
+> iris.new2$Species <- paste(rep(1:50, 12),
++      iris.new2$Species, sep=".")
+> iris.cast2 <- spread(iris.new2, Measure, Value)
+> iris.cast2$Species <- gsub("^\\d+\\.(.+)$", "\\1", 
++      iris.cast2$Species)
+> head(iris.cast2)
+     Species Petal.Length Petal.Width Sepal.Length Sepal.Width
+1     setosa          1.4         0.2          5.1         3.5
+2 versicolor          4.7         1.4          7.0         3.2
+3  virginica          6.0         2.5          6.3         3.3
+4     setosa          1.5         0.1          4.9         3.1
+5 versicolor          3.9         1.4          5.2         2.7
+6  virginica          6.1         2.5          7.2         3.6
+```
+</div>
+
+## 一体化案例 {.smaller}
+
+> 选取iris数据集Sepal.Length > 6的记录，构造一个指标SPWR (Sepal.Width与Petal.Width之比)。
+> 按Species分组，分析SPWR的均数及标准差。
+
+- `group_by(Species)`，构造分组tbl_df
+- `filter(Sepal.Length > 6)`，筛选合格的记录
+- `mutate(SPWR=Sepal.Width / Petal.Width)`，构造次生变量
+- `summarise(mean(SPWR), sd(SPWR))`，计算指标
+
+```r
+> iris %>% group_by(Species) %>% filter(Sepal.Length > 6) %>% 
++     select(contains('Width')) %>% mutate(SPWR=Sepal.Width / Petal.Width) %>% 
++     summarise(m=mean(SPWR), sd=sd(SPWR))
+# A tibble: 2 × 3
+     Species        m        sd
+      <fctr>    <dbl>     <dbl>
+1 versicolor 2.044987 0.2271170
+2  virginica 1.494320 0.1874827
+```
+
+# data.table包
+
+## data.table的处理哲学
+
+- data.table的优势
+    - 处理速度更快(上千倍)
+    - 更善于处理大规模数据
+- 数据集DT的通用格式`DT[i, j, by]`: 对于数据集DT，选取子集i行，通过by对j列分组计算
+- 处理框架的一致性不如dplyr，但同样可完成全流程数据整理
+- 一般用data.table完成较大数据集的分合排转，然后管道化操作实现汇总、制图等
+
+## data.table函数 {.smaller}
+
+- data.table类是
+    - data.table的工作类型
+    - data.frame的一个子类，继承data.frame的所有属性
+- data.table类的优势
+    - 默认最多只打印前后各5行，避免不小心打印过多行
+
+```r
+> library(data.table)
+> data.table(iris)
+     Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+  1:          5.1         3.5          1.4         0.2    setosa
+  2:          4.9         3.0          1.4         0.2    setosa
+  3:          4.7         3.2          1.3         0.2    setosa
+  4:          4.6         3.1          1.5         0.2    setosa
+  5:          5.0         3.6          1.4         0.2    setosa
+ ---                                                            
+146:          6.7         3.0          5.2         2.3 virginica
+147:          6.3         2.5          5.0         1.9 virginica
+148:          6.5         3.0          5.2         2.0 virginica
+149:          6.2         3.4          5.4         2.3 virginica
+150:          5.9         3.0          5.1         1.8 virginica
+```
+
+## 定位/筛取行列
+
+- 和data.frame的定位方式一致
+
+```r
+> data.table(iris)[1:2, 1:2]
+   Sepal.Length Sepal.Width
+1:          5.1         3.5
+2:          4.9         3.0
+```
+
+- 利用`on`: 筛选Sepal.Width == 3.1, Species == 'setosa'的记录
+
+```r
+> data.table(iris)[.(3.1, 'setosa'), on=.(Sepal.Width, Species)]
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1:          4.6         3.1          1.5         0.2  setosa
+2:          4.9         3.1          1.5         0.1  setosa
+3:          4.8         3.1          1.6         0.2  setosa
+4:          4.9         3.1          1.5         0.2  setosa
+```
+
+## 选列 {.smaller}
+
+- data.frame操作 或 `subset`
+
+<div class='columns-2'>
+
+- 保留某些列
+
+```r
+> subset(data.table(iris), select = startsWith(
++     names(iris), "Petal"))
+> data.table(iris)[, .(Petal.Length, Petal.Width)]
+     Petal.Length Petal.Width
+  1:          1.4         0.2
+  2:          1.4         0.2
+  3:          1.3         0.2
+  4:          1.5         0.2
+  5:          1.4         0.2
+ ---                         
+146:          5.2         2.3
+147:          5.0         1.9
+148:          5.2         2.0
+149:          5.4         2.3
+150:          5.1         1.8
+```
+<p class="forceBreak"></p>
+
+- 舍弃某些列
+
+```r
+> subset(data.table(iris), select = !grepl(
++     "Petal", names(iris)))
+> data.table(iris)[, -(3:4)]
+> data.table(iris)[, c("Petal.Width", 
++     "Petal.Length") :=NULL]
+     Sepal.Length Sepal.Width   Species
+  1:          5.1         3.5    setosa
+  2:          4.9         3.0    setosa
+  3:          4.7         3.2    setosa
+  4:          4.6         3.1    setosa
+  5:          5.0         3.6    setosa
+ ---                                   
+146:          6.7         3.0 virginica
+147:          6.3         2.5 virginica
+148:          6.5         3.0 virginica
+149:          6.2         3.4 virginica
+150:          5.9         3.0 virginica
+```
+</div>
+
+## 选列(续) {.smaller}
+
+<div class='columns-2'>
+
+- 重命名某些列
+
+    - data.frame操作或`setnames`
+
+```r
+> d <- data.table(iris)
+> setnames(d, 1:4, c("SL", "SW", "PL", "PW"))
+> d
+      SL  SW  PL  PW   Species
+  1: 4.3 3.0 1.1 0.1    setosa
+  2: 4.4 3.2 1.3 0.2    setosa
+  3: 4.4 3.0 1.3 0.2    setosa
+  4: 4.4 2.9 1.4 0.2    setosa
+  5: 4.5 2.3 1.3 0.3    setosa
+ ---                          
+146: 7.7 3.8 6.7 2.2 virginica
+147: 7.7 3.0 6.1 2.3 virginica
+148: 7.7 2.8 6.7 2.0 virginica
+149: 7.7 2.6 6.9 2.3 virginica
+150: 7.9 3.8 6.4 2.0 virginica
+```
+<p class='forceBreak'></p>
+
+- 重组列的次序
+
+    - data.frame操作或`setcolorder`
+    
+```r
+> setcolorder(d, c(5, 1:4))
+> d
+       Species  PW  SL  SW  PL
+  1:    setosa 0.1 4.3 3.0 1.1
+  2:    setosa 0.2 4.4 3.2 1.3
+  3:    setosa 0.2 4.4 3.0 1.3
+  4:    setosa 0.2 4.4 2.9 1.4
+  5:    setosa 0.3 4.5 2.3 1.3
+ ---                          
+146: virginica 2.2 7.7 3.8 6.7
+147: virginica 2.3 7.7 3.0 6.1
+148: virginica 2.0 7.7 2.8 6.7
+149: virginica 2.3 7.7 2.6 6.9
+150: virginica 2.0 7.9 3.8 6.4
+```
+</div>
+
+## 选行
+
+- 与data.frame的切片法类似
+
+```r
+> data.table(iris)[Petal.Width > 2 & Species == 'virginica']
+    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+ 1:          6.3         3.3          6.0         2.5 virginica
+ 2:          7.1         3.0          5.9         2.1 virginica
+ 3:          6.5         3.0          5.8         2.2 virginica
+ 4:          7.6         3.0          6.6         2.1 virginica
+ 5:          7.2         3.6          6.1         2.5 virginica
+......
+19:          6.9         3.1          5.1         2.3 virginica
+20:          6.8         3.2          5.9         2.3 virginica
+21:          6.7         3.3          5.7         2.5 virginica
+22:          6.7         3.0          5.2         2.3 virginica
+23:          6.2         3.4          5.4         2.3 virginica
+    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+```
+
+## 排序 {.smaller}
+
+- data.frame操作 或`setorder`
+
+```r
+> data.table(iris)[order(Sepal.Length, -Sepal.Width)]
+> setorder(iris, Sepal.Length, -Sepal.Width)
+     Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+  1:          4.3         3.0          1.1         0.1    setosa
+  2:          4.4         3.2          1.3         0.2    setosa
+  3:          4.4         3.0          1.3         0.2    setosa
+  4:          4.4         2.9          1.4         0.2    setosa
+  5:          4.5         2.3          1.3         0.3    setosa
+ ---                                                            
+146:          7.7         3.8          6.7         2.2 virginica
+147:          7.7         3.0          6.1         2.3 virginica
+148:          7.7         2.8          6.7         2.0 virginica
+149:          7.7         2.6          6.9         2.3 virginica
+150:          7.9         3.8          6.4         2.0 virginica
+```
+
+## 次生变量 {.smaller}
+
+- data.frame操作或用`:=`
+
+```r
+> d <- data.table(iris)
+> d[, Sepal.LWR := Sepal.Length/Sepal.Width]
+> d
+     Sepal.Length Sepal.Width Petal.Length Petal.Width   Species Sepal.LWR
+  1:          4.3         3.0          1.1         0.1    setosa  1.433333
+  2:          4.4         3.2          1.3         0.2    setosa  1.375000
+  3:          4.4         3.0          1.3         0.2    setosa  1.466667
+  4:          4.4         2.9          1.4         0.2    setosa  1.517241
+  5:          4.5         2.3          1.3         0.3    setosa  1.956522
+ ---                                                                      
+146:          7.7         3.8          6.7         2.2 virginica  2.026316
+147:          7.7         3.0          6.1         2.3 virginica  2.566667
+148:          7.7         2.8          6.7         2.0 virginica  2.750000
+149:          7.7         2.6          6.9         2.3 virginica  2.961538
+150:          7.9         3.8          6.4         2.0 virginica  2.078947
+```
+
+## 熔解和重铸 {.smaller}
+
+- data.table改写了reshape2的`melt`和`dcast`
+- `library(data.table)`后调用，如为data.table类则直接调用改写后的函数
+
+```r
+> iris.new1 <- melt(data.table(iris), id.var='Species')
+> head(iris.new1, 4)
+   Species     variable value
+1:  setosa Sepal.Length   4.3
+2:  setosa Sepal.Length   4.4
+3:  setosa Sepal.Length   4.4
+4:  setosa Sepal.Length   4.4
+```
+
+```r
+> iris.cast1 <- dcast(iris.new1, Species~variable, mean)
+> iris.cast1
+      Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+1:     setosa        5.006       3.428        1.462       0.246
+2: versicolor        5.936       2.770        4.260       1.326
+3:  virginica        6.588       2.974        5.552       2.026
+```
+
+## 相同的一体化案例 {.smaller}
+
+> 选取iris数据集Sepal.Length > 6的记录，构造一个指标SPWR (Sepal.Width与Petal.Width之比)。
+> 按Species分组，分析SPWR的均数及标准差。
+
+- 不如dplyr那样管道化，可能需要创建中间体
+- 向量化计算的精神贯彻得相当彻底
+
+```r
+> d <- data.table(iris)
+> d.sel <- d[Sepal.Length > 6, SPWR := Sepal.Width / Petal.Width]
+> d.agg <- d.sel[, list(m = mean(SPWR, na.rm=TRUE), 
++                       sd = sd(SPWR, na.rm=TRUE)), by=Species]
+> d.agg
+      Species        m        sd
+1:     setosa      NaN        NA
+2:  virginica 1.494320 0.1874827
+3: versicolor 2.044987 0.2271170
+```
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

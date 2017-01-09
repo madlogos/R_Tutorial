@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A01-01 R入门简介</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A01-01 R入门简介',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A01_01_intro_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+  <script src="libs/htmlwidgets-0.8/htmlwidgets.js"></script>
+  <link href="libs/plotlyjs-1.16.3/plotly-htmlwidgets.css" rel="stylesheet" />
+  <script src="libs/plotlyjs-1.16.3/plotly-latest.min.js"></script>
+  <script src="libs/plotly-binding-4.5.6/plotly.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A01_01_intro_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A01_01_intro_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-27 15:06:29</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>为什么学R？</a></li>
+<li><a href='#10' title=''>怎么学R？</a></li>
+<li><a href='#15' title=''>R单机作业环境的搭建</a></li>
+<li><a href='#22' title=''>典型应用套路</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>为什么学R？</h2></hgroup><article  id="r">
+
+</article></slide><slide class=''><hgroup><h2>R是什么？</h2></hgroup><article  id="r">
+
+<p>一种<ora>开源</ora>的<ora>解释型统计分析</ora>程序语言/<a href='http://www.r-project.org' title=''>软件工具包</a></p>
+
+<div class="columns-2">
+<h3>历史</h3>
+
+<ul>
+<li>前身是S (John Chambers, et al. Bell Lab, 1976) &#8211;&gt; S-Plus</li>
+<li>由<strong>R</strong>oss Ihaka &amp; <strong>R</strong>obert Gentleman开发(U Aucland, 1990s)</li>
+<li>R Core Team成立，维护R核心代码(1997)</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h3>现状</h3>
+
+<ul>
+<li>生态系统：核心组、开发者、用户</li>
+<li>统计学家事实上的标准工具语言</li>
+<li>渐受产业界重视</li>
+<li>金融、零售、生物制药、气象地质、信息科技, &#8230;</li>
+<li>整合大数据技术(<code>Spark</code>, &#8230;)</li>
+<li>商业化分支：<a href='https://www.microsoft.com/en-us/download/details.aspx?id=51204' title=''>Revolution R Analytics</a>, <a href='http://www.oracle.com/technetwork/cn/database/database-technologies/r/r-enterprise/overview/index.html' title=''>Oracle R Enterprise</a>, &#8230;</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>R有何用？</h2></hgroup><article  id="r">
+
+<div class="columns-2">
+<h3>数据科学</h3>
+
+<ul>
+<li>数据抽取
+
+<ul>
+<li>文本/网页</li>
+<li>第三方数据文件</li>
+<li>关系型/非关系型数据库</li>
+</ul></li>
+<li>数据清理
+
+<ul>
+<li>缺失/奇异值</li>
+<li>变形/标签</li>
+</ul></li>
+<li>数据分析
+
+<ul>
+<li>描述分析</li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li><ul>
+<li>统计推断</li>
+<li>挖掘预测</li>
+</ul></li>
+<li>可视化
+
+<ul>
+<li>制图</li>
+<li>数据产品(<em>本deck即knit而成</em>)</li>
+</ul></li>
+</ul>
+
+<h3>工程开发</h3>
+
+<ul>
+<li>R附加包</li>
+<li>Shell/bat调用</li>
+<li>与SQL/Java/Python联用</li>
+<li>与Spark/Hive/Pig联用</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>R的优缺点</h2></hgroup><article  id="r">
+
+<aside class='note'><section><blockquote>
+<p>The best thing about R is that it was developed by <strong>statisticians</strong>. The worst thing about R is that it was developed by <strong>statisticians</strong>. <br> &#8211; Bo Cowgill, <em>Google</em></p>
+</blockquote></section></aside>
+
+<div class="columns-2">
+<h3><gre>优点</gre></h3>
+
+<ul>
+<li>开源
+
+<ul>
+<li>免费、自由、透明</li>
+<li>活跃的支持社区</li>
+</ul></li>
+<li>为统计而生
+
+<ul>
+<li>强大而前沿的统计分析功能</li>
+<li>强大的作图能力</li>
+</ul></li>
+<li>为懒人而生
+
+<ul>
+<li>背靠附加包，代码产出率高</li>
+<li>胶水语言，便于混搭其他工具</li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h3><crb>缺点</crb></h3>
+
+<ul>
+<li>学习曲线陡峭
+
+<ul>
+<li>语法略奇葩</li>
+<li>支持文档不详尽</li>
+</ul></li>
+<li>速度/效率/内存管理弱
+
+<ul>
+<li>数据全部读入内存</li>
+<li>解释执行，速度较慢</li>
+</ul></li>
+<li>缺少权限/安全控制
+
+<ul>
+<li>限制其工程开发用途</li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>R适合谁学？</h2></hgroup><article  id="r">
+
+<div class="columns-2">
+<h3>这些人适合学R</h3>
+
+<ul>
+<li>日常业务需求
+
+<ul>
+<li>常用小型数据集运行分析、挖掘</li>
+<li>常执行重复分析、报告过程</li>
+<li>用不起昂贵的分析工具，但也想跑点分析</li>
+</ul></li>
+<li>个人禀赋
+
+<ul>
+<li>有志成为数据科学家</li>
+<li>对数据/算法/结构有兴趣</li>
+<li>有一点黑客精神</li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h3>你可能关心的问题</h3>
+
+<ul>
+<li><gbl>Q: 需要编程经验吗？</gbl></li>
+<li><red>A: 不需要有编程背景。最好懂SQL，懂Python更好。</red></li>
+<li><gbl>Q: 学起来真的难吗？</gbl></li>
+<li><red>A: 入门容易精通难。</red></li>
+<li><gbl>Q: 一般多久能上手？</gbl></li>
+<li><red>A: 一般50-100小时实操可大致上手。</red></li>
+<li><gbl>Q: 学会了能涨工资吗？</gbl></li>
+<li><red>A: 不能。</red></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="centered">
+<img src='A01_01_intro_files/figure-html/rexersurvey2015.png' title='fig:'/><p class='caption'>Fig. Analytics tools used by respondents to the 2015 Rexer Analytics Survey (multiple choice). - <a href='http://r4stats.com/articles/popularity' title=''>r4stats</a></p></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="centered">
+<img src='A01_01_intro_files/figure-html/lavastorm2013.png' title='fig:'/><p class='caption'>Fig. Lavastorm survey of analytics tools. - <a href='http://r4stats.com/articles/popularity' title=''>r4stats</a></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>怎么学R？</h2></hgroup><article  id="r">
+
+</article></slide><slide class=''><hgroup><h2>30%的时间 - 书本和课堂</h2></hgroup><article  id="---" class="smaller">
+
+<div class="columns-2">
+<h3>书本(供参考)</h3>
+
+<ul>
+<li>入门
+
+<ul>
+<li>R语言初学者指南 (<em>Alain F.Zuur</em>)</li>
+<li>R语言实战 (<em>Robert I.Kabacoff</em>)</li>
+</ul></li>
+<li>高手
+
+<ul>
+<li>ggplot2:数据分析与图形艺术 (<em>H. Wickham</em>)</li>
+<li>数据科学中的R语言 (<em>李舰, 肖凯</em>)</li>
+</ul></li>
+<li>老司机
+
+<ul>
+<li>R语言编程艺术 (<em>Norman Matloff</em>)</li>
+<li>高级R语言编程指南 (<em>H. Wickham</em>)</li>
+<li>Software for data analysis programming with R (<em>J. Chambers</em>)</li>
+</ul></li>
+</ul>
+
+<h3>在线课堂</h3>
+
+<ul>
+<li><strong>M</strong>assive <strong>O</strong>pen <strong>O</strong>nline <strong>C</strong>ourses
+
+<ul>
+<li>Coursera: <a href='https://www.coursera.org/specializations/jhu-data-science' title=''>Data Science</a>, <a href='https://www.coursera.org/specializations/statistics' title=''>Statistics with R</a></li>
+<li>edX: <a href='https://www.edx.org/course/introduction-r-data-science-microsoft-dat204x-2' title=''>Introduction to R for Data Science</a>, <a href='https://www.edx.org/course/explore-statistics-r-kix-kiexplorx-0' title=''>Explore Statistics with R</a></li>
+</ul></li>
+<li>支持网站
+
+<ul>
+<li><a href='http://www.codeschool.com/courses/try-r' title=''>Try-R</a>, <a href='www.datacamp.com/swirl-r-tutorial' title=''>Data Camp</a>, <a href='https://www.rstudio.com/online-learning' title=''>Rstudio</a></li>
+<li><a href='http://cos.name' title=''>统计之都</a>、<a href='http://edu.dataguru.cn' title=''>炼数成金</a></li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>70%的时间 - 社区和实战</h2></hgroup><article  id="---">
+
+<div class="columns-2">
+<h3>社区</h3>
+
+<ul>
+<li>帮助
+
+<ul>
+<li><a href='https://stackoverflow.com/' title=''>StackOverflow</a>, <a href='http://rseek.org/' title=''>RSeek</a></li>
+<li><a href='http://cos.name' title=''>统计之都</a>、<a href='http://www.dataguru.cn' title=''>炼数成金</a></li>
+</ul></li>
+<li>资源
+
+<ul>
+<li><a href='http://www.r-project.org/' title=''>R Official</a>, <a href='http://github.com' title=''>GitHub</a>, <a href='http://bioconductor.org' title=''>Bioconductor</a></li>
+<li><a href='http://www.r-bloggers.com' title=''>R-bloggers</a>, <a href='http://www.rdocumentation.org' title=''>R Doc</a></li>
+</ul></li>
+<li>竞赛
+
+<ul>
+<li><a href='http://www.kaggle.com' title=''>Kaggle</a>, <a href='https://projecteuler.net' title=''>Euler Project</a></li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h3>实战</h3>
+
+<ul>
+<li>R帮助系统: <code>help()</code>, <code>?</code></li>
+<li>坚持在实际工作中使用
+
+<ul>
+<li>分解一个实际问题，将其中的<strong>分析、展示</strong>部分用R实现</li>
+<li>封装可<strong>复用</strong>代码，提升效率</li>
+</ul></li>
+<li>参加项目协作，提升实践能力
+
+<ul>
+<li>团队协作流程和<strong>框架</strong></li>
+<li>团队R<strong>代码规范</strong>、管理指南</li>
+<li><strong>协作</strong>开发，解决中大型分析问题</li>
+<li><strong>多工具</strong>生态环境</li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>帮助系统</h2></hgroup><article >
+
+<p><code>?ggplot2::aes</code>或手动导航</p>
+
+<img src='A01_01_intro_files/figure-html/help.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>随机手册(Vignette)</h2></hgroup><article  id="vignette">
+
+<ul>
+<li>Vignette [vi:n&#39;jet]: 画像。附加包的随机手册。</li>
+<li><code>browseVignettes(&quot;ggplot2&quot;)</code></li>
+</ul>
+
+<img src='A01_01_intro_files/figure-html/vignette.PNG' title='fig:'/>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>R单机作业环境的搭建</h2></hgroup><article  id="r">
+
+</article></slide><slide class=''><hgroup><h2>下载并安装R</h2></hgroup><article  id="r">
+
+<ol>
+<li>访问Aetna AppStore，下载安装<a href='https://appstore.aetna.com/Product/Details/72475' title=''>Open Source R 3.2.4</a>(须装在虚拟机上)，或</li>
+<li><del>访问R官网，下载<a href='https://cloud.r-project.org' title=''>R for windows</a>并解压到C盘；安装32-bit版本</del></li>
+</ol>
+
+<img src='A01_01_intro_files/figure-html/rgui.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>集成开发环境(IDE)</h2></hgroup><article  id="ide">
+
+<ul>
+<li>IDE不是必需的, 你可以用R自带的GUI界面写交互命令行</li>
+<li>但R本质上是一种<strong>脚本语言</strong>，存为脚本后运行才是王道</li>
+<li>IDE的选择:
+
+<ul>
+<li><strong>强烈推荐使用<a href='https://download1.rstudio.org/RStudio-1.0.44.zip' title=''>RStudio Desktop</a></strong> (后续课程都将在RStudio上演示)
+
+<ul>
+<li>接下来Rstudio将是你的一个R的宝库</li>
+<li>在Linux上，更建议安装Rstudio Server</li>
+</ul></li>
+<li>可以用你所惯用的代码编辑器，如Vim, Emacs, Notepad++
+
+<ul>
+<li>但不要用Win Notepad、WordPad、MS Word等带BOM的编辑器</li>
+</ul></li>
+<li>还可以通过插件方式整合在其他IDE中使用，如Eclipse + StatET, Jupyter Notebook + IRkernel, R Tools for Visual Studio
+
+<ul>
+<li>如果要对R进行工程开发，建议采用这种方式</li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A01_01_intro_files/figure-html/rstudio.PNG' title='fig:'/><p class='caption'>RStudio 1.0 GUI</p>
+
+</article></slide><slide class=''><hgroup><h2>一些初始配置 (RStudio)</h2></hgroup><article  id="-rstudio" class="smaller">
+
+<div class="columns-2">
+<h3>全局设置</h3>
+
+<p>(Tools -&gt; Global Options)</p>
+
+<ul>
+<li>Code Tab
+
+<ul>
+<li>Editing -&gt; General -&gt; Insert spaces for tab | Tab width: 4</li>
+<li>Display -&gt; Show margin | Margin column: 80</li>
+</ul></li>
+<li>其他Tab
+
+<ul>
+<li>修改Work Directory</li>
+<li>修改CRAN Mirror</li>
+<li>修改外观主题</li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h3>环境配置</h3>
+
+<p>(Control PanelControl Panel Items-&gt; Change settings -&gt; Advanced -&gt; Environment variables)</p>
+
+<ul>
+<li>验证R安装目录是否在PATH中 (<code>Sys.getenv(&#39;PATH&#39;)</code>)</li>
+<li>Edit PATH， 将R安装路径添加进去</li>
+</ul>
+
+<h3>基础组件</h3>
+
+<ul>
+<li><a href='https://cran.r-project.org/bin/windows/Rtools' title=''>RTools</a> : 包含<code>gcc</code>, <code>mingw</code>等编译工具</li>
+<li><del><a href='https://miktex.org/' title=''>MikTex</a> : 用于生成pdf文档</del></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>安装附加包 (add-on package)</h2></hgroup><article  id="-add-on-package">
+
+<h3>附加包: R最重要的优势</h3>
+
+<h5>用法</h5>
+
+<ul>
+<li>Packages面板 -&gt; Install -&gt; 输入包名</li>
+<li><code>install.packages(c(&quot;&lt;包名1&gt;&quot;, &quot;&lt;包名2&gt;&quot;, ...))</code></li>
+</ul>
+
+<h5>使用原则</h5>
+
+<ul>
+<li>优先使用官方包、流行包</li>
+<li>避免使用偏门包、来历不明的包</li>
+<li>使用前阅读手册，了解其原理和局限</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<h3>推荐一些常用包</h3>
+
+<div class="columns-2">
+<ul>
+<li>数据抽取
+
+<ul>
+<li>数据库: <code>RODBC</code>, <code>RMySQL</code>, <code>RPostgresSQL</code></li>
+<li>表格数据: <code>readr</code>, <code>XLConnect</code>, <code>readxl</code></li>
+<li>网页: <code>XML</code>, <code>httr</code>, <code>jsonlite</code>, <code>RCurl</code></li>
+</ul></li>
+<li>数据整理
+
+<ul>
+<li>拆合排转: <code>dplyr</code>, <code>tidyr</code>, <code>reshape2</code></li>
+<li>文本/时间: <code>stringr</code>, <code>lubridate</code>, <code>timeDate</code></li>
+</ul></li>
+<li>数据分析
+
+<ul>
+<li>建模: <code>car</code>, <code>lme4</code>, <code>glmnet</code>, <code>survival</code></li>
+<li>金融/时序: <code>quantmod</code>, <code>xts</code>, <code>zoo</code></li>
+<li>地理: <code>sp</code>, <code>maps</code>, <code>maptools</code>, <code>ggmap</code></li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>数据挖掘
+
+<ul>
+<li>机器学习: <code>caret</code>, <code>e1071</code>, <code>kernlab</code></li>
+<li>自然语言: <code>NLP</code>, <code>tm</code>, <code>RTextTools</code></li>
+</ul></li>
+<li>可视化
+
+<ul>
+<li>图表: <code>ggplot2</code>, <code>rCharts</code>, <code>ggvis</code>, <code>htmlwidgets</code>族(<code>leaflet</code>, <code>DT</code>, <code>dygraphs</code>, <code>DiagrammR</code>, <code>d3heatmap</code>, &#8230;), <code>plotly</code>, <code>rgl</code>, <code>rbokeh</code>, <code>highcharter</code></li>
+<li>报告: <code>rmarkdown</code>, <code>knitr</code>, <code>shiny</code>, <code>ReporteRs</code></li>
+</ul></li>
+<li>工具
+
+<ul>
+<li>运行效率: <code>data.table</code>, <code>Rcpp</code>, <code>parallel</code></li>
+<li>开发: <code>devtools</code>, <code>roxygen2</code>, <code>testthat</code></li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>典型应用套路</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>GUI操作</h2></hgroup><article  id="gui">
+
+<p>通过Rcmdr或rattle包调用<code>tcltk</code>库，驱动图形界面，进行整理、分析、挖掘</p>
+
+<div class="columns-2">
+<h4>R Commander (经典分析利器)</h4>
+
+<pre class = 'prettyprint lang-r'>library(Rcmdr)  ## 加载Rcmdr包
+Commander()  ## Rcmdr主函数</pre>
+
+<img src='A01_01_intro_files/figure-html/rcmdr.PNG' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>rattle (整合数据挖掘功能)</h4>
+
+<pre class = 'prettyprint lang-r'>library(rattle)  ## 加载rattle包
+rattle()  ## rattle主函数</pre>
+
+<img src='A01_01_intro_files/figure-html/rattle.PNG' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>交互命令行</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<h4>用法</h4>
+
+<ul>
+<li>最传统的使用形式</li>
+<li>在控制台敲入命令后回车，即时返回结果</li>
+<li>通过History面板或向上键调出历史命令</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left"></th>
+<th align="left">优点</th>
+<th align="left">缺点</th>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">直观</td>
+<td align="left">结果杂乱</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">便捷</td>
+<td align="left">无法复用</td>
+</tr>
+</table>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>例子</h4>
+
+<pre class = 'prettyprint lang-r'>1:4 + 1:4</pre>
+
+<pre >## [1] 2 4 6 8</pre>
+
+<pre class = 'prettyprint lang-r'>library(plotly)
+plot_ly(cars, x=~speed, y=~dist) %&gt;% add_markers()</pre>
+
+<div class="figure">
+<div id="htmlwidget-1e1709e5b6699c633b3c" style="width:432px;height:240px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1e1709e5b6699c633b3c">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"speed"},"yaxis":{"domain":[0,1],"title":"dist"},"hovermode":"closest"},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"modeBarButtonsToRemove":["sendDataToCloud"]},"data":[{"x":[4,4,7,7,8,9,10,10,10,11,11,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,16,16,17,17,17,18,18,18,18,19,19,19,20,20,20,20,20,22,23,24,24,24,24,25],"y":[2,10,4,22,16,10,18,26,34,17,28,14,20,24,28,26,34,34,46,26,36,60,80,20,26,54,32,40,32,40,50,42,56,76,84,36,46,68,32,48,52,56,64,66,54,70,92,93,120,85],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y"}],"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+
+<p class="caption">
+
+scatter cars
+
+</p></div></div>
+
+</article></slide><slide class=''><hgroup><h2>脚本</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<h4>用法</h4>
+
+<ul>
+<li>创建.R脚本文件，编辑函数、执行代码</li>
+<li><code>source</code>该.R脚本读入，编辑或块选执行</li>
+<li>用Shell/bat等外部工具直接通过<code>R CMD</code>或<code>Rscript</code>命令调用脚本</li>
+<li>选块Ctrl+Enter，显示为R Notebook</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left"></th>
+<th align="left">优点</th>
+<th align="left">缺点</th>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">可复用</td>
+<td align="left">需脚本管理</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">代码逻辑</td>
+<td align="left">结果欠结构</td>
+</tr>
+</table>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>例子</h4>
+
+<p>保存一个<a href='A01_01_intro_files/file/intro.R' title=''>intro.R</a>脚本</p>
+
+<pre class = 'prettyprint lang-r'># Open pdf device and name it
+pdf(&#39;intro.pdf&#39;)
+# Lazy plot a scatterplot
+plot(cars, main=&#39;Scatterplot of cars&#39;)
+# Close all the devices
+dev.off()</pre>
+
+<p>执行<a href='A01_01_intro_files/file/intro.bat' title=''>intro.bat</a>，内容为</p>
+
+<pre class = 'prettyprint lang-bat'>@echo off
+: If Rscript is not in PATH, define the location manually 
+C:\Docs\R\R-3.3.2\bin\Rscript.exe intro.R
+@pause</pre>
+
+<p>最后在脚本同目录下生成一个intro.pdf。全过程不出现RGui。</p></div>
+
+</article></slide><slide class=''><hgroup><h2>可重复报告</h2></hgroup><article >
+
+<div class="columns-2">
+<h4>用法</h4>
+
+<ul>
+<li>创建.rmd文档</li>
+<li>用YAML头部定义文档参数</li>
+<li>可自由生成html, docx, rtf, pdf</li>
+<li>混编可执行代码(R/Python/SQL)和自然语言行文 (markdown/ html/ LaTeX)</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left"></th>
+<th align="left">优点</th>
+<th align="left">缺点</th>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">可反复运行</td>
+<td align="left">有一定学习成本</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">文学化编程</td>
+<td align="left">需要一定的构思</td>
+</tr>
+</table>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>例子</h4>
+
+<ul>
+<li>创建的.Rmd文档本身自带示例代码，可尝试Knit</li>
+<li><a href='A01_01_intro.rmd' title=''>本文档</a>是一个较复杂的例子</li>
+<li>可以将配置项目写在_output.yml文件中，<code>rmarkdown::render()</code>生成文档</li>
+<li>可以尝试套用模板创建一个封装好格式的R Markdown文档
+
+<ul>
+<li>默认的html</li>
+<li>R Presentation</li>
+<li>(安装<code>rticles</code>包)基于template的文档</li>
+</ul></li>
+<li>直接创建R Notebook文档</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>入门仪式: Hello, world!</h2></hgroup><article  id="-hello-world" class="smaller">
+
+<div class="columns-2">
+<h4>Java</h4>
+
+<pre class = 'prettyprint lang-java'>public class HelloWorld
+{ 
+  public static void main(String[] args)  
+  { 
+    System.out.println(&quot;Hello, world!&quot;);  
+  }  
+}</pre>
+
+<h4>PHP</h4>
+
+<pre class = 'prettyprint lang-php'>&lt;!DOCTYPE html&gt;  
+&lt;body&gt;  
+&lt;?php 
+    echo &quot;Hello, world!&quot;;
+?&gt;  
+&lt;/body&gt;  
+&lt;/html&gt;</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>JavaScript</h4>
+
+<pre class = 'prettyprint lang-javascript'>var sys = require(&quot;sys&quot;);
+sys.puts(&quot;Hello, world!&quot;); </pre>
+
+<h4>Python 3</h4>
+
+<pre class = 'prettyprint lang-python'>print(&quot;Hello, world!&quot;)</pre>
+
+<h4>Scala</h4>
+
+<pre class = 'prettyprint lang-scala'>println(&quot;Hello, world!&quot;)</pre>
+
+<h4>R</h4>
+
+<pre class = 'prettyprint lang-r'>print(&quot;Hello, world!&quot;)</pre></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

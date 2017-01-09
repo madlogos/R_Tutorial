@@ -1,0 +1,663 @@
+---
+title: A02-06 文本操作和正则表达式
+subtitle: R Analyst Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A02_06_string_regex_files/figure-html")
+```
+
+## 目录
+
+- [基本的文本操作](#3)
+- [正则表达式](#11)
+- [格式与编码](#20)
+- [stringr包](#25)
+
+<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
+
+# 基本的文本操作
+
+## 字符数统计&字符翻替
+
+#### 统计: `nchar()`
+
+```r
+> nchar(c("Hello world!", "Goodbye guys!"))
+> [1] 12 13
+```
+
+#### 翻替: `toupper()`, `tolower()`, `chartr()`
+
+```r
+> tolower('AgCTaaGGGcctTagct')  # 转小写
+[1] "agctaagggccttagct"
+> toupper("AgCTaaGGGcctTagct")  # 转大写
+[1] "AGCTAAGGGCCTTAGCT"
+> chartr("Tt", "Uu", 'AgCTaaGGGcctTagct')  # 批量替换
+[1] "AgCUaaGGGccuUagcu"
+```
+
+## 字符连接&分割 {.smaller}
+
+#### 连接: `paste`/`paste0`
+
+```r
+> paste(c("A", "B"), 1:2, sep="_")  # sep连接向量
+[1] "A_1" "B_2"
+> paste(c("A", "B"), 1:2, collapse="_")
+# 先sep连接向量，再collapse连接为标量
+[1] "A 1_B 2"
+> paste0(c("A", "B"), 1:2)  # 等价于paste(..., sep="")
+[1] "A1" "B2"
+```
+
+#### 分割: `strsplit`
+
+- 返回的是list
+
+```r
+> strsplit("Hello\nworld!", split="\n")
+[[1]]
+[1] "Hello"  "world!"
+> strsplit("Hello", split="")  # 单字符拆分
+[[1]]
+[1] "H" "e" "l" "l" "o"
+```
+
+## 定位和提取: `substr`/`substring`
+
+- `substr(x, start, stop)`
+- `substring(text, first, last = 1000000L)`
+
+```r
+> substr("01234567", 2, 4)
+[1] "123"
+> substring("01234567", c(2, 4), c(4, 6))
+# 等价于subtr(rep("01234567", 2), c(2, 4), c(4, 6))
+[1] "123" "345"
+
+> substring("01234567", seq(1, 7, by=2), seq(2, 8, by=2))
+# 等价于substring("01234567", c(1, 3, 5, 7), c(2, 4, 6, 8))
+# 也等价于substr(rep("01234567", 4), seq(1, 7, by=2), seq(2, 8, by=2))
+[1] "01" "23" "45" "67"
+```
+
+## 模式查询: `grep`家族
+
+- grep是UNIX下的模式识别库，基于[正则表达式](#11)
+
+- 返回位置的函数: `grep`, `regexpr`
+
+```r
+> grep("a", c("abca", "tbbt"))  # 返回第一个查找结果
+[1] 1
+> regexpr("a", c("abca", "tbbt"))
+[1]  1 -1
+attr(,"match.length")
+[1]  1 -1
+attr(,"useBytes")
+[1] TRUE
+````
+
+- 返回逻辑值的函数: `grepl`
+
+```r
+> grepl("a", c("abca", "tbbt"))
+[1] TRUE FALSE
+```
+
+## 模式查询: `grep`家族 (续) {.smaller}
+
+- 返回列表的函数: `gregexpr`, `regexec`
+
+<div class="columns-2">
+```r
+> gregexpr("a", c("abca", "tbbt"))  # 返回全部查找结果
+[[1]]
+[1] 1 4
+attr(,"match.length")
+[1] 1 1
+attr(,"useBytes")
+[1] TRUE
+
+[[2]]
+[1] -1
+attr(,"match.length")
+[1] -1
+attr(,"useBytes")
+[1] TRUE
+```
+
+```r
+> regexec("a", c("abca", "tbbt"))  # 返回第一个查找结果
+[[1]]
+[1] 1
+attr(,"match.length")
+[1] 1
+attr(,"useBytes")
+[1] TRUE
+
+[[2]]
+[1] -1
+attr(,"match.length")
+[1] -1
+attr(,"useBytes")
+[1] TRUE
+````
+</div>
+
+## 模式替换: `grep`家族`sub`, `gsub`
+
+- 替换第一个: `sub`
+
+```r
+> sub("a", "x", c("abca", "tbbt"))
+[1] "xbca" "tbbt"
+```
+
+- 全局替换: `gsub`
+
+```r
+> gsub("a", "x", c("abca", "tbbt"))
+[1] "xbcx" "tbbt"
+```
+
+- 不用`replace`或`substitute`
+
+```r
+> replace(1:5, c(3,5), 'a')
+[1] "1" "2" "a" "4" "a"
+> subsitute(y~x)
+y ~ x
+```
+
+## 定制输出 {.smaller}
+
+- `strtrim`: 定制输出宽度
+
+```r
+> strtrim(rep("abcde", 3), c(1, 5, 10))
+[1] "a"     "abcde" "abcde"
+```
+
+- `trimws`: 去空格
+
+```r
+> trimws("  abcd ")
+[1] "abcd"
+```
+
+- `strwrap`: 缩进和宽度
+
+```r
+> strwrap(stringi::stri_rand_lipsum(1), width=40, exdent=4)
+ [1] "Lorem ipsum dolor sit amet, in ornare"
+ [2] "    vehicula proin lorem duis platea"
+ [3] "    aliquam ridiculus tortor. Tellus"
+ [4] "    conubia nibh elementum, quam lectus"
+ [5] "    odio duis eleifend. Sed dictumst"
+ [6] "    morbi laoreet dignissim, sapien"
+ ...
+```
+
+# 正则表达式
+
+## 何为正则表达式 (Regular Expression)
+
+- 用单个字符串来描述、匹配一系列匹配某个句法规则的字符串
+- 发端于UNIX，广泛用于计算机编程
+- `grep`家族本质上是基于正则表达式工作的
+- `?regex`可了解更多，基本组成
+    - 字符: 如\\d代表数字
+    - 选择: 如|表示或
+    - 数量: 如{1,4}表示出现最少1次，最多4次
+    - 层级: 先匹配括号内的
+
+## R中的正则表达式 {.smaller}
+
+- 英文字母、数字和很多可显示的字符本身就是正则表达式，用于匹配自己
+
+```r
+> grep("2", c("way", "2", "go"))
+[1] 2
+```
+
+- 一些特殊字符不能用于匹配自身，如. \\ | ( ) [ ] { } ^ $ * + ?，称为元字符
+- 元字符匹配自身需要前加\\转义
+
+```r
+> grep("\\.", c("4.2", "1", "0.4"))
+[1] 1 3
+```
+
+- 支持Perl正则
+
+```r
+> grep("[[:punct:]]", c("32", "a", "5-6"), perl=TRUE)
+[1] 3
+```
+
+## 示例 {.smaller}
+
+### 单词\\w、数字\\d、空格\\s
+
+- \\w = [[:alnum:]] 或 [a-zA-Z0-9], \\d = [[:digit:]] 或 [0-9], \\s = [[:blank:]]
+- \\W、\\D、\\S代表非单词、非数字、非空格
+
+```r
+> grep("\\w", c("w1", " ", 23))
+[1] 1 3
+> grep("[[:alnum:]]", c("w1", " ", 23), perl=TRUE)
+[1] 1 3
+> grep("[[:lower:]]", c("w1", " ", 23), perl=TRUE)
+[1] 1
+> grep("\\d", c("w1", " ", 23))
+[1] 1 3
+> grep("[[:digit:]]", c("w1", " ", 23))
+[1] 1 3
+> grep("\\s", c("w1", " ", 23))
+[1] 2
+> grep("[[:blank:]]", c("w1", " ", 23))
+[1] 2
+```
+
+--------------
+
+### 模糊匹配: `.`，含(`[]`)和不含(`[^]`)
+
+- 匹配任何含"hello"的字符串，无论"h"大小写
+
+```r
+> string <- c("Hello ", " world", " hello", " piano", " cello.")
+> grep("[Hh]ello", string)
+[1] 1 3
+```
+
+- 匹配任何含"ello"、但不包括"hello"的字符串，无论"h"大小写
+
+```r
+> grep("[^Hh]ello", string)
+[1] 5
+```
+
+- 匹配任意字符
+
+```r
+> string <- c("Grrr", "small", "Grrrrrr", "big")
+> grep("s.a", string)
+[1] 2
+```
+
+---------------
+
+### 匹配行首(`^`)、行尾(`$`)
+
+- 匹配"hello"开头的字符串，无论"h"大小写
+
+```r
+> string <- c("Hello ", " world", " hello", " piano", " cello.")
+> grep("^[Hh]ello", string)
+[1] 1
+```
+
+- 匹配"hello"结尾的字符串，无论"h"大小写
+
+```r
+> string <- c("Hello ", " world", " hello", " piano", " cello.")
+> grep("[Hh]ello$", string)
+[1] 3
+```
+
+## {.smaller}
+
+### 字符重复多次(?, *, +, {m,n})
+
+- 匹配"r"出现0次或1次的字符串
+
+```r
+> string <- c("Grrr", "small", "Grrrrrr", "big")
+> grep("r?", string)
+[1] 1 2 3 4
+```
+
+- 匹配"r"出现0次或多次的字符串
+
+```r
+> grep("r*", string)
+[1] 1 2 3 4
+```
+
+- 匹配"r"出现1次或多次的字符串
+
+```r
+> grep("r+", string)
+[1] 1 3
+```
+
+- 匹配"r"出现4到6次的字符串
+
+```r
+> grep("r{4,6}", string)
+[1] 3
+```
+
+- 匹配"r"出现5次以上的字符串
+
+```r
+> grep("r{5,}", string)
+[1] 3
+```
+
+-------
+
+### 抽取和替换: `sub`或`gsub`
+
+- 将"hello"替换成"hi"，无论"h"大小写
+
+```r
+> sub("[Hh]ello", "Hi", "Hello world, hello everyone.")
+[1] "Hi world, hello everyone."
+> gsub("[Hh]ello", "hi", "Hello world, hello everyone.")
+[1] "hi world, hi everyone."
+```
+
+- 取出紧邻"hello"后的单词，无论"h"大小写
+- \\N表示模式表达式中的第N个括号中的内容
+
+```r
+> gsub("[Hh]ello (\\w+)[[:punct:][:blank:]]", "\\1", 
++     "Hello world, hello everyone.", perl=TRUE)
+[1] "world everyone"
+```
+
+------------
+
+### 并列模式: `|`
+
+```r
+> grep("(H|h|c)ello", c("Hello ", " world", " hello", " piano", " cello."))
+[1] 1 3 5
+```
+
+### 贪婪匹配
+
+- 默认是贪婪匹配的，即最大程度匹配
+
+```r
+> gsub("[Hh]ello (.+)", "\\1", "Hello world, hello everyone.")
+[1] "world, hello everyone."
+```
+
+- 在模式表达式后加"?"，即取消贪婪匹配
+
+```r
+> gsub("[Hh]ello (.+?)", "\\1", "Hello world, hello everyone.")
+[1] "world, everyone."
+```
+
+# 格式与编码(Encoding)
+
+## 格式: `format`
+
+- `format`函数可将非文本格式化为文本
+
+```r
+> format(c('aa', 'b', 'ccc'), justify='right')
+[1] " aa" "  b" "ccc"
+
+> format(c('aa', 'b', 'ccc'), justify='right', width=8)
+[1] "      aa" "       b" "     ccc"
+
+> format(pi, digits=5)
+[1] "3.1416"
+
+> format(pi, scientific = TRUE)
+[1] "3.141593e+00"
+
+> format(1234567890, big.mark=',')
+[1] "1,234,567,890"
+```
+
+## 格式: `sprintf`
+
+- `sprintf`是C语言的格式化库，直观便捷
+- 最常用的`fmt`模板包括`%d`(整型), `%f`( 固定格式), `%e`(指数格式), `%g`(双精度), `%s`(文本)等, 模板标志前可加`%m.n`(整数.小数), 空格, 0, #等辅助符号
+- 可通过`%1$`, `%2$`定义模板索引号，通过`*1$`, `*2$`引用
+
+```r
+> sprintf("%d月销售额为￥%0.0f万元，占全年的%.1f%%。", 12, 40, 100*400/2000)
+[1] "12月销售额为￥40万元,占全年的20.0%。"
+
+> sprintf("%5.2e", 1234567890)
+[1] "1.23e+09"
+
+> sprintf("圆周率保留%1$d位小数，结果为%2$.*1$f", 1:4, pi)
+[1] "圆周率保留1位小数,结果为3.1"    "圆周率保留2位小数,结果为3.14"
+[3] "圆周率保留3位小数,结果为3.142"  "圆周率保留4位小数,结果为3.1416"
+```
+
+## 编码(Encoding)
+
+- 计算机初期只支持ASCII码: 128个字符
+- 各国分别颁布编码系统，如中文GB2312, Big5，导致混乱
+- 颁布国际标准Unicode: 100多万字符
+- UTF-8是Unicode的一种存储方式，可根据实际情况将字符存为1-4字节，更节约空间
+- Windows采用代码页(Code page)管理编码体系，如美国英语为1252，简体中文为936
+- 在Windows下，编码问题是一个大坑
+    - ANSI编码: 英文ASCII，简体中文GB2312，繁体中文Big5
+    - Unicode编码: 以UCS-2编码方式存储(双字节)
+    - UTF-8编码
+
+## 编码(Encoding) (续)
+
+- 默认`sessionInfo()`或`Sys.getlocale("LC_CTYPE")`: "English_United States.1252"
+- 可通过`Sys.setlocale("LC_CTYPE", "chs")`将R的环境转为简体中文
+- 涉及非英文字符时，操作不当容易出现乱码
+- 推荐的操作习惯:
+    - R和Rstudio通用编码默认为"UTF-8"，但Windows下不建议通用UTF-8
+    - 脚本和文本文件保存为UTF-8编码，微软相关文件存为"GB2312"或兼容编码
+    - 读写外部文件时要弄清编码，并通过`encoding`或`filEncoding`指定正确编码
+    - 如文本编码为"unknown"，就容易出现乱码问题。可通过`stringr::str_conv()`函数转化
+    - 如的确出现乱码，分析成因并解决
+
+# stringr包
+
+## stringr
+
+- *Hadley Wickham*基于`stringi`开发的字符处理工具包
+- 可取代默认base包中的文本处理函数，包括几大类
+    - 拼截: `str_c`/`str_join`, `str_sub`, ...
+    - 格式: `str_trim`, `str_wrap`, ...
+    - 计算: `str_count`, `str_length`, ...
+    - 匹配: `str_split`, `str_subset`, `str_match`, ...
+    - 变换: `str_conv`, `str_to_upper`, ...
+    - 控制: `boundary`, `coll`, `regex`, ...
+
+## 拼截 {.smaller}
+
+- `str_c(..., sep = "", collapse = NULL)`: 默认不带空格拼接，NA保持NA
+
+```r
+> library(stringr)
+> str_c(letters[1:2], letters[3:4], sep="-")
+[1] "a-c" "b-d"
+> str_c(letters[1:2], letters[3:4], collapse="")
+[1] "abcd"
+```
+
+- `str_sub(string, start = 1L, end = -1L)`: 同`substring`
+
+```r
+> str_sub('abcdefghijklm', c(1, 4), c(3, 6))
+[1] "abc" "def"
+> str_sub('abcdefghijklm', c(-3, -6), c(-1, -4))
+[1] "klm" "hij"
+```
+
+## 格式 {.smaller}
+
+- `str_trim(string, side = c("both", "left", "right"))`: 去两端空格和\\t
+
+```r
+> str_trim(' blabla\tblabla ')
+[1] "blabla\tblabla"
+```
+
+- `str_dup(string, times)`: 重复字符
+
+```r
+> str_dup(letters[1:3], 2)
+[1] "aa" "bb" "cc"
+```
+
+- `str_wrap(string, width = 80, indent = 0, exdent = 0)`: 格式输出
+
+```r
+> cat(str_wrap('abcdefghijklm abcdefghijklm', width=5, exdent=5))
+abcdefghijklm
+     abcdefghijklm
+```
+
+## 计算 {.smaller}
+
+- `str_count(string, pattern = "")`: 字数匹配统计
+
+```r
+> str_count(c("a.", ".", ".a.",NA), ".")
+[1]  2  1  3 NA
+> str_count(c("a.", ".", ".a.",NA), "\\.")
+[1]  1  1  2 NA
+```
+
+- `str_length(string)`: 字数统计
+
+```r
+> str_length(c("a.", ".", ".a.",NA))  # 等价于str_count(..., pattern="")
+[1]  2  1  3 NA
+```
+
+- `str_sort(x, decreasing = FALSE, na_last = TRUE, locale = "", ...)`: 排序返值
+- `str_order(x, decreasing = FALSE, na_last = TRUE, locale = "", ...)`: 排序返序号
+
+```r
+> str_sort(c('a', 1, '我', 2, '11'), locale="en")
+[1] "1"  "11" "2"  "a"  "我"
+> str_sort(c('a', 1, '我', 2, '11'), locale="zh")
+[1] "1"  "11" "2"  "我" "a" 
+> str_order(c('a', 1, '我', 2, '11'), TRUE, locale="zh")
+[1] 1 3 4 5 2
+```
+
+## 匹配 {.smaller}
+
+- `str_split(string, pattern, n = Inf)`: 匹配切割返回列表
+- `str_split_fixed(string, pattern, n)`: 匹配切割返回矩阵
+
+```r
+> str_split("aaa,bbb;ccc.ddd", pattern="[[:punct:]]", n=3)
+[[1]]
+[1] "aaa"     "bbb"     "ccc.ddd"
+```
+
+- `str_subset(string, pattern)`: 返回匹配字符串
+
+```r
+> str_subset(c("ab", "dc", "ac"), "a")
+[1] "ab" "ac"
+```
+
+- `str_match(string, pattern)`: 匹配提取
+- `str_match_all(string, pattern)`: 匹配提取，返回矩阵
+
+```r
+> str_match(c("ab", "dc", "ac"), "a")
+     [,1]
+[1,] "a" 
+[2,] NA  
+[3,] "a" 
+```
+
+## 匹配 (续) {.smaller}
+
+- `str_detect(string, pattern)`: 匹配与否
+
+```r
+> str_detect(c("ab", "dc", "ac"), "a")
+[1]  TRUE FALSE  TRUE
+```
+
+- `word(string, start = 1L, end = start, sep = fixed(" "))`: 提取单词
+
+```r
+> word("aaa,bbb;ccc.ddd", 1:2, sep="[[:punct:]]")
+[1] "aaa" "bbb"
+```
+
+- `str_locate(string, pattern)`: 定位，返回首个
+- `str_locate_all(string, pattern)`: 定位，返回矩阵
+
+```r
+> str_locate(c("ab", "dc", "ac"), "a")
+     start end
+[1,]     1   1
+[2,]    NA  NA
+[3,]     1   1
+```
+
+## 匹配 (续) {.smaller}
+
+- `str_replace(string, pattern, replacement)`: 模式替换
+
+```r
+> str_replace(c("ab", "dc", "ac"), "a", "A")
+[1] "Ab" "dc" "Ac"
+```
+
+- `str_extract(string, pattern)`: 提取模式，返回首个
+- `str_extract_all(string, pattern, simplify = FALSE)`: 提取模式，返回全部
+
+```r
+> str_extract(c("ab13", "d2c", "a_c"), "\\d")
+[1] "1" "2" NA 
+```
+
+## 变换 {.smaller}
+
+- `str_conv(string, encoding)`: 转编码
+
+```r
+> str_conv("\u4e0a\u6d77", "UTF-8")  # Unicode ==> UTF-8
+[1] "上海"
+```
+
+- `str_to_upper(string, locale = "")`: 转大写
+- `str_to_lower(string, locale = "")`: 转小写
+- `str_to_title(string, locale = "")`: 首字母大写
+
+```r
+> str_to_title(c("adb", "edb", "db de"))
+[1] "Adb"   "Edb"   "Db De"
+```
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

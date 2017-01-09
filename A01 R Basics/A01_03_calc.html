@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A01-03 R的运算和函数</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A01-03 R的运算和函数',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A01_03_calc_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A01_03_calc_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A01_03_calc_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-14 09:53:23</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>算符计算</a></li>
+<li><a href='#8' title=''>向量运算</a></li>
+<li><a href='#11' title=''>矩阵运算</a></li>
+<li><a href='#13' title=''>函数</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>算符计算 (<code>?Ops</code>)</h2></hgroup><article  id="-ops">
+
+<aside class='note'><section><blockquote>
+<p>R的所有运算符本质上都是函数</p>
+
+<p>x <算符> y ==&gt; &quot;<算符>&quot;(x, y)</p>
+</blockquote></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>代数运算符</h2></hgroup><article  class="smaller">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">名称</th>
+<th align="left">符号</th>
+<th align="left">等价函数</th>
+<th align="left">举例</th>
+<th align="left">等价于</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">加</td>
+<td align="left">+</td>
+<td align="left">&quot;+&quot;()</td>
+<td align="left">1 + 2</td>
+<td align="left">&quot;+&quot;(1, 2)</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">减</td>
+<td align="left">-</td>
+<td align="left">&quot;-&quot;()</td>
+<td align="left">1 - 2</td>
+<td align="left">&quot;-&quot;(1, 2)</td>
+<td align="left">-1</td>
+</tr>
+<tr class="odd">
+<td align="left">乘</td>
+<td align="left">*</td>
+<td align="left">&quot;*&quot;()</td>
+<td align="left">1 * 2</td>
+<td align="left">&quot;*&quot;(1, 2)</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">处以</td>
+<td align="left">/</td>
+<td align="left">&quot;/&quot;()</td>
+<td align="left">1 / 2</td>
+<td align="left">&quot;/&quot;(1, 2)</td>
+<td align="left">0.5</td>
+</tr>
+<tr class="odd">
+<td align="left">求余</td>
+<td align="left">%%</td>
+<td align="left">&quot;%%&quot;()</td>
+<td align="left">5 %% 2</td>
+<td align="left">&quot;%%&quot;(5, 2)</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">整除</td>
+<td align="left">%/%</td>
+<td align="left">&quot;%/%&quot;()</td>
+<td align="left">5 %/% 2</td>
+<td align="left">&quot;%/%&quot;(5, 2)</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">乘方</td>
+<td align="left">^</td>
+<td align="left">&quot;^&quot;()</td>
+<td align="left">5 ^ 2</td>
+<td align="left">&quot;^&quot;(5, 2)</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">乘方</td>
+<td align="left">**</td>
+<td align="left">&quot;**&quot;()</td>
+<td align="left">5 ** 2</td>
+<td align="left">&quot;**&quot;(5,2)</td>
+<td align="left">25</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>比较运算符</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">名称</th>
+<th align="left">符号</th>
+<th align="left">等价函数</th>
+<th align="left">举例</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">大于</td>
+<td align="left">&gt;</td>
+<td align="left">&quot;&gt;&quot;()</td>
+<td align="left">1 &gt; 2</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">小于</td>
+<td align="left">&lt;</td>
+<td align="left">&quot;&lt;&quot;()</td>
+<td align="left">1 &lt; 2</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">大于等于</td>
+<td align="left">&gt;=</td>
+<td align="left">&quot;&gt;=&quot;()</td>
+<td align="left">1 &gt;= 2</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">小于等于</td>
+<td align="left">&lt;=</td>
+<td align="left">&quot;&lt;=&quot;()</td>
+<td align="left">1 &lt;= 2</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">等于</td>
+<td align="left">==</td>
+<td align="left">&quot;==&quot;()</td>
+<td align="left">1 == 2</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">不等于</td>
+<td align="left">!=</td>
+<td align="left">&quot;!=&quot;()</td>
+<td align="left">1 != 2</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">包含于</td>
+<td align="left">%in%</td>
+<td align="left">&quot;%in%&quot;()</td>
+<td align="left">1 %in% c(1,3)</td>
+<td align="left">TRUE</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>逻辑运算符</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">名称</th>
+<th align="left">符号</th>
+<th align="left">等价函数</th>
+<th align="left">举例</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">且(向量)</td>
+<td align="left">&amp;</td>
+<td align="left">&quot;&amp;&quot;()</td>
+<td align="left">c(TRUE, TRUE) &amp; c(FALSE, TRUE)</td>
+<td align="left">c(FALSE, TRUE)</td>
+</tr>
+<tr class="even">
+<td align="left">且(标量)</td>
+<td align="left">&amp;&amp;</td>
+<td align="left">&quot;&amp;&amp;&quot;()</td>
+<td align="left">c(TRUE, TRUE) &amp;&amp; c(FALSE, TRUE)</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">或(向量)</td>
+<td align="left">|</td>
+<td align="left">&quot;|&quot;()</td>
+<td align="left">c(TRUE, TRUE) | c(FALSE, TRUE)</td>
+<td align="left">c(TRUE, TRUE)</td>
+</tr>
+<tr class="even">
+<td align="left">或(标量)</td>
+<td align="left">||</td>
+<td align="left">&quot;||&quot;()</td>
+<td align="left">c(TRUE, TRUE) || c(FALSE, TRUE)</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">非</td>
+<td align="left">!</td>
+<td align="left">&quot;!&quot;()</td>
+<td align="left">! TRUE</td>
+<td align="left">FALSE</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>其它常用算符</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">名称</th>
+<th align="left">符号</th>
+<th align="left">等价函数</th>
+<th align="left">举例</th>
+<th align="left">结果</th>
+<th align="left">备注</th>
+</tr>
+<tr class="odd">
+<td align="left">序列</td>
+<td align="left">:</td>
+<td align="left"><code>seq()</code></td>
+<td align="left">1:3</td>
+<td align="left">c(1, 2, 3)</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">波浪</td>
+<td align="left">~</td>
+<td align="left"><code>&quot;~&quot;()</code></td>
+<td align="left">y ~ x</td>
+<td align="left">模型y~x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">附加包显式对象</td>
+<td align="left">::</td>
+<td align="left"><code>&quot;::&quot;()</code></td>
+<td align="left">base::abs(-2)</td>
+<td align="left">2</td>
+<td align="left">被export到附加包Namespace的函数/数据集</td>
+</tr>
+<tr class="even">
+<td align="left">附加包隐式对象</td>
+<td align="left">:::</td>
+<td align="left"><code>&quot;:::&quot;()</code></td>
+<td align="left">MASS:::vcov.polr</td>
+<td align="left">略</td>
+<td align="left">未被export到附加包Namespace的函数/数据集</td>
+</tr>
+</table>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>向量运算</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>一切皆向量</h2></hgroup><article >
+
+<ul>
+<li>R里面没有标量，本质上都是向量运算</li>
+<li>向量进行简单运算时，会尽量自动循环补齐</li>
+<li>向量化运算能显著提高效率(如<code>apply()</code>家族)</li>
+<li>建立向量化计算的思维习惯
+
+<ul>
+<li>避免一切显式循环</li>
+<li>数据切片/拆分-统合/&#8230;</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>举例</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; 1:4 + 1:4
+[1] 2 4 6 8</pre>
+
+<p>\[
+\begin{pmatrix}
+1\\ 
+2\\ 
+3\\ 
+4
+\end{pmatrix} +
+\begin{pmatrix}
+1\\ 
+2\\ 
+3\\ 
+4
+\end{pmatrix} =
+\begin{pmatrix}
+2\\ 
+4\\ 
+6\\ 
+8
+\end{pmatrix}
+\]</p>
+
+<pre class = 'prettyprint lang-r'>&gt; 1:4 + 1:2
+[1] 2 4 4 6</pre>
+
+<p>\[
+\begin{pmatrix}
+1\\ 
+2\\ 
+3\\ 
+4
+\end{pmatrix} +
+\begin{pmatrix}
+1\\ 
+2\\ 
+1\\ 
+2
+\end{pmatrix} =
+\begin{pmatrix}
+2\\ 
+4\\ 
+4\\ 
+6
+\end{pmatrix}
+\]</p>
+
+<pre class = 'prettyprint lang-r'>c(T, T, F, F) &amp; c(T, F, T, F)
+[1]  TRUE FALSE FALSE FALSE</pre>
+
+<p>\[
+\begin{pmatrix}
+TRUE\\ 
+TRUE\\ 
+FALSE\\ 
+FALSE
+\end{pmatrix} \&amp;
+\begin{pmatrix}
+TRUE\\ 
+FALSE\\ 
+TRUE\\ 
+FALSE
+\end{pmatrix} =
+\begin{pmatrix}
+TRUE\\ 
+FALSE\\ 
+FALSE\\ 
+FALSE
+\end{pmatrix}
+\]</p>
+
+<pre class = 'prettyprint lang-r'>c(T, T, F, F) &amp;&amp; c(T, F, T, F)
+[1]  TRUE</pre>
+
+<p>\[
+\begin{pmatrix}
+\textbf{TRUE}\\ 
+TRUE\\ 
+FALSE\\ 
+FALSE
+\end{pmatrix} \&amp;\&amp;
+\begin{pmatrix}
+\textbf{TRUE}\\ 
+FALSE\\ 
+TRUE\\ 
+FALSE
+\end{pmatrix} =
+TRUE
+\]</p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>矩阵运算</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>内积和外积</h2></hgroup><article  class="smaller">
+
+<p>结论：反正R是很擅长矩阵运算的。</p>
+
+<div class="columns-2">
+<h3>内积(点积/标积)</h3>
+
+<pre class = 'prettyprint lang-r'>&gt; 1:4 %*% 1:4  ## inner production
+[1] 30</pre>
+
+\[
+\begin{pmatrix}
+1\\ 
+2\\ 
+3\\ 
+4
+\end{pmatrix} \cdot 
+\begin{pmatrix}
+1\\ 
+2\\ 
+3\\
+4
+\end{pmatrix} =
+1 + 4 + 9 + 16
+\]
+
+<p class="forceBreak">
+
+</p>
+
+<h3>外积(叉积/矢积)</h3>
+
+<pre class = 'prettyprint lang-r'>&gt; 1:4 %o% 1:4  # outer production
+     [,1] [,2] [,3] [,4]
+[1,]    1    2    3    4
+[2,]    2    4    6    8
+[3,]    3    6    9   12
+[4,]    4    8   12   16</pre>
+
+<p>\[
+\begin{pmatrix}
+1\\ 
+2\\ 
+3\\ 
+4
+\end{pmatrix} \otimes  
+\begin{pmatrix}
+1 &amp; 2 &amp; 3 &amp; 4
+\end{pmatrix} =
+\begin{pmatrix}
+1 &amp; 2 &amp; 3 &amp; 4\\ 
+2 &amp; 4 &amp; 6 &amp; 8\\ 
+3 &amp; 6 &amp; 9 &amp; 12\\ 
+4 &amp; 8 &amp; 12 &amp; 16
+\end{pmatrix}
+\]</p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>函数</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>函数的基本结构</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>function( arglist ) {
+    # comments
+    expr
+    return(value)
+}</pre>
+
+<ul>
+<li>函数头
+
+<ul>
+<li>arglist 形式参数列表: 留空，或若干名称，或<code>name=默认取值</code>；</li>
+</ul></li>
+<li>函数体
+
+<ul>
+<li>comments 注释: 非必需，但可帮助理解函数的用法</li>
+<li>expr 表达式: 若干行函数体表达式</li>
+<li>value 返回值: 返回值</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>例子</h2></hgroup><article >
+
+<p>以内置泛型函数<code>print</code>的默认方法<code>print.default</code>为例，看函数结构</p>
+
+<pre class = 'prettyprint lang-r'>&gt; print.default
+function (x, digits = NULL, quote = TRUE, na.print = NULL, print.gap = NULL, 
+    right = FALSE, max = NULL, useSource = TRUE, ...) 
+{
+    noOpt &lt;- missing(digits) &amp;&amp; missing(quote) &amp;&amp; missing(na.print) &amp;&amp; 
+        missing(print.gap) &amp;&amp; missing(right) &amp;&amp; missing(max) &amp;&amp; 
+        missing(useSource) &amp;&amp; missing(...)
+    .Internal(print.default(x, digits, quote, na.print, print.gap, 
+        right, max, useSource, noOpt))
+}
+&lt;bytecode: 0x07b8c9a8&gt;
+&lt;environment: namespace:base&gt;</pre>
+
+</article></slide><slide class=''><hgroup><h2>调用函数</h2></hgroup><article >
+
+<ul>
+<li>载入附加包
+
+<ul>
+<li>加载命令为函数<code>library(&lt;包名&gt;)</code></li>
+<li>系统包不需要专门载入</li>
+</ul></li>
+<li><p>调用格式</p>
+
+<pre class = 'prettyprint lang-r'>fun(arglist)</pre>
+
+<ul>
+<li>fun: 函数名</li>
+<li>arglist: 实际参数列表（取值）</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>其它常用计算函数</h2></hgroup><article  class="smaller">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">类型</th>
+<th align="left">名称</th>
+<th align="left">函数</th>
+<th align="left">举例</th>
+<th align="left">结果</th>
+</tr>
+<tr class="odd">
+<td align="left">代数</td>
+<td align="left">自然对数</td>
+<td align="left"><code>log</code></td>
+<td align="left">log(10)</td>
+<td align="left">2.302585</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">科学对数</td>
+<td align="left"><code>log10</code></td>
+<td align="left">log10(10)</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left">幂</td>
+<td align="left"><code>exp</code></td>
+<td align="left">exp(2)</td>
+<td align="left">7.389056</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">三角函数</td>
+<td align="left"><code>sin, cos, tan</code></td>
+<td align="left">sin(pi/6)</td>
+<td align="left">0.5</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left">绝对值</td>
+<td align="left"><code>abs</code></td>
+<td align="left">abs(-1)</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">逻辑</td>
+<td align="left">所有</td>
+<td align="left"><code>all</code></td>
+<td align="left">all(c(T, F, T))</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left">任一</td>
+<td align="left"><code>any</code></td>
+<td align="left">any(c(T, F, T))</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">比较</td>
+<td align="left">异或</td>
+<td align="left"><code>xor</code></td>
+<td align="left">xor(TRUE, FALSE)</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left">全等</td>
+<td align="left"><code>identical</code></td>
+<td align="left">identical(1, 1L)</td>
+<td align="left">FALSE</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>自定义函数</h2></hgroup><article >
+
+<blockquote>
+<p>需求: 定义一个函数addN，将一个向量x的每个元素加n。如果不指定n，就加1。</p>
+</blockquote>
+
+<pre class = 'prettyprint lang-r'>&gt; addN &lt;- function(x, n=1){
++     # add n to vector x
++     # params:
++     #   x: vector
++     #   n: default 1
++     x &lt;- x + n
++     return(x)
++ }
+
+&gt; x &lt;- c(1, 4, 2, 6)
+&gt; addN(x=x)
+[1] 2 5 3 7</pre>
+
+</article></slide><slide class=''><hgroup><h2>闭包(closure)与环境<del>: 盗梦空间</del></h2></hgroup><article  id="closure-">
+
+<ul>
+<li>在R中，函数的实际type是闭包(closure)</li>
+<li>闭包计算运行在一个隔离的下层临时环境中，不会影响调用环境</li>
+<li>闭包运行完毕，函数临时环境即被销毁</li>
+<li>超级赋值号<code>&lt;&lt;-</code>可穿透当前环境，将某对象抛入上一级环境</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- 2
+&gt; z
+Error: object &#39;z&#39; not found
+&gt; environment()
+&lt;environment: R_GlobalEnv&gt;
+&gt; f &lt;- function(x) {
++   print(environment())  # this env
++   z &lt;&lt;- x  # super assignment
++   return(x + 1)
++ }</pre>
+
+<pre class = 'prettyprint lang-r'>&gt; y &lt;- f(x=5)
+&gt; y
+&lt;environment: 0x1342c330&gt;
+[1] 6
+&gt; environment()
+[1] &lt;environment: R_GlobalEnv&gt;
+&gt; x
+[1] 2
+&gt; z
+[1] 5</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>环境</h2></hgroup><article >
+
+<ul>
+<li><p>默认载入的环境: RStudio中，Environment面板 &#8211;&gt; Global Environment 下拉菜单 <img src='A01_03_calc_files/figure-html/env.PNG' title=''/></p></li>
+<li><p><code>search()</code></p>
+
+<pre class = 'prettyprint lang-r'> [1] &quot;.GlobalEnv&quot;        &quot;tools:rstudio&quot;     &quot;package:stats&quot;     &quot;package:graphics&quot;
+ [5] &quot;package:grDevices&quot; &quot;package:utils&quot;     &quot;package:datasets&quot;  &quot;package:methods&quot;
+ [9] &quot;Autoloads&quot;         &quot;package:base&quot;   </pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>自定义算符</h2></hgroup><article >
+
+<p>设计一个名称格式为<code>&quot;%&lt;算符名&gt;%&quot;(lhs, rhs)</code>的函数(必须包含两个参数)，可获得一个名为<code>%&lt;算符名&gt;%</code>的算符，等价于<code>lhs %&lt;算符名&gt;% rhs</code>。</p>
+
+<pre class = 'prettyprint lang-r'>&gt; &quot;%+n%&quot; &lt;- function(x, n){
++     x &lt;- x + n
++     return(x)
++ }
+
+&gt; x &lt;- c(1, 4, 2, 6)
+&gt; x %+n% 2
+[1] 3 6 4 8
+
+&gt; x %+n% 1.5
+[1] 2.5 5.5 3.5 7.5</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "libs/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A02-02 读写数据</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A02-02 读写数据',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A02_02_io_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A02_02_io_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A02_02_io_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-22 18:11:51</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>读入内部数据</a></li>
+<li><a href='#6' title=''>读入外部数据</a></li>
+<li><a href='#25' title=''>把数据写入文件</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>读入内部数据</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>内部数据的存在形式</h2></hgroup><article >
+
+<ul>
+<li>常数: 如<code>pi</code></li>
+<li>随默认包示例数据: 不需加载即可使用
+
+<ul>
+<li><code>datasets</code>包: <code>cars, mtcars, airquality, faithful</code></li>
+</ul></li>
+<li>随附加包示例数据: 先library加载后使用
+
+<ul>
+<li><code>MASS</code>包: <code>UScrime, Boston, Animal</code></li>
+<li><code>ggplot2</code>包: <code>diamonds, economics</code></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>内部数据读入: <code>data</code></h2></hgroup><article  id="-data">
+
+<ul>
+<li>载入内存: <code>data(&lt;数据集&gt;)</code>
+
+<ul>
+<li>出现在Environment面板</li>
+<li>点下拉箭头展开，显示结构</li>
+<li>点右侧表格图标，显示表格明细</li>
+</ul></li>
+<li>查看结构: <code>str(&lt;数据集&gt;)</code></li>
+<li>查看明细: <code>View(&lt;数据集&gt;)</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data(cars)
+&gt; str(cars)
+&#39;data.frame&#39;:   50 obs. of  2 variables:
+ $ speed: num  4 4 7 7 8 9 10 10 10 11 ...
+ $ dist : num  2 10 4 22 16 10 18 26 34 17 ...</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>读入外部数据</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>外部数据存在形式</h2></hgroup><article >
+
+<ul>
+<li>结构化数据
+
+<ul>
+<li>表格: CSV, Excel, SAS, SPSS, Stata</li>
+<li>关系型数据库: Oracle, SQL Server, MySQL, PostgreSQL, Access</li>
+<li>结构化文件: RDS, RDA</li>
+</ul></li>
+<li>非结构化数据
+
+<ul>
+<li>文本: Txt, Log</li>
+<li>网页: HTML, CSS, XML</li>
+<li>非关系型数据库: MongoDB, HBase</li>
+<li>图片: .bmp, .png, .jpg</li>
+<li>音频/视频: .wav, .avi</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>读剪贴板</h2></hgroup><article  class="smaller">
+
+<blockquote>
+<p>我从Outlook打开一个Excel附件，突然想拿出其中的一部分数据跑个时间序列分析。 但这个文件和分析都用于初步探索，不需要保存。我也比较懒，不高兴费劲另存、读取、选片再分析。</p>
+</blockquote>
+
+<ul>
+<li>工具: <code>base</code>包</li>
+<li>函数: <code>read.table</code></li>
+<li>语法:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>read.table(file, header = FALSE, sep = &quot;&quot;, quote = &quot;\&quot;&#39;&quot;,
+           dec = &quot;.&quot;, numerals = c(&quot;allow.loss&quot;, &quot;warn.loss&quot;, &quot;no.loss&quot;),
+           row.names, col.names, as.is = !stringsAsFactors,
+           na.strings = &quot;NA&quot;, colClasses = NA, nrows = -1,
+           skip = 0, check.names = TRUE, fill = !blank.lines.skip,
+           strip.white = FALSE, blank.lines.skip = TRUE,
+           comment.char = &quot;#&quot;,
+           allowEscapes = FALSE, flush = FALSE,
+           stringsAsFactors = default.stringsAsFactors(),
+           fileEncoding = &quot;&quot;, encoding = &quot;unknown&quot;, text, skipNul = FALSE)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<ul>
+<li><p>方法: <strong>两步</strong>:</p>
+
+<ul>
+<li>直接复制数据区域</li>
+<li>调用函数读取剪贴板的数据
+
+<ol>
+<li><code>read.table(file=&quot;clipboard&quot;)</code>，或</li>
+<li><code>read.table(text=readClipboard())</code></li>
+</ol></li>
+</ul></li>
+<li>注意
+
+<ul>
+<li>这是快捷但临时的方法</li>
+<li>不适合读取特别大的数据</li>
+<li><code>readClipboard</code>是<code>utils</code>包的函数，读取后返回的是一个制表符(&#39;&#39;)分隔的字符串</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>直接加载R镜像(.Rdata)</h2></hgroup><article  id="r.rdata">
+
+<blockquote>
+<p>退出时，R会询问是否保存工作空间(workspace)的镜像(image)。什么是镜像？</p>
+</blockquote>
+
+<ul>
+<li>R可以将若干个对象压缩保存为一个.Rdata文件</li>
+<li>保存当前环境的所有对象为.Rdata，即生成一个瞬时工作镜像，包括但不限于
+
+<ul>
+<li>数据集(Data)</li>
+<li>变量值(Value)</li>
+<li>函数(Function)</li>
+</ul></li>
+<li>RStudio启动后默认加载当前工作空间的镜像</li>
+<li>如保存过Rdata文件，用<code>load()</code>函数加载，即可读入该镜像文件内封存的所有对象。(<strong>当前的同名对象会被覆盖</strong>)。</li>
+<li>保存为.rds的数据集存档，可使用<code>readRDS</code>函数读入</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>读表格-1: csv</h2></hgroup><article  id="-1-csv" class="smaller">
+
+<ul>
+<li>工具: <code>readr</code>包</li>
+<li>函数: <code>read_csv()</code></li>
+<li>语法:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>read_csv(file, col_names = TRUE, col_types = NULL,
+  locale = default_locale(), na = c(&quot;&quot;, &quot;NA&quot;), quoted_na = TRUE,
+  comment = &quot;&quot;, trim_ws = TRUE, skip = 0, n_max = Inf,
+  guess_max = min(1000, n_max), progress = interactive())</pre>
+
+<ul>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(readr)                                                     # 载入包
+&gt; csv.file &lt;- system.file(&quot;extdata/challenge.csv&quot;, package=&quot;readr&quot;)  # 指定文件路径
+&gt; data &lt;- read_csv(csv.file, col_types=&quot;nD&quot;)                         # 读入数据
+&gt; str(data)                                                          # 看结构
+Classes &#39;tbl_df&#39; &#39;tbl&#39; and &#39;data.frame&#39;: 2000 obs. of  2 variables:
+ $ x: num  404 4172 3004 787 37 ...
+ $ y: Date, format: NA NA NA NA ...</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<p>也可以用自带函数<code>base::read.csv</code></p>
+
+<pre class = 'prettyprint lang-r'>&gt; data &lt;- read.csv(csv.file, colClasses=c(&quot;numeric&quot;, &quot;Date&quot;))
+&gt; str(data)
+&#39;data.frame&#39;: 2000 obs. of  2 variables:
+ $ x: num  404 4172 3004 787 37 ...
+ $ y: Date, format: NA NA NA NA ...</pre>
+
+<p>但<code>read_csv</code>更好:</p>
+
+<ul>
+<li>执行速度更快(20+倍)</li>
+<li>能直接读.gz, .bz2, .xz, .zip等压缩包</li>
+<li>对于远程表格(<a href='http://' title=''>http://</a>, <a href='https://' title=''>https://</a>, <a href='ftp://' title=''>ftp://</a>, ftps://)会自动下载后读入</li>
+<li>定义各列数据格式更方便 (建议自己定义，不要让函数自动猜): &#39;nD&#39; vs c(&#39;numeric&#39;, &#39;Date&#39;)</li>
+<li>默认参数更人性化: stringsAsFactors默认为FALSE</li>
+</ul>
+
+<p><strong>推荐始终用csv给R传递数据</strong></p>
+
+<ul>
+<li><strong>不推荐任何形式的Excel文档 (xls, xlsx, &#8230;)!</strong></li>
+<li><strong>不推荐任何形式的Excel文档 (xls, xlsx, &#8230;)!</strong></li>
+<li><strong>不推荐任何形式的Excel文档 (xls, xlsx, &#8230;)!</strong></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>读表格-2: Excel</h2></hgroup><article  id="-2-excel" class="smaller">
+
+<ul>
+<li>工具: <code>readxl</code>包</li>
+<li>函数: <code>read_excel()</code></li>
+<li>语法:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>read_excel(path, sheet = 1, col_names = TRUE, col_types = NULL, na = &quot;&quot;,
+  skip = 0)</pre>
+
+<ul>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; datasets &lt;- system.file(&quot;extdata/datasets.xlsx&quot;, package = &quot;readxl&quot;)
+&gt; data &lt;- read_excel(datasets)
+&gt; str(data)
+Classes &#39;tbl_df&#39; &#39;tbl&#39; and &#39;data.frame&#39;:    150 obs. of  5 variables:
+ $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+ $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+ $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+ $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+ $ Species     : chr  &quot;setosa&quot; &quot;setosa&quot; &quot;setosa&quot; &quot;setosa&quot; ...</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p>其它可选包</p>
+
+<ul>
+<li><code>openxlsx</code>, <code>xlsx</code>: 读xlsx文件</li>
+<li><code>XLConnect</code>: 读xls文件</li>
+<li><code>RODBC</code>: (除了读ODBC驱动的数据库外) 读xls文件</li>
+</ul>
+
+<p>但它们都不如<code>readxl</code>好用</p>
+
+<ul>
+<li>开发者是RStudio Inc.的<em>Hadley Wickham</em> (按&quot;p&quot;看notes)</li>
+<li>使用了高效的C++库<code>libxls</code>和<code>RapidXML</code>，执行速度更快</li>
+<li>语法更简洁统一</li>
+<li>跨平台，且不需要安装外部依赖库(甚至不需要装Excel)</li>
+</ul>
+
+<aside class='note'><section><p><a href='http://www.kdnuggets.com/2015/06/top-20-r-packages.html' title=''>2015年上半年CRAN上最受欢迎的20个包</a></p>
+
+<p><img src="A02_02_io_files/figure-htmlhadley%20packages-1.png" width="672" /></p></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>读表格-3: 其它统计软件的数据文件</h2></hgroup><article  id="-3-">
+
+<p>传统三大统计软件SAS, SPSS, Stata都可以和R无缝切换</p>
+
+<div class="columns-2">
+<ul>
+<li>数据格式转换工具: <strong><code>haven</code></strong>包
+
+<ul>
+<li>SAS
+
+<ul>
+<li><code>read_sas</code></li>
+</ul></li>
+<li>SPSS
+
+<ul>
+<li><code>read_sav</code> / <code>read_por</code></li>
+<li><code>read_spss</code></li>
+</ul></li>
+<li>Stata
+
+<ul>
+<li><code>read_dta</code></li>
+<li><code>read_stata</code></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>更小众的软件: <code>foreign</code>包
+
+<ul>
+<li>EpiData/EpiInfo: <code>read.epiinfo</code></li>
+<li>DBF: <code>read.dbf</code></li>
+<li>Minitab: <code>read.mtp</code></li>
+<li>Octave: <code>read.octave</code></li>
+<li>Systat: <code>read.systat</code></li>
+<li>S: <code>read.S</code></li>
+<li>Weka: <code>read.arff</code></li>
+<li>&#8230;</li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>读数据库-1: ODBC和JDBC</h2></hgroup><article  id="-1-odbcjdbc">
+
+<ul>
+<li>微软系: <code>RODBC</code>包 (仅限Windows) - by <em>Brian Ripley</em></li>
+<li>其它: <code>DBI</code>家族 - by <em>Hadley Wickham</em>
+
+<ul>
+<li><code>RJDBC</code>: 提供JDBC引擎接口</li>
+<li><code>ROracle</code>: Oracle</li>
+<li><code>RMySQL</code>: MySQL</li>
+<li><code>RSQLServer</code>: MS SQL Server</li>
+<li><code>RPostgreSQL</code>: PostgreSQL</li>
+<li><code>RSQLite</code>: SQLite</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>读数据库-2: MS Access为例</h2></hgroup><article  id="-2-ms-access" class="smaller">
+
+<p><code>RODBC</code>包读取Access数据库</p>
+
+<pre class = 'prettyprint lang-r'>&gt; library(RODBC)                                        # 1. 加载RODBC
+&gt; db &lt;- paste0(&quot;C:/HMSProjects/Data Analytics/RWork/R_Tutorial/&quot;,
+               &quot;A02 Data Manipulation/ProvCity.accdb&quot;)  # 2. 数据库位置(dsn)
+&gt; con &lt;- odbcConnectAccess2007(db)                      # 3. 建立数据库连接
+&gt; tbl &lt;- sqlTables(con, tableType = &quot;Table&quot;)            # 4. 数据库所有非系统表
+&gt; tbl$TABLE_NAME                                        # 5. 打印表名
+[1] &quot;CaptCity&quot;    &quot;City&quot;    &quot;Province&quot;
+&gt; prov &lt;- sqlFetch(con, &#39;Province&#39;)                     # 6. 读取Province表
+&gt; head(Prov, 2)                                         # 7. Prov前2行
+  ProvID ProvCode Province ProvAlias ProvNick CountryID ProvinceEN IsCapital
+1      1       11   北京市      北京       京        48    Beijing         1
+2      2       12   天津市      天津       津        48    Tianjin         0
+&gt; qry &lt;- paste(&quot;select Province.ProvAlias as Prov, count(City.CityID) as N&quot;,
++              &quot;from Province inner join City on Province.ProvID = City.ProvID&quot;,
++              &quot;group by Province.ProvAlias;&quot;)          # 8. 统计各省城市数的查询
+&gt; city.n &lt;- sqlQuery(con, qry)                          # 9. 运行查询
+&gt; head(city.n, 2)                                       # 10. 查看前2行结果
+   Prov        N
+1  安徽       17
+2  北京        2
+&gt; odbcClose(con)                                        # 11. 关闭数据库连接</pre>
+
+</article></slide><slide class=''><hgroup><h2>读文本-1: 按行读入<code>readr::read_lines</code></h2></hgroup><article  id="-1-readrread_lines">
+
+<ul>
+<li>语法:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>read_lines(file, skip = 0, n_max = -1L, locale = default_locale(),
+  na = character(), progress = interactive())</pre>
+
+<ul>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; txt.file &lt;- system.file(&quot;extdata/epa78.txt&quot;, package=&quot;readr&quot;)
+&gt; data &lt;- read_lines(txt.file)
+&gt; str(data)
+chr [1:20] &quot;ALFA ROMEO                         ALFA ROMEO           78010003&quot;...</pre>
+
+</article></slide><slide class=''><hgroup><h2>读文本-2: 定宽文本<code class="smaller">readr::read_fwf</code></h2></hgroup><article  id="-2-readrread_fwf">
+
+<ul>
+<li>语法:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>read_fwf(file, col_positions, col_types = NULL, locale = default_locale(),
+  na = c(&quot;&quot;, &quot;NA&quot;), comment = &quot;&quot;, skip = 0, n_max = Inf,
+  guess_max = min(n_max, 1000), progress = interactive())</pre>
+
+<ul>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; txt.file &lt;- system.file(&quot;extdata/epa78.txt&quot;, package=&quot;readr&quot;)
+&gt; data &lt;- read_fwf(txt.file, fwf_positions(
++       c(1, 38, 41, 45, 51, 54, 58, 62, 67, 70, 80, 101), 
++       c(37, 40, 44, 50, 53, 57, 61, 66, 69, 79, 100, 108)))
+&gt; head(data, 2)
+          X1    X2    X3    X4    X5    X6    X7    X8    X9   X10        X11      X12
+       &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;      &lt;chr&gt;    &lt;int&gt;
+1 ALFA ROMEO  &lt;NA&gt;    NA    NA    NA    NA    NA    NA    NA    NA ALFA ROMEO 78010003
+2    ALFETTA    03    81     8    74     7    89     9    NA    NA    ALFETTA 78010053</pre>
+
+</article></slide><slide class=''><hgroup><h2>读日志: <code class="smaller">readr::read_log</code></h2></hgroup><article  id="-readrread_log">
+
+<ul>
+<li>语法:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>read_log(file, col_names = FALSE, col_types = NULL, skip = 0,
+  n_max = -1, progress = interactive())</pre>
+
+<ul>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; log.file &lt;- system.file(&quot;extdata/compound.log&quot;, package=&quot;readr&quot;)
+&gt; str(read_log(log.file))
+Classes &#39;tbl_df&#39; &#39;tbl&#39; and &#39;data.frame&#39;:    2 obs. of  9 variables:
+ $ X1: chr  &quot;74.133.75.225&quot; &quot;162.13.87.136&quot;
+ $ X2: chr  NA NA
+ $ X3: chr  NA NA
+ $ X4: chr  &quot;01/Jan/2015:15:15:20 -0500&quot; &quot;01/Jan/2015:15:15:16 -0500&quot;
+ $ X5: chr  &quot;GET blah/ HTTP/1.0&quot; &quot;GET / HTTP/1.0&quot;
+ $ X6: int  200 200
+ $ X7: int  202 6934
+ $ X8: chr  NA NA
+ $ X9: chr  &quot;R (3.1.2 x86_64-apple-darwin13.4.0 x86_64 darwin13.4.0)...&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>读网页-1: <code class="smaller">readr::read_lines</code></h2></hgroup><article  id="-1-readrread_lines">
+
+<p><img src='A02_02_io_files/figure-html/jivehome.PNG' title=''/> ==&gt; <img src='A02_02_io_files/figure-html/jivehome_sourcecode.png' title=''/></p>
+
+<p>读作页面代码文本</p>
+
+<pre class = 'prettyprint lang-r'>&gt; data &lt;- read_lines(&quot;https://aetna.jiveon.com&quot;)
+&gt; str(data)
+chr [1:616] &quot;&lt;!DOCTYPE html&gt;&lt;!--[if IE 8]&gt; &lt;html class=\&quot;ie8\&quot; lang=\&quot;en\&quot;&gt;&lt;![endif]--&gt;&lt;!--[if IE 9]&gt; &lt;html class=\&quot;ie9\&quot; lang=\&quot;en\&quot;&gt;&lt;![end&quot;| __truncated__ ...</pre>
+
+</article></slide><slide class=''><hgroup><h2>读网页-2: <code>XML</code>包</h2></hgroup><article  id="-2-xml">
+
+<img src='A02_02_io_files/figure-html/bocidx.PNG' title='fig:'/><p class='caption'>中国银行外汇牌价网页</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="smaller">
+
+<ul>
+<li>把页面文件下载到本地演示</li>
+<li>读取汇率表，形成一个data.frame</li>
+<li><del>另推荐爬虫包<code>curl</code>和<code>RCurl</code> (但公司电脑不支持443/80端口SSL curl)</del></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(XML)                               # 加载XML包
+&gt; data &lt;- readHTMLTable(&quot;A02_02_io_files/file/BOC EXCHANGE RATE(new).html&quot;,
+                        header = TRUE)       # 读取保存到本地的页面文件
+&gt; str(data[[8]])                             # 共获得23个列表，我们要的是其中第8个
+&#39;data.frame&#39;:   27 obs. of  7 variables:
+ $ Currency Name    : Factor w/ 27 levels &quot;AED&quot;,&quot;AUD&quot;,&quot;BRL&quot;,..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ Buying Rate      : Factor w/ 22 levels &quot;&quot;,&quot;0.5887&quot;,&quot;10.87&quot;,..: 1 11 1 12 14 22 16 20 21 1 ...
+ $ Cash Buying Rate : Factor w/ 27 levels &quot;&quot;,&quot;0.05&quot;,&quot;0.568&quot;,..: 8 15 10 17 18 27 20 24 25 2 ...
+ $ Selling Rate     : Factor w/ 22 levels &quot;&quot;,&quot;0.5935&quot;,&quot;10.95&quot;,..: 1 11 1 12 14 22 16 20 21 1 ...
+ $ Cash Selling Rate: Factor w/ 27 levels &quot;&quot;,&quot;0.0536&quot;,&quot;0.615&quot;,..: 8 15 11 16 19 27 21 24 25 2 ...
+ $ Middle Rate      : Factor w/ 27 levels &quot;0.0517&quot;,&quot;0.5929&quot;,..: 8 16 11 17 19 27 21 25 26 1 ...
+ $ Pub Time         : Factor w/ 1 level &quot;2016-12-09 \n\t\t10:07:37&quot;: 1 1 1 1 1 1 1 1 1 1 ...</pre>
+
+</article></slide><slide class=''><hgroup><h2>其它</h2></hgroup><article >
+
+<ul>
+<li>XML: <code>XML</code> / <code>xml2</code>包</li>
+<li>json: <code>jsonlite</code>包</li>
+<li>jpg图片: <code>jpeg</code>包</li>
+<li>png图片: <code>png</code>包</li>
+<li>shp、KML等地图数据: <code>maptools</code> / <code>sp</code>包</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>数据写入文件</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>存镜像 <code>save</code></h2></hgroup><article  id="-save">
+
+<ul>
+<li>语法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>save(..., list = character(),
+     file = stop(&quot;&#39;file&#39; must be specified&quot;),
+     ascii = FALSE, version = NULL, envir = parent.frame(),
+     compress = isTRUE(!ascii), compression_level,
+     eval.promises = TRUE, precheck = TRUE)</pre>
+
+<ul>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>save(c(&lt;obj1&gt;, &lt;obj2&gt;), file=&quot;~/image.RData&quot;)</pre>
+
+<ul>
+<li><code>save.image</code>是其快捷形式，将当前环境下所有对象都存入目标文件.RData。</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>写入csv <code>readxl::write_csv</code></h2></hgroup><article  id="csv-readxlwrite_csv">
+
+<ul>
+<li>语法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>write.csv(x, file = &quot;&quot;, append = FALSE, quote = TRUE, sep = &quot; &quot;,
+            eol = &quot;\n&quot;, na = &quot;NA&quot;, dec = &quot;.&quot;, row.names = TRUE,
+            col.names = TRUE, qmethod = c(&quot;escape&quot;, &quot;double&quot;),
+            fileEncoding = &quot;&quot;)</pre>
+
+<ul>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>write.csv(&lt;data.frame&gt;, file=&quot;~/target.csv&quot;)</pre>
+
+<ul>
+<li>导出为csv是最推荐的数据中转形式</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>写入Excel <code class="smaller">openxlsx::write.xlsx</code></h2></hgroup><article  id="excel-openxlsxwrite.xlsx">
+
+<ul>
+<li>语法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>write.xlsx(x, file, asTable = FALSE, ...)</pre>
+
+<ul>
+<li>部分可选参数 (&#8230;内的部分)
+
+<ul>
+<li>sheetName: Name of the worksheet</li>
+<li>: A logical. If FALSE, the worksheet grid lines will be hidden.</li>
+<li>colNames: or col.names If TRUE, column names of x are written.</li>
+<li>rowNames: or row.names If TRUE, row names of x are written.</li>
+<li>格式参数gridLines, headerStyle, borders, borderColour, borderStyle</li>
+</ul></li>
+<li>案例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>write.xlsx(&lt;data.frame&gt;, file=&quot;~/target.xlsx&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>写入数据库</h2></hgroup><article >
+
+<ul>
+<li>基本步骤同读取数据库: 加载包、建立连接、运行查询、断开连接</li>
+<li>查询语句可能包括:
+
+<ul>
+<li>创建新表 <code>create table ...</code></li>
+<li>修改表结构 <code>alter table ...</code></li>
+<li>删除表 <code>drop table ...</code></li>
+<li>插入记录 <code>insert into table (...) ...</code></li>
+<li>删除记录 <code>delete ... from table ...</code></li>
+<li>覆盖记录 <code>update table set ...</code></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-2" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,564 @@
+---
+title: A02-07 日期和时间处理
+subtitle: R Analyst Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A02_07_date_time_files/figure-html")
+```
+
+## 目录
+
+- [基本处理](#3)
+- [lubridate包](#15)
+- [timeDate包](#23)
+
+<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
+
+# 基本处理
+
+## [复习一下](../A01%20R%20Basics/A01_02_type.html#9)
+
+- 获取系统日期和系统时间
+
+命令 | 结果 | `typeof()` | `class()`
+-----|------|------------|---------------
+`Sys.Date()` | "2016-12-23" | "double" | "Date"
+`Sys.time()` | "2016-12-23 13:39:56 CST" | "double" | "POSIXct" "POSIXt" 
+
+- `Date`和`POSIXct`本质上就是double，是距离1970-1-1的天数和秒数
+- 转为`POSIXlt`就形成一个list
+
+```r
+> t <- as.POSIXlt(Sys.Date())
+> t
+[1] "2016-12-23 UTC"
+> unlist(t)
+sec   min  hour  mday   mon  year  wday  yday isdst 
+  0     0     0    23    11   116     5   357     0 
+```
+
+## 转换为日期/时间
+
+- 判断是否为日期/时间: `inherits`
+
+```r
+> t <- "2010-01-02 11:12:59"  # 实际是个文本
+> inherits(t, c('Date', 'POSIXt'))
+[1] FALSE
+```
+
+- 不是日期/时间的话，先要转换: `strptime`, `as.Date`, `as.POSIXlt`
+
+```r
+> t <- as.POSIXlt(t, format="%Y-%m-%d %H:%M:%S")
+> t
+[1] "2010-01-02 CST"
+```
+
+- 推荐用`strptime`转换，结果为POSIXlt类型
+
+## 时间/日期样式掩码 {.smaller}
+
+- 转换日期需要指定format，要用到一套掩码，如%Y, %m
+
+| 类型 | 掩码 | 含义 | 例子 | 结果 |
+|------|------|------|------|------|
+| 完整日/时 | `%c` | "%a %b %e %H:%M:%S %Y" | `format(t, "%c")` | "Sat Jan  2 11:12:59 2010" |
+|      | `%D` | 日期格式%m/%d/%y | `format(t, "%D")` | "01/02/10" |
+|      | `%F` | %Y-%m-%d | `format(t, "%F")` | "2010-01-02" |
+|      | `%x` | 日期格式"%y/%m/%d"(系统语境) | `format(t, "%x")` | "01/02/2010" |
+|      | `%X` | 时间 "%H:%M:%S" | `format(t, "%X")` | "11:12:59 AM" |
+|      | `%r` | 12-小时制时间(某些语境可用) | `format(t, "%r")` | "11:12:59 AM" |
+|      | `%T` | 等价于%H:%M:%S | `format(t, "%T")` | "11:12:59" |
+|      | `%R` | 等价于%H:%M | `format(t, "%R")` | "11:12" |
+
+## 时间/日期样式掩码 (续) {.smaller}
+
+| 类型 | 掩码 | 含义 | 例子 | 结果 |
+|------|------|------|------|------|
+| 世纪 | `%C` | 世纪(00–99) | `format(t, "%C")` | "20" |
+| 年   | `%y` | 年份，不含世纪(00–99) | `format(t, "%y")` | "10" |
+|      | `%Y` | 年份，含世纪 | `format(t, "%Y")` | "2010" |
+|      | `%g` | 当周属于的年份末两位(see %V) | `format(t, "%g")` | "09" |
+|      | `%G` | 当周属于的年份(see %V) | `format(t, "%G")` | "2009" |
+| 月   | `%b` | 月名简称(系统语境) | `format(t, "%b")` | "Jan" |
+|      | `%B` | 月份全名(系统语境) | `format(t, "%B")` | "January" |
+|      | `%h` | 等价于 %b | `format(t, "%h")` | "Jan" |
+|      | `%m` | 月份 (01–12) | `format(t, "%m")` | "01" |
+
+## 时间/日期样式掩码 (续) {.smaller}
+
+| 类型 | 掩码 | 含义 | 例子 | 结果 |
+|------|------|------|------|------|
+| 周   | `%a` | 星期名简称(系统语境) | `format(t, "%a")` | "Sat" |
+|      | `%A` | 星期全名(系统语境) | `format(t, "%A")` | "Saturday" |
+|      | `%u` | 星期几(1–7, 周一为1) | `format(t, "%u")` | "6" |
+|      | `%U` | 当年的第几周(00–53)(周日为首日) | `format(t, "%U")` | "00" |
+|      | `%V` | 当年的第几周(01–53) (ISO 8601) | `format(t, "%V")` | "53" |
+|      | `%w` | 星期几(0–6, 周日为0) | `format(t, "%w")` | "6" |
+|      | `%W` | 当年的第几周(00–53) (周一为首日) | `format(t, "%w")` | "6" |
+| 日   | `%d` | 当月第几天 (01–31) | `format(t, "%d")` | "02" |
+|      | `%e` | 当月第几天 (1–31) | `format(t, "%e")` | " 2" |
+|      | `%j` | 当年的第几天(001–366) | `format(t, "%j")` | "002" |
+
+## 时间/日期样式掩码 (续) {.smaller}
+
+| 类型 | 掩码 | 含义 | 例子 | 结果 |
+|------|------|------|------|------|
+| 小时 | `%H` | 小时(00–23) | `format(t, "%H")` | "11" |
+|      | `%I` | 小时(01–12) | `format(t, "%h")` | "11" |
+| 分   | `%M` | 分钟 (00–59) | `format(t, "%M")` | "12" |
+| 秒   | `%S` | 秒数(00–61) | `format(t, "%S")` | "59" |
+| 上午/下午 | `%p` | 上午/下午(系统语境) | `format(t, "%p")` | "AM" |
+| 时区 | `%z` | 时差 | `format(t, "%z")` | "+0000" |
+|      | `%Z` | 时区，仅用于输出 | `format(t, "%Z")` | "CST" |
+| 占位 | `%n` | 空行 | | |
+|      | `%t` | 制表符 | | |
+
+## 日期/时间格式化: `format`函数 {.smaller}
+
+当前系统语境是: 
+
+```r
+> Sys.getlocale("LC_ALL")
+[1] "LC_COLLATE=English_United States.1252;LC_CTYPE=Chinese (Simplified)_People's Republic of China.936;
+LC_MONETARY=English_United States.1252;LC_NUMERIC=C;LC_TIME=English_United States.1252"
+```
+
+```r
+> t
+[1] "2010-01-02 11:12:59 CST"  # POSIXlt格式
+
+> format(t, "%A %B %e, %Y %I:%M:%S %p, Week %V")  # 完整格式
+[1] "Saturday January  2, 2010 11:12:59 AM, Week 53"
+
+> format(t, "%Y年%m月%d日（第%V周）%H点%M分%S秒")  # 中文化
+[1] "2010年01月02日（第53周）11点12分59秒"
+
+> format(t, "%d%b%y")
+[1] "02Jan10"  # SAS格式
+
+> format(t, "%Y%m%d")
+[1] "20100102"  # 八位格式
+```
+
+## 读取并识别日期/时间
+
+- 从`readr`的内置数据中读取example.log，时间戳X4是文本格式
+
+```r
+> log <- readr::read_log(system.file("extdata/example.log", package="readr"))
+> log$X4
+[1] "08/Apr/2001:17:39:04 -0800" "10/Oct/2000:13:55:36 -0700"
+```
+
+- 进行格式化，转为时间
+
+```r
+> strptime(log$X4, "%d/%b/%Y:%H:%M:%S %z", tz="UTC")  # UTC即格林威治时间
+[1] "2001-04-09 01:39:04 UTC" "2000-10-10 20:55:36 UTC"
+> strptime(log$X4, "%d/%b/%Y:%H:%M:%S %z")  # 默认为本地时区，
+                                            # 上海是"Asia/Shanghai"或"Etc/GMT-8"
+[1] "2001-04-09 09:39:04" "2000-10-11 04:55:36"
+```
+
+- 注意：转换后，修正了时差
+
+
+## 日期/时间部件的截取
+
+- POSIXlt类型的日期/时间可以很容易地截取部件: sec, min, hour, mday, mon, year, wday, yday, isdst, zone, gmtoff 
+
+```r
+> c(t$mday, t$hour)  # 日和小时部分
+[1] 2 11
+```
+
+- 在data.frame中，POSIXlt会被转为POSIXct
+
+```r
+> df <- data.frame(x=rep(t,2), y=3:4)
+> time <- sapply(df$x, function(v) unlist(as.POSIXlt(v)))
+> df <- cbind(df, t(time), stringsAsFactors=FALSE)
+> df
+                    x y sec min hour mday mon year wday yday isdst zone gmtoff
+1 2010-01-02 11:12:59 3  59  12   11    2   0  110    6    1     0  CST  28800
+2 2010-01-02 11:12:59 4  59  12   11    2   0  110    6    1     0  CST  28800
+```
+
+## 日期/时间的拼接
+
+- 有了部件，就可以很容易地拼接出日期/时间
+
+```r
+> head(airquality, 2)  # New York May - Sep 1973
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+
+> airquality$Date <- as.Date(with(airquality, paste('1973', Month, Day, sep="/")))
+# 将"1973", "5", "1"用"/"拼接起来形成字符串，再as.Date转换
+
+> head(airquality, 2)
+  Ozone Solar.R Wind Temp Month Day       Date
+1    41     190  7.4   67     5   1 1973-05-01
+2    36     118  8.0   72     5   2 1973-05-02
+> str(airquality$Date)
+Date[1:153], format: "1973-05-01" "1973-05-02" "1973-05-03" ...
+```
+
+## 时区问题 (时区代码查询`?timezones`)
+
+- R转换日期/时间时，tz默认为系统当前时区。如本机为"CST" (China Standard Time)。
+- 从外部导入数据(尤其是Excel)时不带时区信息，会被识别为"UTC"，即格林威治时间。
+- 此类外部数据在R中运算时，可能被转为本地时区，从而产生时差。
+    - `openxlsx`包的readTest.xlsx Var5为"02/07/2015" "02/06/2015", ...
+
+    ```r
+    > xl <- readxl::read_excel(system.file("readTest.xlsx", package="openxlsx"))
+    > xl$Var5[1:2]
+    [1] "2015-02-07 UTC" "2015-02-06 UTC"
+    > xl$Var5[1] - as.POSIXct("2015-2-7")
+    Time difference of 8 hours
+    ```
+
+- 解决办法：导入后显式转换时区(`lubridate::force_tz`)，或将本机时区改为UTC
+
+# lubridate包
+
+## lubridate
+
+- 又是*Hadley Wickham*开发的
+- 基于POSIX，内建高速POSIX解析器
+- 重要的基本概念: 
+    - 时点(instants)
+        - 兼容函数: `now`, `yday`, `week`, ...
+        - 日期取整: `round_date`, `ceiling_date`, ...
+    - 时段(Timespan类)(包括Duration, Period, Interval类)
+        - Duration: 绝对时长: `duration`, `ddays`, ...
+        - Period: 相对(钟面)时长: `period`, `days`, `years`, ...
+        - Interval: 起止于特定时点的时长(完整信息): `int_shift`, `int_overlaps`, ...
+
+
+## 时点函数
+
+- 系统日期、时间
+
+```r
+> library(lubridate)
+> today()
+[1] "2016-12-23"
+> now()
+[1] "2016-12-23 17:39:35 CST"
+```
+- 提取部件
+
+```r
+> year(t)
+[1] 2010
+> mday(t)
+[1] 2
+> minute(t)
+[1] 12
+```
+
+## 时点函数 (续)
+
+- `ymd`, `mdy`, ..., `hms`, ...
+
+```r
+> ymd("20100102")  # 无间隔文本
+[1] "2010-01-02"
+> dmy("10.05-2016")  # 带间隔文本
+[1] "2016-05-10"
+> mdy(050614)  # 纯数字
+[1] "2014-05-06"
+> hms("08:15:00")
+[1] "8H 15M 0S"
+```
+
+- `parse_date_time`
+
+```r
+> parse_date_time(c('12/17/1996 04:00:00','4/18/1950 0130'),
++        c('%m/%d/%Y %I:%M:%S','%m/%d/%Y %H%M'), exact = TRUE)
+[1] "1996-12-17 04:00:00 UTC" "1950-04-18 01:30:00 UTC"
+```
+
+## 时点函数 (续)
+
+- 日期取整
+
+```r
+> ceiling_date(now(), unit="day")
+[1] "2016-12-24 CST"
+> floor_date(now(), unit="hour")
+[1] "2016-12-23 17:00:00 CST"
+```
+
+- 时区
+    - 利用`force_tz`强制变更时区（但不转时值）
+    - 利用`with_tz`转换时区（同时变更时值）
+
+```r
+> force_tz(now(), tzone="UTC")
+[1] "2016-12-23 17:46:42 UTC"
+> with_tz(now(), tzone="UTC")
+[1] "2016-12-23 09:48:05 UTC"
+```
+
+## Duration类函数
+
+- 创建一个Duration类对象
+
+```r
+> duration(day=-1)
+[1] "86400s (~1 days)"
+```
+- 绝对时长操作 (`?duration`)
+
+```r
+> at.present <- now()
+> at.present + ddays(2)
+[1] "2016-12-25 17:54:03 CST"
+> at.present + dweeks(1)
+[1] "2016-12-30 17:54:03 CST"
+```
+
+- 但没有dmonths，因为月的时长是有弹性的，不能作为duration对象
+
+## Period类函数
+
+- 创建一个Period类对象
+
+```r
+> period(c(90, 5), c("second", "minute"))
+[1] "5M 90S
+```
+- 钟面时长操作 (`?period`)
+
+```r
+> at.present <- now()
+> at.present + days(2)
+[1] "2016-12-25 17:54:03 CST"
+> at.present + months(1)
+[1] "2017-01-23 17:54:03 CST"
+
+> as.Date("2016-1-31") + months(1)
+[1] NA
+> as.Date("2016-1-31") %m+% months(1)
+[1] "2016-02-29"
+```
+
+## Interval类函数
+
+- 创建一个Interval类对象
+
+```r
+> interval(as.Date("2016-10-1"), now())
+[1] 2016-10-01 08:00:00 CST--2016-12-23 18:02:28 CST
+> as.Date("2016-10-1") %--% now()
+[1] 2016-10-01 08:00:00 CST--2016-12-23 18:05:15 CST
+```
+
+- 计算时间差 (`?interval`)
+
+```r
+> int_length(interval(as.Date("2016-10-1"), now()))
+[1] 7207406  # 秒数
+```
+
+- 时间段是否有重叠
+
+```r
+> int1 <- as.Date("2016-1-1") %--% as.Date("2016-1-31")
+> int2 <- as.Date("2016-1-15") %--% as.Date("2016-2-14")
+> int_overlaps(int1, int2)
+[1] TRUE
+```
+
+# timeDate包
+
+## timeDate包
+
+- 量化投资分析工具[Rmetrics](https://www.rmetrics.org)开发组发布，与Rmetrics包搭配使用
+- timeDate类兼容POSIXt，作为S4类型，也基本兼容SPlus的timeDate类
+- 内建大量时区、节假日信息，便于跨时区转换
+- 包括绝对的时区(zone)概念，和相对的金融中心(FinCenter)概念
+- 能精细调整夏令时、节假日等
+- 可利用timeDate类对象实现便捷的日期、时间操作
+
+## 生成timeDate类对象 {.smaller}
+
+- `timeDate`函数
+
+```r
+> dates <- c("1989-09-28","2001-01-15","2004-08-30"
+> times <- c(  "23:12:55",  "10:34:02",  "08:30:00")
+> charvec = paste(dates, times)
+> timeDate(charvec)
+GMT
+[1] [1989-09-28 23:12:55] [2001-01-15 10:34:02] [2004-08-30 08:30:00]
+```
+
+- `timeSequence`函数
+
+```r
+> timeSequence(from = "2008-01-01", to = "2008-01-31", by = "week")
+GMT
+[1] [2008-01-01] [2008-01-08] [2008-01-15] [2008-01-22] [2008-01-29]
+```
+
+- `timeCalendar`函数
+
+```r
+> timeCalendar(2008, m=1, d=1:5, h=16, zone="London", FinCenter="Shanghai")
+Shanghai
+[1] [2008-01-02] [2008-01-03] [2008-01-04] [2008-01-05] [2008-01-06]
+> timeCalendar(2008, m=1, d=1:5, h=16, zone="London", FinCenter="London")
+London
+[1] [2008-01-01 16:00:00] [2008-01-02 16:00:00] [2008-01-03 16:00:00] ...
+```
+
+## timeDate类对象的操作 {.smaller}
+
+- 向量化推移
+
+```r
+> t <- timeCalendar(m=1:4)
+> t + 86400  # 顺推1天(86400s)
+GMT
+[1] [2016-01-02] [2016-02-02] [2016-03-02] [2016-04-02]
+```
+
+- 计算时差
+
+```r
+> Sys.timeDate() - t  # Sys.timeDate()返回当前系统时间
+Time differences in days
+[1] 360.1743 329.1743 300.1743 269.176
+```
+
+- 取整
+
+```r
+> t + 123456
+[1] [2016-01-02 10:17:36] [2016-02-02 10:17:36] [2016-03-02 10:17:36] [2016-04-02 10:17:36]
+> trunc(t + 123456, 'h')
+[1] [2016-01-02 10:00:00] [2016-02-02 10:00:00] [2016-03-02 10:00:00] [2016-04-02 10:00:00]
+```
+
+## 特殊日期查询 {.smaller}
+
+- 区段首日/尾日
+
+```r
+> timeFirstDayInMonth(Sys.timeDate())
+[1] [2016-12-01]
+> timeLastDayInMonth(Sys.timeDate())
+[1] [2016-12-31]
+> timeFirstDayInQuarter(Sys.timeDate())
+[1] [2016-10-01]
+> timeLastDayInQuarter(Sys.timeDate())
+[1] [2016-12-31]
+```
+
+- 区段特定日（0 (周日) - 6 (周六)）
+
+```r
+> timeNdayOnOrAfter(Sys.timeDate(), 6)    # Sat
+[1] [2016-12-31]
+> timeNdayOnOrBefore(Sys.timeDate(), 0)   # Sun
+[1] [2016-12-25]
+> timeNthNdayInMonth(Sys.timeDate(), 1)   # Mon
+[1] [2016-12-26]
+> timeLastNdayInMonth(Sys.timeDate(), 2)  # Tue
+[1] [2017-01-03]
+```
+
+## 查找FinCenter {.smaller}
+
+- 支持正则表达式
+
+```r
+> listFinCenter()
+  [1] "Africa/Abidjan"  "Africa/Accra"   "Africa/Addis_Ababa"  "Africa/Algiers"                
+  [5] "Africa/Asmara"   "Africa/Bamako"  "Africa/Bangui"       "Africa/Banjul"  ...
+  
+> listFinCenter("Asia/S.*")
+[1] "Asia/Saigon"    "Asia/Sakhalin"   "Asia/Samarkand"   "Asia/Seoul" 
+[5] "Asia/Shanghai"  "Asia/Singapore"
+```
+
+- `FinCenter`
+
+```r
+> t1 <- timeDate("2016-01-01", zone="GMT", FinCenter="Shanghai"); t1
+Shanghai
+[1] [2016-01-01 08:00:00]
+> t2 <- timeDate("2016-01-01", zone="GMT", FinCenter="Zurich"); t2
+Zurich
+[1] [2016-01-01 01:00:00]
+> t1 - t2
+Time difference of 0 secs
+```
+
+## 查看夏令时和时区规则历史
+
+```r
+> Shanghai()
+              Shanghai offSet isdst TimeZone     numeric
+1  1901-12-14 20:45:52  29152     0      LMT -2147397248
+2  1927-12-31 15:54:08  28800     0      CST -1325491552
+......
+17 1991-04-13 16:00:00  32400     1      CDT   671558400
+18 1991-09-14 15:00:00  28800     0      CST   684860400
+
+> Hong_Kong()
+             Hong_Kong offSet isdst TimeZone     numeric
+1  1901-12-14 20:45:52  27396     0      LMT -2147397248
+2  1904-10-29 16:23:24  28800     0      HKT -2056692996
+......
+71 1979-05-12 19:30:00  32400     1     HKST   295385400
+72 1979-10-20 18:30:00  28800     0      HKT   309292200
+```
+
+## 节假日规则历史
+
+```r
+> listHolidays()
+ [1] "Advent1st" "Advent2nd"     "Advent3rd"  "Advent4th"     "AllSaints"               
+ [6] "AllSouls"  "Annunciation"  "Ascension"  "AshWednesday"  "AssumptionOfMary" ...
+ 
+> Christmas()
+            Christmas offSet isdst TimeZone     numeric
+1 1901-12-14 20:45:52  25200     0      CXT -2147397248
+
+> ChristmasDay(year=2016)
+GMT
+[1] [2016-12-25]
+```
+
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

@@ -1,0 +1,533 @@
+---
+title: A02-03 数据框的分合排转
+subtitle: R Analyst Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A02_03_df_ops_files/figure-html")
+```
+
+## 目录
+
+- [索引和定位](#3)
+- [分割和合并](#9)
+- [排序](#17)
+- [转换](#21)
+
+<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
+
+
+# 索引和定位
+
+## 获得索引号
+
+- 序号即索引号: [2] (向量), [[2]] (列表), [3, 4] (矩阵), ...
+- 向量名(names)为索引代称，也可用来索引
+- 获得索引号(元素所在位置): 动手数，或用条件命令`which()`
+- 必须在正确的维度索引: [1:4, ]
+
+```r
+> str(euro)
+Named num [1:11] 13.76 40.34 1.96 166.39 5.95 ...
+ - attr(*, "names")= chr [1:11] "ATS" "BEF" "DEM" "ESP" ...
+
+> which(euro > 100)  # 返回索引代称和索引序号
+ESP ITL PTE 
+  4   8  11
+```
+
+## 一维对象切片: "["(向量)和"[["(列表)
+
+- 用索引序号向量切片
+
+```r
+> euro[c(3, 6)]   # 某条街道euro，3号和6号住的是谁？
+    DEM     FRF 
+1.95583 6.55957   # 该地址住户为名为"DEM"的1.96和名为"FRF"的6.56
+```
+
+- 用索引代称切片
+
+```r
+> euro['ITL']   # 此街道1-11号为ATS, BEF等大厦。ITL大厦的门牌8号
+    ITL 
+1936.27         # 返回该地址住户
+```
+
+## 多维数组切片 {.smaller}
+
+- 有n维，就要有n-1个逗号
+
+- 二维数组(如data.frame): `data.frame[row.indices, col.indices]`
+
+```r
+> mtcars['Mazda RX4', 'mpg']
+[1] 21
+
+> mtcars[1:3, 1]
+[1] 21.0 21.0 22.8
+```
+
+- 高维数组: `array[indices on dim 1, indices on dim 2, ...]`
+
+```r
+> str(Titanic)
+table [1:4, 1:2, 1:2, 1:2] 0 0 35 0 0 0 17 0 118 154 ...
+ - attr(*, "dimnames")=List of 4
+  ..$ Class   : chr [1:4] "1st" "2nd" "3rd" "Crew"
+  ..$ Sex     : chr [1:2] "Male" "Female"
+  ..$ Age     : chr [1:2] "Child" "Adult"
+  ..$ Survived: chr [1:2] "No" "Yes"
+ 
+> Titanic['1st', 'Male', 'Adult', 'Yes']  # 四个维度都作唯一索引 ==> 单个元素
+[1] 57
+```
+
+## 条件切片
+
+- 一维对象
+
+```r
+> euro[euro > 100]
+    ESP      ITL      PTE 
+ 166.386 1936.270  200.482 
+```
+
+- 多维对象
+
+```r
+> mtcars[mtcars$mpg > 30, ]
+                mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Fiat 128       32.4   4 78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4 75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla 33.9   4 71.1  65 4.22 1.835 19.90  1  1    4    1
+Lotus Europa   30.4   4 95.1 113 3.77 1.513 16.90  1  1    5    2
+```
+
+## 切片原理 {.smaller}
+
+- 条件表达式 euro>100 => 逻辑向量 c(F, F, F T, F, F, F, T, F, F, T)
+- 逻辑向量 => 定位TRUE所在的索引 c(4, 8, 11) 
+- 索引=> 切片 euro[c(4, 8, 11)]
+
+![](A02_03_df_ops_files/figure-html/slicing.png)
+
+
+# 分割和合并
+
+## `split` {.smaller}
+
+- 语法
+
+```r
+split(x, f, drop = FALSE, ...)
+```
+    - x: 向量或数据框
+    - f: 分组因子，将x按f因子分组切割。要与x等长。
+    - drop: 逻辑值，分割时找不到的因子水平是否被弃去
+- 例子
+
+```r
+> split(1:10, rep(c(1,2), 5))
+$`1`
+[1] 1 3 5 7 9
+$`2`
+[1] 2 4 6 8 10
+
+> str(split(morley, morley$Expt))
+```
+
+## 纵向合并 - `rbind`
+
+- **各列结构完全一致**的数据框可以`rbind`纵向合并
+- 列名和列的**次序要完全相同**
+- 更多用于矩阵
+
+```r
+> rbind(data.frame(A=c(1, 3), B=c(2, 4)), 
+        data.frame(A=c(5, 7), B=c(6, 8)))
+  A B
+1 1 2
+2 3 4
+3 5 6
+4 7 8
+```
+
+## 纵向合并 - `data.table`包的`rbind`
+
+- 更灵活的合并(参数use.names, fill, idcol, ...)
+- 速度更快(数据框要先转为data.table类)
+
+```r
+> library(data.table)
+> DT1 = data.table(A=1:2, B=letters[1:2])
+> DT2 = data.table(B=letters[4:5], A=4:5, C=c(TRUE, FALSE))
+> rbind(DT1, DT2, use.names=TRUE, fill=TRUE)
+   A  B     C
+1: 1  a    NA
+2: 2  b    NA
+3: 4  d  TRUE
+4: 5  e FALSE
+```
+
+## 纵向合并 - `dplyr`包的`bind_rows`
+
+- 速度更快(数据框要先转为tbl_df类)
+
+```r
+> library(dplyr)
+> DT1 = tbl_df(data.frame(A=1:2, B=letters[1:2]))
+> DT2 = tbl_df(data.frame(B=letters[4:5], A=4:5, C=c(TRUE, FALSE)))
+> bind_rows(list(DT1, DT2), .id="from")
+# A tibble: 4 × 4
+   from     A     B     C
+  <chr> <int> <chr> <lgl>
+1     1     1     a    NA
+2     1     2     b    NA
+3     2     4     d  TRUE
+4     2     5     e FALSE
+```
+
+## 横向合并 - `cbind`
+
+- **行数相等**的数据框可以用`cbind`
+- 不能识别主键。如行的次序有错误，会造成错行
+- 更多用于矩阵
+
+```r
+> cbind(data.frame(A=c(1, 3), B=c(2, 4)), 
+        data.frame(A=c(5, 7), B=c(6, 8)))
+  A B A B
+1 1 2 5 6
+2 3 4 7 8
+```
+
+## 横向合并 - `data.table`包的`merge`
+
+- 有公用主键的数据框，可以用`merge`匹配后合并
+- 可自定义两个数据集的匹配一个或多个主键（by, 或by.x, by.y）
+- 需先将数据框转为data.table类，最好设定key
+
+```r
+> d1 <- data.table(a=rep(1:2, each=3), b=1:6, key="a,b")
+> d2 <- data.table(a=0:1, b=0:1, bb=10:11, key="a,b")
+> merge(d1, d2, by=c('a', 'b'), all=TRUE)
+   a  b bb
+1: 0 NA 10
+2: 1  1 11
+3: 1  2 11
+4: 1  3 11
+5: 2  4 NA
+6: 2  5 NA
+7: 2  6 NA
+```
+
+## 横向合并 - `dplyr`包的`join`家族 {.smaller}
+
+- 更灵活的类SQL合并(`inner_join`, `left_join`, `right_join`, `full_join` ...)
+
+```r
+> library(dplyr)
+> DT1 = tbl_df(data.frame(a=rep(1:2, each=3), b=1:6))
+> DT2 = tbl_df(data.frame(a=0:1, b=0:1, bb=10:11))
+> inner_join(DT1, DT2, by=c("a", "b"))
+# A tibble: 1 × 3
+      a     b    bb
+  <int> <int> <int>
+1     1     1    11
+> left_join(DT1, DT2, by=c("a", "b"))
+# A tibble: 6 × 3
+      a     b    bb
+  <int> <int> <int>
+1     1     1    11
+2     1     2    NA
+3     1     3    NA
+4     2     4    NA
+5     2     5    NA
+6     2     6    NA
+```
+
+# 排序
+
+## 返回排序结果 - `sort`
+
+- 语法
+```r
+sort(x, decreasing = FALSE, na.last = NA, ...)
+```
+
+- 示例
+```r
+> sort(BOD$demand, decreasing = TRUE)  # 逆序
+[1] 19.8 19.0 16.0 15.6 10.3  8.3
+```
+
+- 只能用于向量或因子，不能对数据框排序
+
+## 返回排序索引号 - `order`
+
+- 语法
+```r
+order(..., na.last = TRUE, decreasing = FALSE, method = c("shell", "radix"))
+```
+
+- 示例
+```r
+> order(BOD$demand, decreasing = TRUE)  # 逆序
+[1] 6 3 4 5 2 1
+> BOD[order(BOD$demand, dec=TRUE), ]
+  Time demand
+6    7   19.8
+3    3   19.0
+4    4   16.0
+5    5   15.6
+2    2   10.3
+1    1    8.3
+```
+
+## 更高效的排序法 - `data.table::setorder` {.smaller}
+
+- 语法
+
+```r
+setorder(x, ..., na.last=FALSE)
+setorderv(x, cols, order=1L, na.last=FALSE)
+```
+
+- 示例
+
+<div class='columns-2'>
+
+```r
+> DT <- data.table(
++   A=sample(3, 4, TRUE), 
++   B=sample(letters[1:3], 4, TRUE),
++   C=sample(4))
+> DT
+   A B C
+1: 2 b 1
+2: 2 a 4
+3: 3 b 3
+4: 1 c 2
+```
+
+<p class='forceBreak'></p>
+
+```r
+> setorder(DT, A, -B)
+> DT
+   A B C
+1: 1 c 2
+2: 2 b 1
+3: 2 a 4
+4: 3 b 3
+```
+
+- 等价于`setorderv(DT, c("A", "B"), c(1, -1))`
+
+</div>
+
+# 转换
+
+## 行的增删插改 {.smaller}
+
+<div class='columns-2'>
+
+#### 增行
+
+- 增加一行，直接录值
+    ```r
+    > BOD[nrow(BOD)+1, ] <- c(8, 11)
+    > BOD
+      Time demand
+    1    1    8.3
+    2    2   10.3
+    3    3   19.0
+    4    4   16.0
+    5    5   15.6
+    6    7   19.8
+    7    8   11.0
+    ```
+- 搭个新数据框，rbind进旧数据框
+
+<p class="forceBreak"></p>
+
+#### 删行
+
+- 切片取
+    ```r
+    > BOD <- BOD[1:6, ]
+    ```
+- 切片弃: 
+    ```r
+    > BOD <- BOD[-7, ]
+    > BOD
+      Time demand
+    1    1    8.3
+    2    2   10.3
+    3    3   19.0
+    4    4   16.0
+    5    5   15.6
+    6    7   19.8
+    ```
+
+</div>
+
+## {.smaller}
+
+<div class='columns-2'>
+
+#### 插入 (没有专门的插入函数)
+
+- 从插入点切成两部分Df1, Df2
+- `data.table::rbindlist`合并list(Df1, Df.new, Df2)
+
+```r
+> newBOD <- data.frame(Time=6, demand=15)
+> BOD <- data.table::rbindlist(list(
++   BOD[1:5, ], newBOD, BOD[6, ]), use.names=TRUE)
+> BOD
+   Time demand
+1:    1    8.3
+2:    2   10.3
+3:    3   19.0
+4:    4   16.0
+5:    5   15.6
+6:    6   15.0
+7:    7   19.8
+```
+
+<p class="forceBreak"></p>
+
+#### 重排
+
+- 定义新的行索引号向量
+- 重新索引数据框
+
+```r
+> index <- c(1, 2, 5, 4, 3, 6)
+> BOD <- BOD[index, ]
+> BOD
+   Time demand
+1:    1    8.3
+2:    2   10.3
+3:    5   15.6
+4:    4   16.0
+5:    3   19.0
+6:    7   19.8
+```
+
+- 在末尾添加新行，然后重排，也可实现插入
+
+</div>
+
+## 列的增删插改 {.smaller}
+
+<div class='columns-2'>
+
+#### 增列
+
+- 直接录值
+    ```r
+    > BOD$newCol <- TRUE
+    > BOD
+       Time demand newCol
+    1:    1    8.3   TRUE
+    2:    2   10.3   TRUE
+    3:    3   19.0   TRUE
+    4:    4   16.0   TRUE
+    5:    5   15.6   TRUE
+    6:    7   19.8   TRUE
+    ```
+- 搭个新数据框，merge或cbind进旧数据框
+
+<p class="forceBreak"></p>
+
+#### 删列
+
+- 切片取: 
+    ```r
+    > BOD <- BOD[, c("Time", "demand")]
+    ```
+
+- 切片弃: 
+    ```r
+    BOD <- BOD[, -3]
+    ```
+
+- 设为NULL: 
+    ```r
+    BOD$newCol <- NULL
+    ```
+
+</div>
+
+## {.smaller}
+
+<div class='columns-2'>
+
+#### 插入 (没有专门的插入函数)
+
+- 从插入点切成两部分Df1, Df2
+- `do.call("cbind")`合并Df1, 插入的数据框, Df2
+
+```r
+> newDf <- data.frame(newCol=TRUE)
+> do.call('cbind', list(BOD[,1], newDf, BOD[,2]))
+   Time newCol demand
+1:    1   TRUE    8.3
+2:    2   TRUE   10.3
+3:    3   TRUE   19.0
+4:    4   TRUE   16.0
+5:    5   TRUE   15.6
+6:    7   TRUE   19.8
+```
+
+<p class="forceBreak"></p>
+
+#### 重排
+
+- 定义新的列索引号向量
+- 重新索引数据框
+
+```r
+> newCol <- c("demand", "Time")
+> BOD <- BOD[, newCol]
+> BOD
+   demand Time
+1:    8.3    1
+2:   10.3    2
+3:   19.0    3
+4:   16.0    4
+5:   15.6    5
+6:   19.8    7
+```
+
+- 在末尾添加新列，然后重排，也可实现插入
+
+</div>
+
+
+
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

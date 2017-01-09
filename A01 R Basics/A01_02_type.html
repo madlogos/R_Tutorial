@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A01-02 R的对象和类型</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A01-02 R的对象和类型',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A01_02_type_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A01_02_type_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A01_02_type_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-06 17:34:22</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>类型</a></li>
+<li><a href='#10' title=''>对象</a></li>
+<li><a href='#14' title=''>向量和矩阵</a></li>
+<li><a href='#22' title=''>列表和数据框</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>类型</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>R对象的类型</h2></hgroup><article  id="r" class="smaller">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="right"></th>
+<th align="left">数据对象</th>
+<th align="left"></th>
+<th align="left">其他对象</th>
+<th align="left"></th>
+<th align="left">R内部对象</th>
+<th align="left"></th>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left"><crb>logical</crb></td>
+<td align="left">逻辑向量</td>
+<td align="left"><crb>list</crb></td>
+<td align="left">列表</td>
+<td align="left">symbol</td>
+<td align="left">变量名</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left"><crb>integer</crb></td>
+<td align="left">整数向量</td>
+<td align="left">NULL</td>
+<td align="left">空</td>
+<td align="left">pairlist</td>
+<td align="left">成对列表对象</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left"><crb>double</crb></td>
+<td align="left">实数向量</td>
+<td align="left"><crb>closure</crb></td>
+<td align="left">函数(闭包)</td>
+<td align="left">promise</td>
+<td align="left">用于实现悠闲赋值的对象</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">complex</td>
+<td align="left">复数向量</td>
+<td align="left">special</td>
+<td align="left">不可针对参数求值的内置函数</td>
+<td align="left">language</td>
+<td align="left">R语言构建</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left"><crb>character</crb></td>
+<td align="left">字符向量</td>
+<td align="left">builtin</td>
+<td align="left">可针对参数求值的内置函数</td>
+<td align="left">any</td>
+<td align="left">可以匹配任何类型的特殊类型</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">raw</td>
+<td align="left">字节值向量</td>
+<td align="left">environment</td>
+<td align="left">环境</td>
+<td align="left">expression</td>
+<td align="left">表达式对象</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">externalptr</td>
+<td align="left">外表指针对象</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">weakref</td>
+<td align="left">弱引用对象</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">char</td>
+<td align="left">字符</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">bytecode</td>
+<td align="left">二进制</td>
+</tr>
+</table>
+
+<p>&#8211; R源代码src/main/util.c的TypeTable内的定义</p>
+
+</article></slide><slide class=''><hgroup><h2>常见的数据对象</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">类型</th>
+<th align="left">举例</th>
+<th align="left">要点</th>
+<th align="left">判别方法</th>
+<th align="left"><code>typeof()</code></th>
+<th align="left"><code>class()</code></th>
+</tr>
+<tr class="odd">
+<td align="left">逻辑</td>
+<td align="left">TRUE, FALSE, T, F</td>
+<td align="left">注意大写</td>
+<td align="left"><code>is.logical()</code></td>
+<td align="left">logical</td>
+<td align="left">logical</td>
+</tr>
+<tr class="even">
+<td align="left">整数</td>
+<td align="left">0L, 1L</td>
+<td align="left">数字后面跟个L</td>
+<td align="left"><code>is.integer()</code></td>
+<td align="left">integer</td>
+<td align="left">integer</td>
+</tr>
+<tr class="odd">
+<td align="left">实数</td>
+<td align="left">1, -1, 1E3</td>
+<td align="left"></td>
+<td align="left"><code>is.double()</code></td>
+<td align="left">double</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="even">
+<td align="left">复数</td>
+<td align="left">1+2i, 1-2i</td>
+<td align="left"></td>
+<td align="left"><code>is.complex()</code></td>
+<td align="left">complex</td>
+<td align="left">complex</td>
+</tr>
+<tr class="odd">
+<td align="left">字符</td>
+<td align="left">&quot;a&quot;, &quot;1&quot;</td>
+<td align="left">用单引号或双引号括起来</td>
+<td align="left"><code>is.character()</code></td>
+<td align="left">character</td>
+<td align="left">character</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>类型转换</h2></hgroup><article >
+
+<blockquote>
+<p>用<code>as.&lt;type&gt;()</code>函数进行类型转换，会发生什么？</p>
+</blockquote>
+
+<table class = 'rmdtable'>
+<col width="8%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+<col width="11%" />
+<tr class="header">
+<th align="left">类型</th>
+<th align="left">实例</th>
+<th align="left">逻辑<br> <code>as.logical</code></th>
+<th align="left">整数<br> <code>as.integer</code></th>
+<th align="left">实数<br> <code>as.double</code></th>
+<th align="left">复数<br> <code>as.complex</code></th>
+<th align="left">字符<br> <code>as.character</code></th>
+</tr>
+<tr class="odd">
+<td align="left">逻辑</td>
+<td align="left">TRUE</td>
+<td align="left">&#8212;</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">1+0i</td>
+<td align="left">&quot;TRUE&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">整数</td>
+<td align="left">0L</td>
+<td align="left">FALSE</td>
+<td align="left">&#8212;</td>
+<td align="left">0</td>
+<td align="left">0+0i</td>
+<td align="left">&quot;0&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left">实数</td>
+<td align="left">2E2</td>
+<td align="left">TRUE</td>
+<td align="left">200</td>
+<td align="left">&#8212;</td>
+<td align="left">200+0i</td>
+<td align="left">&quot;200&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">复数</td>
+<td align="left">1+2i</td>
+<td align="left">TRUE</td>
+<td align="left"><del>1</del></td>
+<td align="left"><del>1</del></td>
+<td align="left">&#8212;</td>
+<td align="left">&quot;1+2i&quot;</td>
+</tr>
+<tr class="odd">
+<td align="left">字符</td>
+<td align="left">&quot;a&quot;</td>
+<td align="left"><del>NA</del></td>
+<td align="left"><del>NA</del></td>
+<td align="left"><del>NA</del></td>
+<td align="left"><del>NA</del></td>
+<td align="left">&#8212;</td>
+</tr>
+</table>
+
+<p>最常用的是文本(character)和数值(numeric)型(整数和实数)。</p>
+
+</article></slide><slide class=''><hgroup><h2>特殊的数值</h2></hgroup><article  class="columns-2 smaller">
+
+<h4>NA(缺失/Not applicable)</h4>
+
+<pre class = 'prettyprint lang-r'>&gt; as.numeric(&#39;a&#39;)
+[1] NA
+
+&gt; length(NA)
+[1] 1
+
+&gt; is.na(NA)
+[1] TRUE</pre>
+
+<p>特例NaN (非数值/Not a number)</p>
+
+<pre class = 'prettyprint lang-r'>&gt; 0/0
+[1] NaN
+
+&gt; is.na(NaN)
+[1] TRUE
+
+&gt; is.nan(NaN)
+[1] TRUE</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>计算黑洞</h5>
+
+<pre class = 'prettyprint lang-r'>&gt; 1 + NA  # Cannot + - * /
+[1] NA
+
+&gt; 2 * NaN  # NaN, too...
+[1] NaN
+
+&gt; NA + NaN  # Coerced to NA
+[1] NA
+
+&gt; as.character(NA)  # cannot transforme
+[1] NA
+
+&gt; NA &lt; 1  # cannot compare
+[1] NA</pre>
+
+<p><strong>但是!</strong></p>
+
+<pre class = 'prettyprint lang-r'>&gt; paste(NA, NA)
+[1] &quot;NA NA&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>特殊的数值(续)</h2></hgroup><article  class="columns-2">
+
+<h4>Inf (无穷大)</h4>
+
+<pre class = 'prettyprint lang-r'>&gt; 1/0
+[1] Inf
+
+&gt; -2/Inf
+[1] 0
+
+&gt; length(-Inf)
+[1] 0
+
+&gt; is.infinite(Inf)
+[1] TRUE</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>NULL (空值)</h4>
+
+<pre class = 'prettyprint lang-r'>&gt; length(NULL)
+[1] 0
+
+&gt; is.null(NULL)
+[1] TRUE</pre>
+
+<p><strong>超级计算黑洞</strong></p>
+
+<pre class = 'prettyprint lang-r'>&gt; as.character(NULL)
+[1] character(0)
+
+&gt; paste(NULL, NULL)
+[1] character(0)</pre>
+
+</article></slide><slide class=''><hgroup><h2>日期和时间 (巨坑)</h2></hgroup><article  id="-" class="columns-2 smaller">
+
+<h4>Date 日期</h4>
+
+<ul>
+<li>本质上是double</li>
+<li>默认以1970-01-01为起算日</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; Sys.Date()
+[1] &quot;2016-12-01&quot;
+
+&gt; class(Sys.Date())
+[1] &quot;Date&quot;
+
+&gt; typeof(Sys.Date())
+[1] &quot;double&quot;
+
+&gt; as.numeric(Sys.Date())
+[1] 17136</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>Time 时间</h4>
+
+<ul>
+<li>POSIXct: 本质是integer向量
+
+<ul>
+<li>表示距离1970-01-01 00:00:00 UTC的秒数</li>
+</ul></li>
+<li>POSIXlt: 本质上是个named list
+
+<ul>
+<li>更便于数据处理</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; as.numeric(as.POSIXct(Sys.time()))
+[1] 1480587443
+
+&gt; unlist(as.POSIXlt(Sys.time()))
+               sec            min           hour 
+&quot;31.2764060497284&quot;           &quot;14&quot;           &quot;18&quot; 
+              mday            mon           year 
+               &quot;1&quot;           &quot;11&quot;          &quot;116&quot; 
+              wday           yday          isdst 
+               &quot;4&quot;          &quot;335&quot;            &quot;0&quot; 
+              zone         gmtoff 
+             &quot;CST&quot;        &quot;28800&quot;
+
+&gt; as.POSIXlt(Sys.time())$mon
+[1] 11</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>对象</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>基本对象</h2></hgroup><article >
+
+<ul>
+<li>最基本的对象是向量(vector)</li>
+<li>列表是向量的特例，可以由不同类型的元素构成</li>
+<li>数据框是列表的特例，每一列为一个列表，每个列表长度相同</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="right">维数</th>
+<th align="left">同类型</th>
+<th align="left">不同类型</th>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">向量(vector)</td>
+<td align="left">列表(list)</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">矩阵(matrix)</td>
+<td align="left">列表、数据框(data.frame)</td>
+</tr>
+<tr class="odd">
+<td align="right">&gt;2</td>
+<td align="left">数组(array)</td>
+<td align="left">列表</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>对象的构成</h2></hgroup><article >
+
+<ul>
+<li>取值 (value): 对象的实际数值</li>
+<li>属性 (attributes):
+
+<ul>
+<li>名称: <code>names</code>, <code>dimnames</code></li>
+<li>维度: <code>dimensions</code> (如矩阵、数组)</li>
+<li>类型: <code>class</code></li>
+<li>长度: <code>length</code></li>
+<li>其它: 如自定义<code>attributes</code>/metadata</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; structure(1, &#39;info&#39;=&#39;hello!&#39;)
+[1] 1
+attr(,&quot;info&quot;)
+[1] &quot;hello!&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>对象的操作</h2></hgroup><article >
+
+<ul>
+<li>对象生成后被分配入内存
+
+<ul>
+<li>注意预估对象的大小，以免内存溢出</li>
+<li>及时删除(<code>rm()</code>)无用的对象</li>
+</ul></li>
+<li>用赋值号(<code>=</code>, <code>&lt;-</code>)给对象分配一个符号</li>
+<li>调用方法(method)来查看、变换、删除对象</li>
+<li>方法以函数(function)形式存在 (R的灵魂是函数)</li>
+<li>R会根据对象的类型自动适配方法(<strong>为懒而生</strong>)
+
+<ul>
+<li>控制台输入<code>x</code>则自动适配<code>print(x)</code></li>
+<li>泛型函数(如<code>plot</code>, <code>predict</code>)自动根据对象类型调用特定的函数程序</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>向量和矩阵</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>向量的构造</h2></hgroup><article >
+
+<ul>
+<li>粘合函数<code>c()</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- c(0.5, 0.6)       ## numeric
+&gt; x &lt;- c(TRUE, FALSE)    ## logical
+&gt; x &lt;- c(T, F)           ## logical
+&gt; x &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)  ## character
+&gt; x &lt;- 9L:29L            ## integer
+&gt; x &lt;- c(1+0i, 2+4i)     ## complex</pre>
+
+<ul>
+<li>构造函数<code>vector()</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- vector(&quot;numeric&quot;, length = 10) 
+&gt; x
+[1] 0 0 0 0 0 0 0 0 0 0</pre>
+
+</article></slide><slide class=''><hgroup><h2>向量的注意事项</h2></hgroup><article >
+
+<ul>
+<li>向量没有维数属性</li>
+<li>标量被看作长度为1的向量</li>
+<li>打印向量时，行首显示的[n]即元素序号</li>
+<li>向量必须是同一类型，混搭多种类型的向量会被兼容转换
+
+<ul>
+<li><strong>文本 &gt; 复数 &gt; 实数 &gt; 整数 &gt; 逻辑</strong>
+
+<ul>
+<li>逻辑 + 数值 &#8211;&gt; 数值</li>
+<li>整数 + 实数 &#8211;&gt; 实数</li>
+<li>实数 + 复数 &#8211;&gt; 复数</li>
+<li>文本 + 其它 &#8211;&gt; 文本</li>
+</ul></li>
+<li>NaN, NA 不被兼容转换</li>
+<li>向量中不能含有空值(如NULL、numeric(0))</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>特殊向量: 因子 (factor)</h2></hgroup><article  id="--factor" class="smaller">
+
+<p>因子 = integer取值 + character标签属性</p>
+
+<pre class = 'prettyprint lang-r'>&gt; f = factor(c(&#39;A&#39;, &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;B&#39;))
+&gt; f
+[1] A A B C B
+Levels: A B C
+
+&gt; attributes(f)
+$levels
+[1] &quot;A&quot; &quot;B&quot; &quot;C&quot;
+
+$class
+[1] &quot;factor&quot;
+
+&gt; typeof(f)
+[1] &quot;integer&quot;
+
+&gt; unclass(f)
+[1] 1 1 2 3 2
+attr(,&quot;levels&quot;)
+[1] &quot;A&quot; &quot;B&quot; &quot;C&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>名称 (names)</h2></hgroup><article  id="-names">
+
+<p>向量可以有名称(<code>names</code>)属性，便于快速索引。</p>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- 1:3
+&gt; names(x)
+NULL
+
+&gt; names(x) &lt;- c(&quot;foo&quot;, &quot;bar&quot;, &quot;norf&quot;) 
+&gt; x
+foo bar norf 
+  1   2    3
+  
+&gt; names(x)
+[1] &quot;foo&quot;  &quot;bar&quot;  &quot;norf&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>矩阵的构造</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>矩阵 = 多个向量堆起来</li>
+<li>矩阵具有<strong><code>dim</code></strong><code>ension</code>属性，该属性本身是一个长度为2的向量(<code>c(nrow, ncol)</code>)</li>
+<li>矩阵默认是按<strong>列</strong> (维)构造的</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; m &lt;- matrix(1:6, nrow = 2, ncol = 3) 
+&gt; m
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+&gt; dim(m)
+[1] 2 3
+&gt; attributes(m)
+$dim
+[1] 2 3</pre>
+
+<pre class = 'prettyprint lang-r'>&gt; m &lt;- 1:10 
+&gt; m
+[1] 1 2 3 4 5 6 7 8 9 10 
+&gt; dim(m) &lt;- c(2, 5)
+&gt; m
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    3    5    7    9
+[2,]    2    4    6    8   10</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>矩阵的行列名</h2></hgroup><article >
+
+<p>矩阵可以通过<code>dimnames()</code>赋予行名和列名，便于索引</p>
+
+<pre class = 'prettyprint lang-r'>&gt; m &lt;- matrix(1:4, nrow = 2, ncol = 2)
+&gt; dimnames(m) &lt;- list(c(&quot;R1&quot;, &quot;R2&quot;), c(&quot;C1&quot;, &quot;C2&quot;)) 
+&gt; m
+   C1 C2 
+R1 1  3 
+R2 2  4</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>cbind</code>和<code>rbind</code></h2></hgroup><article  id="cbindrbind">
+
+<p>矩阵可以横向拼接(<code>cbind()</code>)或纵向拼接(<code>rbind()</code>)</p>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- 1:3
+&gt; y &lt;- 10:12
+&gt; cbind(x, y)
+     x  y 
+[1,] 1 10 
+[2,] 2 11 
+[3,] 3 12
+
+&gt; rbind(x, y) 
+  [,1] [,2] [,3]
+x    1    2    3
+y   10   11   12</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>列表和数据框</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>列表</h2></hgroup><article >
+
+<ul>
+<li>列表是特殊的向量，组成元素可以是不同类型</li>
+<li>打印列表时，元素序号用[[n]]表示</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- list(1, &quot;a&quot;, TRUE, 1 + 4i) 
+&gt; x
+[[1]]
+[1] 1
+
+[[2]] 
+[1] &quot;a&quot;
+
+[[3]]
+[1] TRUE
+
+[[4]]
+[1] 1+4i</pre>
+
+</article></slide><slide class=''><hgroup><h2>列表的名称</h2></hgroup><article >
+
+<p>与向量一样，列表可以有names属性。</p>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- list(a = 1, b = &quot;a&quot;, c = TRUE, d = 1 + 4i) 
+&gt; x
+$a
+[1] 1
+
+$b 
+[1] &quot;a&quot;
+
+$c 
+[1] TRUE
+
+$d
+[1] 1 + 4i</pre>
+
+</article></slide><slide class=''><hgroup><h2>数据框</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>数据框是特殊的列表，每个列表长度相等</li>
+<li>数据框用于存放表格数据，是数据分析的基础
+
+<ul>
+<li>每一列就是一个列表</li>
+<li>每一行分布在所有列表的同一位元素</li>
+</ul></li>
+<li>计算速度上，矩阵明显快于数据框，可通过<code>data.matrix()</code>转换</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- data.frame(foo = 1:4, bar = c(T, T, F, F)) 
+&gt; x
+  foo   bar
+1   1  TRUE
+2   2  TRUE
+3   3 FALSE
+4   4 FALSE
+&gt; nrow(x)
+[1] 4
+&gt; ncol(x)
+[1] 2</pre>
+
+</article></slide><slide class=''><hgroup><h2>数据框的行列名</h2></hgroup><article >
+
+<p>数据框和矩阵一样，可以通过<code>row.names</code>和<code>names</code>赋予行名和列名</p>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- data.frame(1:4, c(T, T, F, F))
+&gt; names(x) &lt;- c(&quot;foo&quot;, &quot;bar&quot;)
+&gt; x
+  foo   bar
+1   1  TRUE
+2   2  TRUE
+3   3 FALSE
+4   4 FALSE
+
+&gt; row.names(x) &lt;- c(&quot;r1&quot;, &quot;r2&quot;, &quot;r3&quot;, &quot;r4&quot;)
+   foo   bar
+r1   1  TRUE
+r2   2  TRUE
+r3   3 FALSE
+r4   4 FALSE</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

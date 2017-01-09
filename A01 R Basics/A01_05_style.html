@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A01-05 R的代码风格</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A01-05 R的代码风格',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A01_05_style_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A01_05_style_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A01_05_style_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-14 11:22:35</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>代码风格</a></li>
+<li><a href='#9' title=''>编码风格约定</a></li>
+<li><a href='#21' title=''>语言规则</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>代码风格</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>是啥？</h2></hgroup><article >
+
+<p><strong>代码风格</strong>（英语：Programming style）即程序开发人员所编写源代码的书写风格。 良好代码风格的特点是使代码易读。 总结程序设计实践中的经验，代码风格的要素包括（但不限于）以下几点：</p>
+
+<ul>
+<li>名字的使用（参见：<a href='https://zh.wikipedia.org/wiki/%E9%A7%9D%E5%B3%B0%E5%BC%8F%E5%A4%A7%E5%B0%8F%E5%AF%AB' title=''>驼峰式大小写</a>、<a href='https://zh.wikipedia.org/w/index.php?title=%E6%A0%87%E8%AF%86%E7%AC%A6%E5%91%BD%E5%90%8D%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;redlink=1' title=''>标识符命名约定</a>、<a href='https://zh.wikipedia.org/wiki/%E5%8C%88%E7%89%99%E5%88%A9%E5%91%BD%E5%90%8D%E6%B3%95' title=''>匈牙利命名法</a>）</li>
+<li><a href='https://zh.wikipedia.org/wiki/%E8%A1%A8%E8%BE%BE%E5%BC%8F' title=''>表达式</a>与语句</li>
+<li>常量的使用</li>
+<li>注释的使用</li>
+<li><a href='https://zh.wikipedia.org/w/index.php?title=%E7%BC%A9%E8%BF%9B&amp;action=edit&amp;redlink=1' title=''>缩进</a>（参见：<a href='https://zh.wikipedia.org/w/index.php?title=%E7%BC%A9%E8%BF%9B%E9%A3%8E%E6%A0%BC&amp;action=edit&amp;redlink=1' title=''>缩进风格</a>）</li>
+<li>代码的布局</li>
+</ul>
+
+<p class="footer">
+
+来源: <a href='https://zh.wikipedia.org/zh-hans/%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC' title=''>Wikipedia.org</a>
+
+</p>
+
+</article></slide><slide class=''><hgroup><h2>遵守风格约定的意义</h2></hgroup><article >
+
+<blockquote>
+<p>我只是想用R跑跑分析，又不要做码农，为什么还要遵守开发者代码风格？</p>
+</blockquote>
+
+<ul>
+<li>良好的代码风格代表了代码组织的<strong>最优实践</strong>
+
+<ul>
+<li>降低了<strong>手残/笔误</strong>的几率</li>
+<li>便于理解，提高了代码的<strong>可读性</strong>(结构、注释)</li>
+</ul></li>
+<li>统一的代码风格能<strong>避免混乱</strong>，便利<strong>团队协作</strong></li>
+</ul>
+
+<p class="footer">
+
+参见<a href='file://ship-oa-001/china_health_advisory/Analytics/GUIDE%20And%20TOOLS/Guideline/HMS%20R%E8%AF%AD%E8%A8%80%E7%BC%96%E7%A0%81%E9%A3%8E%E6%A0%BC%E6%8C%87%E5%8D%97.html#4-r-编码风格约定-style-rules' title=''>HMS的R代码风格指南</a>和<a href='https://google.github.io/styleguide/Rguide.xml' title=''>Google R Style Guide</a>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>编码风格约定 (Style Rules)</h2></hgroup><article  id="-style-rules">
+
+</article></slide><slide class=''><hgroup><h2>表示和命名 Notation And Naming </h2><h3> 文件命名 Filenames</h3></hgroup><article  id="-notation-and-naming--filenames">
+
+<ul>
+<li>脚本文件名应以 .R (大写) 结尾, 文件名本身要有意义。
+
+<ul>
+<li><gre>正例</gre>: predict_ad_revenue.R</li>
+<li><red>反例</red>: foo.R, function.R</li>
+</ul></li>
+<li>不要把所有的功能函数放在一个脚本中。</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<h3>标识符命名 Identifiers</h3>
+
+<ul>
+<li>不要使用连字符( - )，也尽量不使用下划线 ( _ )。</li>
+<li>变量名：名词或<strong>名词性短语</strong>，用(.)分隔小写单词，或从第二个单词开始首字母大写（小驼峰法）;
+
+<ul>
+<li>不使用保留字或函数名，如<code>c, list, TRUE, FALSE</code>；</li>
+<li><gre>正例</gre>: avgClicks, avg.clicks</li>
+<li><red>反例</red>: avg_Clicks, AvgClicks</li>
+</ul></li>
+<li>函数名：动词或<strong>动词性短语</strong>，用(_)分隔小写单词；或小驼峰法（不用大驼峰法）;
+
+<ul>
+<li>不输出(export)到命名空间(NAMESPACE)的函数名前加”.”前缀；</li>
+<li><gre>正例</gre>: calculateAvgClicks, calculate_avg_clicks</li>
+<li><red>反例</red>: calculate.avg.clicks, CalculateAvgClicks</li>
+</ul></li>
+<li>S3类(S3 Class)名采用大驼峰法，S4类(S4 Class)名采用大驼峰法并加”S4”前缀</li>
+<li>方法名(method)也采用函数名相同规则</li>
+<li>常数命名规则同函数, 但需使用一个k 开头；或全大写：如kConstantName，CONSTANTNAME</li>
+<li>例外: 当创建一个含类 (class) 属性的对象时, 函数名 (也是constructor) 和类名 (class) 应当匹配 (例如, lm).</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>语法 Syntax</h2></hgroup><article  id="-syntax" class="smaller">
+
+<div class="columns-2">
+<h3>单行长度 Length of Lines</h3>
+
+<ul>
+<li>最大单行长度为 80 个字符。</li>
+</ul>
+
+<p>Rstudio中Tools -&gt; Global Options -&gt; Code -&gt; Display-&gt; General -&gt; Show margin -&gt; Margin column = 80。</p>
+
+<img src='A01_05_style_files/figure-html/margin.PNG' title='fig:'/>
+
+<h3>缩进 Indentation</h3>
+
+<ul>
+<li>使用4个空格来缩进代码. 不要使用制表符(tab)或混合使用二者。</li>
+</ul>
+
+<p>Rstudio中Tools -&gt; Global Options -&gt; Code -&gt; Editing -&gt; General -&gt; Insert spaces for tab -&gt; Tab width=4。</p>
+
+<img src='A01_05_style_files/figure-html/indent.PNG' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="smaller">
+
+<h3>空白 Spacing</h3>
+
+<ul>
+<li>在所有二元操作符 (=, +, -, &lt;-, 等等)的<strong>两侧</strong>加上空格。
+
+<ul>
+<li>例外: 在函数调用中传递参数时 =两边的空格可不加。不可在逗号前加空格, 逗号后总须加空格。</li>
+<li><p><gre>正例</gre>:</p>
+
+<pre class = 'prettyprint lang-r'>tabPrior &lt;- table(df[df$daysFromOpt &lt; 0, &quot;campaignid&quot;])
+total &lt;- sum(x[, 1])
+total &lt;- sum(x[1, ])</pre></li>
+<li><p><red>反例</red>:</p>
+
+<pre class = 'prettyprint lang-r'>tabPrior &lt;- table(df[df$daysFromOpt&lt;0, &quot;campaignid&quot;])   # 在 &#39;&lt;&#39; 两侧需要增加空格
+tabPrior &lt;- table(df[df$daysFromOpt &lt; 0,&quot;campaignid&quot;])  # 逗号后需要一个空格
+tabPrior&lt;- table(df[df$daysFromOpt &lt; 0, &quot;campaignid&quot;])  # 在 &lt;- 前需要一个空格
+tabPrior&lt;-table(df[df$daysFromOpt &lt; 0, &quot;campaignid&quot;])   # 在 &lt;- 两侧需要增加空格
+total &lt;- sum(x[,1])   # 逗号后需要一个空格
+total &lt;- sum(x[ ,1])  # 逗号后需要一个空格, 而非逗号之前
+-2&lt;-1                 # 想想看会发生什么?</pre></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-2" class="smaller">
+
+<ul>
+<li>在前括号前加一个空格, 函数调用时除外。
+
+<ul>
+<li><gre>正例</gre>: <code>if (debug)</code></li>
+<li><red>反例</red>: <code>if(debug)</code></li>
+</ul></li>
+<li><p>多加空格 (即，在行内使用多于一个空格) 也是可以的，如果这样做能够改善等号或箭头 (&lt;-) 的对齐效果。</p>
+
+<pre class = 'prettyprint lang-r'>plot(x    = xCoord,
+     y    = dataMat[, makeColName(metric, ptiles[1], &quot;roiOpt&quot;)],
+     ylim = ylim,
+     xlab = &quot;dates&quot;,
+     ylab = metric,
+     main = (paste(metric, &quot; for 3 samples &quot;, sep=&quot;&quot;)))</pre></li>
+<li>不要向圆括号或方括号中的代码两侧加入空格。但逗号后总要加空格。
+
+<ul>
+<li><p><gre>正例</gre>:</p>
+
+<pre class = 'prettyprint lang-r'>if (debug)
+x[1, ]</pre></li>
+<li><p><red>反例</red>: <code>if(debug)</code></p>
+
+<pre class = 'prettyprint lang-r'>if ( debug )  # debug 的两边不要加空格
+x[1,]         # 需要在逗号后加一个空格 </pre></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-3" class="smaller">
+
+<h3>花括号 Curly Braces</h3>
+
+<ul>
+<li>前括号永远不应该独占一行；</li>
+<li>后括号应当总是独占一行。</li>
+<li><p>但在处理这类单个语句时， 必须前后一致地要么全部使用花括号，或者全部不用花括号。</p>
+
+<pre class = 'prettyprint lang-r'>if (is.null(ylim)) {
+    ylim &lt;- c(0, 0.06)
+}</pre>
+
+<p>或 (不可混用)</p>
+
+<pre class = 'prettyprint lang-r'>if (is.null(ylim))
+    ylim &lt;- c(0, 0.06)</pre></li>
+<li>总在新起的一行开始书写代码块的主体.
+
+<ul>
+<li><p><red>反例</red>:</p>
+
+<pre class = 'prettyprint lang-r'>if (is.null(ylim))              ylim &lt;- c(0, 0.06)
+if (is.null(ylim))              {ylim &lt;- c(0, 0.06)}</pre></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>赋值 Assignment</h3>
+
+<ul>
+<li>尽量使用&quot;&lt;-&quot;进行赋值, 不用&quot;=&quot;赋值，以保证对早期R版本的兼容性；</li>
+<li>但对于仅用于较新版本环境的代码，可统一用&quot;=&quot;赋值。</li>
+</ul>
+
+<h3>分号 Semicolons</h3>
+
+<p>不要以分号结束一行，也不要利用分号在同一行放多于一个命令。</p>
+
+</article></slide><slide class=''><hgroup><h2>代码组织 Organization</h2></hgroup><article  id="-organization" class="smaller">
+
+<h3>总体布局和顺序 General Layout And Ordering</h3>
+
+<p>如果所有人都以相同顺序安排代码内容, 就可以更加轻松快速地阅读并理解他人的脚本了。</p>
+
+<ul>
+<li>版权声明注释</li>
+<li>作者信息注释</li>
+<li>文件描述注释, 包括程序的用途, 输入和输出</li>
+<li><code>source()</code> 和 <code>library()</code> 语句</li>
+<li>函数定义</li>
+<li>要执行的语句，如果有的话 (例如，<code>print</code>，<code>plot</code>)</li>
+<li>所有的类定义都写入一个名为allClass.R的独立文件中</li>
+<li>基本过程/函数定义写入一个名为generic.R的独立文件中</li>
+<li>单元测试应在另一个名为原始的文件名_unittest.R的独立文件中进行。</li>
+</ul>
+
+<p>编写R加载包的话，请全盘参考<a href='http://r-pkgs.had.co.nz' title=''>William Hadley的指南</a>。</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>注释准则 Commenting Guidelines</h3>
+
+<ul>
+<li><strong>注释您的代码</strong>。整行注释应以 # 后接一个空格开始。</li>
+<li>行内短注释应在代码后接两个空格，#，再接一个空格. 。</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'># Create histogram of frequency of campaigns by pct budget spent.
+
+hist(df$pctSpent,
+     breaks = &quot;scott&quot;,  # method for choosing number of buckets
+     main   = &quot;Histogram: fraction budget spent by campaignid&quot;,
+     xlab   = &quot;Fraction of budget spent&quot;,
+     ylab   = &quot;Frequency (count of campaignids)&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>函数的定义和调用 Function Definition And Calls</h3>
+
+<ul>
+<li>函数定义应首先列出无默认值的参数，然后再列出有默认值的参数。</li>
+<li>函数定义和函数调用中，允许每行写多个参数；折行只允许在赋值语句外进行。
+
+<ul>
+<li><p><gre>正例</gre>:</p>
+
+<pre class = 'prettyprint lang-r'>predictCTR &lt;- function(query, property, numDays,
+                   showPlot = TRUE)</pre></li>
+<li><p><red>反例</red>:</p>
+
+<pre class = 'prettyprint lang-r'>predictCTR &lt;- function(query, property, numDays, showPlot =
+                   TRUE)</pre></li>
+</ul></li>
+<li>理想情况下，单元测试应该充当函数调用的样例 (对于包中的程序来说)。</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-4" class="smaller">
+
+<h3>函数文档 Function Documentation</h3>
+
+<p>为便于使用<a href='https://github.com/klutometis/roxygen' title=''>roxygen2</a>包将R脚本编译成加载包，<strong>强烈建议</strong>在函数定义行上方插入一个注释区. 这些注释应当符合roxygen2的语法，每一行都以#’ 开头:</p>
+
+<ul>
+<li>此函数的标题，用<code>@title</code>表示（或注释区第一行）;</li>
+<li>此函数的简要描述和详细描述，用<code>@description</code>（或注释区第三行，第二行留空）和<code>@details</code>表示;</li>
+<li>此函数的参数列表, 用<code>@param</code>表示, 对每个参数的描述 (包括数据类型);</li>
+<li>以及对于返回值的描述, 以<code>@return</code>表示;</li>
+<li>其他可选注释，如<code>@aliases</code>，<code>@author</code>，<code>@examples</code>，<code>@export</code>，<code>@importFrom</code></li>
+</ul>
+
+<p>这些注释应当描述得足够充分, 这样调用者无须阅读函数中的任何代码即可使用此函数. 而编译后，roxygen2能自动将这些注释生成函数文档(.Rd)。</p>
+
+<p>鼓励用RStudio中书写代码。可使用 <code>Ctrl+Alt+Shift+R</code> 快捷键在函数体上方插入Roxygen2文档骨架。</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-5" class="smaller">
+
+<h4>示例函数 Showcase</h4>
+
+<pre class = 'prettyprint lang-r'>#&#39; Computes the sample covariance between two vectors.
+#&#39; 
+#&#39; \code{CalculateSampleCovariance} computes the sample covariance between two 
+#&#39;       vectors.
+#&#39; 
+#&#39; @details \code{CalculateSampleCovariance} computes the sample covariance 
+#&#39;       between two vectors.
+#&#39;
+#&#39; @param x One of two vectors whose sample covariance is to be calculated.
+#&#39; @param y The other vector. x and y must have the same length, greater than one,
+#&#39;      with no missing values.
+#&#39; @param verbose If TRUE, prints sample covariance; if not, not. Default is TRUE.
+#&#39;
+#&#39; @return The sample covariance between x and y.
+#&#39; @export
+#&#39; @import base
+#&#39;
+#&#39; @examples
+#&#39; calculateSampleCovariance(x, y)
+#&#39;
+#&#39; @author Given Middle Surname, \email{name@@domain.com}
+#&#39; @references \url{http://xxxxxxxxxxx}
+#&#39; @seealso \code{\link{var}}
+#&#39; @keywords covariance
+#&#39;</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>calculateSampleCovariance &lt;- function(x, y, verbose = TRUE) {
+  n &lt;- length(x)
+  # Error handling
+  if (n &lt;= 1 || n != length(y)) {
+    stop(&quot;Arguments x and y have invalid lengths: &quot;,
+         length(x), &quot; and &quot;, length(y), &quot;.&quot;)
+  }
+  if (TRUE %in% is.na(x) || TRUE %in% is.na(y)) {
+    stop(&quot; Arguments x and y must not have missing values.&quot;)
+  }
+  covariance &lt;- var(x, y)
+  if (verbose)
+    cat(&quot;Covariance = &quot;, round(covariance, 4), &quot;.\n&quot;, sep = &quot;&quot;)
+  return(covariance)
+}</pre>
+
+<p>对于不输出到命名空间的隐函数，可将上述注释修改为非roxygen2格式的，即以“#”开头，而非“#’”。</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>TODO/FIXME 书写风格 Style</h3>
+
+<p>编码时通篇使用一种一致的风格来书写 TODO：</p>
+
+<ul>
+<li><code>TODO(您的用户名)</code>: 所要采取行动的明确描述 或</li>
+<li><code>FIXME(您的用户名)</code>: 所要采取行动的明确描述</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>语言规则 (Language)</h2></hgroup><article  id="-language">
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-6">
+
+<h3>不要用<code>Attach()</code></h3>
+
+<p>使用 attach() 造成错误的可能数不胜数。避免使用它。</p>
+
+<h3>完整书写Comprehensive TRUE和FALSE</h3>
+
+<p>始终完整书写TRUE和FALSE，而不要用T或F简略。</p>
+
+<ul>
+<li><p><gre>正例</gre>:</p>
+
+<pre class = 'prettyprint lang-r'>a &lt;- TRUE</pre></li>
+<li><p><red>反例</red>:</p>
+
+<pre class = 'prettyprint lang-r'>a &lt;- F</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-7"></li>
+</ul>
+
+<h3>错误捕捉 Error Capturing</h3>
+
+<p>错误 (error) 应当使用 <code>stop()</code>或<code>stopifnot()</code> 抛出。</p>
+
+<h3>对象和方法 Objects And Methods</h3>
+
+<ul>
+<li>S 语言中有两套面向对象系统，S3 和 S4，在 R 中这两套均可使用。S3 方法的可交互性更强，更加灵活；反之，S4 方法更加正式和严格。</li>
+<li>这里推荐使用 S3 对象和方法，除非您有很强烈的理由去使用 S4 对象和方法。使用 S4 对象的一个主要理由是在 C++ 代码中直接使用对象。使用一个 S4 泛型/方法的主要理由是对双参数的分发.</li>
+<li>避免混用 S3 和 S4: S4 方法会忽略 S3 中的继承，反之亦然。</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-8" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "libs/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

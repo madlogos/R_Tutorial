@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A01-04 R的控制结构</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A01-04 R的控制结构',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A01_04_ctrl_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A01_04_ctrl_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A01_04_ctrl_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-06 18:20:53</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>控制结构</a></li>
+<li><a href='#5' title=''>条件</a></li>
+<li><a href='#9' title=''>循环</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span><br>部分内容借鉴Johns Hopkins University Data Science Series Courses @ <a href='https://www.coursera.org' title=''>Coursera</a>.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>控制结构</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>常见控制结构</h2></hgroup><article >
+
+<p>当用到大段代码时，控制结构用来控制程序的运行逻辑。常见的有：</p>
+
+<ul>
+<li>条件:
+
+<ul>
+<li><code>if</code>, <code>else</code></li>
+<li><code>switch</code></li>
+</ul></li>
+<li>循环:
+
+<ul>
+<li><code>for</code>: 固定次数的循环</li>
+<li><code>while</code>: 符合某种条件时循环</li>
+<li><code>repeat</code>: 无限循环</li>
+<li><code>break</code>: 终止循环</li>
+<li><code>next</code>: 跳出某若干轮循环</li>
+</ul></li>
+<li><code>return</code>: 跳出函数</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>条件</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2><code>if</code>&#8230;<code>else</code></h2></hgroup><article  id="if...else">
+
+<p>else不是必需的。</p>
+
+<pre class = 'prettyprint lang-r'>if (&lt;条件&gt;) {
+    ## 执行代码
+} else {
+    ## 执行另一些代码
+}
+
+if (&lt;条件1&gt;) {
+    ## 执行代码
+} else if (&lt;条件2&gt;)  {
+    ## 执行另一些代码
+} else {
+    ## 执行另一些代码
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2>举例</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>if (x &gt; 3) {
+    y &lt;- 10
+} else {
+    y &lt;- 0
+}</pre>
+
+<pre class = 'prettyprint lang-r'>y &lt;- if (x &gt; 3) 10 else 0</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>switch</code></h2></hgroup><article  id="switch">
+
+<p>用于离散型标量，符合某个条件即返回对应的表达式。</p>
+
+<pre class = 'prettyprint lang-r'>switch(expr, &lt;case1&gt; = &lt;result1&gt;, &lt;case2&gt; = &lt;result2&gt;, ...)</pre>
+
+<pre class = 'prettyprint lang-r'>centre &lt;- function(x, type = c(&quot;mean&quot;, &quot;median&quot;, &quot;trimmed&quot;)) {
+    type &lt;- match.arg(type)
+    switch(type,
+        mean = mean(x),
+        median = median(x),
+        trimmed = mean(x, trim = .1))
+}
+centre(rcauchy(10), &quot;mean&quot;)</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>循环</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2><code>for</code>循环</h2></hgroup><article  id="for">
+
+<p><code>for</code>逐个遍历一个控制变量，并执行循环体内的代码。常用来遍历一个list。</p>
+
+<pre class = 'prettyprint lang-r'>for (i in 1:10) {
+    print(i)
+}</pre>
+
+<p>下面几个循环语句的结果是一样的。</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;)
+
+for (i in 1:4) print(x[i])
+for (i in seq_along(x)) print(x[i])
+for (letter in x) print(letter)
+for (i in 1:4) print(x[i])</pre>
+
+</article></slide><slide class=''><hgroup><h2>嵌套的<code>for</code>循环</h2></hgroup><article  id="for">
+
+<p><code>for</code>循环也可以嵌套用（但效率会很低）。</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- matrix(1:6, 2, 3)
+
+for (i in seq_len(nrow(x))) {
+    for (j in seq_len(ncol(x))) {
+        print(x[i, j])
+    }   
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>while</code>循环</h2></hgroup><article  id="while">
+
+<p>While循环每循环一遍就检测一下控制条件，如果为真，则循环执行循环体代码；一旦为假，则停止循环。 如果控制条件始终无法达到，将进入死循环。</p>
+
+<pre class = 'prettyprint lang-r'>count &lt;- 0
+while (count &lt; 10) {
+    print(count)
+    count &lt;- count + 1
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>while</code>循环(续)</h2></hgroup><article  id="while">
+
+<p>也可以检测多个条件。</p>
+
+<pre class = 'prettyprint lang-r'>z &lt;- 5
+
+while (z &gt;= 3 &amp;&amp; z &lt;= 10) {
+    print(z)
+    coin &lt;- rbinom(1, 1, 0.5)
+    
+    if (coin == 1) {  ## random walk
+        z &lt;- z + 1
+    } else {
+        z &lt;- z - 1
+    } 
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>repeat</code></h2></hgroup><article  id="repeat">
+
+<p><code>repeat</code>启动一个无限循环，必须搭配一个稳妥的<code>break</code>命令在适当时机结束循环。</p>
+
+<pre class = 'prettyprint lang-r'>x0 &lt;- 1
+tol &lt;- 1e-8
+
+repeat {
+    x1 &lt;- computeEstimate()
+    
+    if(abs(x1 - x0) &lt; tol) {
+        break
+    } else {
+        x0 &lt;- x1
+    } 
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>next</code>, <code>return</code></h2></hgroup><article  id="next-return">
+
+<p><code>next</code>用于跳过循环体的某几轮，而<code>return</code>则用于终止函数执行，并向上返回结果值。</p>
+
+<pre class = 'prettyprint lang-r'>for (i in 1:100) {
+    if (i &lt;= 20) {
+        ## 跳出前20次循环
+        next 
+    }
+    ## &lt;执行代码&gt;
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "libs/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

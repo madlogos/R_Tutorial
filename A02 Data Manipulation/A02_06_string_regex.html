@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A02-06 文本操作和正则表达式</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A02-06 文本操作和正则表达式',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A02_06_string_regex_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  'HMS' ,
+        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A02_06_string_regex_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
+
+  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A02_06_string_regex_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2016-12-22 17:32:12</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>基本的文本操作</a></li>
+<li><a href='#11' title=''>正则表达式</a></li>
+<li><a href='#20' title=''>格式与编码</a></li>
+<li><a href='#25' title=''>stringr包</a></li>
+</ul>
+
+<p class="footer">
+
+Copyright © 2016 Aetna Inc. <span class="cranberry">
+内部使用，请勿外传。</span>
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>基本的文本操作</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>字符数统计&amp;字符翻替</h2></hgroup><article >
+
+<h4>统计: <code>nchar()</code></h4>
+
+<pre class = 'prettyprint lang-r'>&gt; nchar(c(&quot;Hello world!&quot;, &quot;Goodbye guys!&quot;))
+&gt; [1] 12 13</pre>
+
+<h4>翻替: <code>toupper()</code>, <code>tolower()</code>, <code>chartr()</code></h4>
+
+<pre class = 'prettyprint lang-r'>&gt; tolower(&#39;AgCTaaGGGcctTagct&#39;)  # 转小写
+[1] &quot;agctaagggccttagct&quot;
+&gt; toupper(&quot;AgCTaaGGGcctTagct&quot;)  # 转大写
+[1] &quot;AGCTAAGGGCCTTAGCT&quot;
+&gt; chartr(&quot;Tt&quot;, &quot;Uu&quot;, &#39;AgCTaaGGGcctTagct&#39;)  # 批量替换
+[1] &quot;AgCUaaGGGccuUagcu&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>字符连接&amp;分割</h2></hgroup><article  class="smaller">
+
+<h4>连接: <code>paste</code>/<code>paste0</code></h4>
+
+<pre class = 'prettyprint lang-r'>&gt; paste(c(&quot;A&quot;, &quot;B&quot;), 1:2, sep=&quot;_&quot;)  # sep连接向量
+[1] &quot;A_1&quot; &quot;B_2&quot;
+&gt; paste(c(&quot;A&quot;, &quot;B&quot;), 1:2, collapse=&quot;_&quot;)
+# 先sep连接向量，再collapse连接为标量
+[1] &quot;A 1_B 2&quot;
+&gt; paste0(c(&quot;A&quot;, &quot;B&quot;), 1:2)  # 等价于paste(..., sep=&quot;&quot;)
+[1] &quot;A1&quot; &quot;B2&quot;</pre>
+
+<h4>分割: <code>strsplit</code></h4>
+
+<ul>
+<li>返回的是list</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; strsplit(&quot;Hello\nworld!&quot;, split=&quot;\n&quot;)
+[[1]]
+[1] &quot;Hello&quot;  &quot;world!&quot;
+&gt; strsplit(&quot;Hello&quot;, split=&quot;&quot;)  # 单字符拆分
+[[1]]
+[1] &quot;H&quot; &quot;e&quot; &quot;l&quot; &quot;l&quot; &quot;o&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>定位和提取: <code>substr</code>/<code>substring</code></h2></hgroup><article  id="-substrsubstring">
+
+<ul>
+<li><code>substr(x, start, stop)</code></li>
+<li><code>substring(text, first, last = 1000000L)</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; substr(&quot;01234567&quot;, 2, 4)
+[1] &quot;123&quot;
+&gt; substring(&quot;01234567&quot;, c(2, 4), c(4, 6))
+# 等价于subtr(rep(&quot;01234567&quot;, 2), c(2, 4), c(4, 6))
+[1] &quot;123&quot; &quot;345&quot;
+
+&gt; substring(&quot;01234567&quot;, seq(1, 7, by=2), seq(2, 8, by=2))
+# 等价于substring(&quot;01234567&quot;, c(1, 3, 5, 7), c(2, 4, 6, 8))
+# 也等价于substr(rep(&quot;01234567&quot;, 4), seq(1, 7, by=2), seq(2, 8, by=2))
+[1] &quot;01&quot; &quot;23&quot; &quot;45&quot; &quot;67&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>模式查询: <code>grep</code>家族</h2></hgroup><article  id="-grep">
+
+<ul>
+<li><p>grep是UNIX下的模式识别库，基于<a href='#11' title=''>正则表达式</a></p></li>
+<li><p>返回位置的函数: <code>grep</code>, <code>regexpr</code></p></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;a&quot;, c(&quot;abca&quot;, &quot;tbbt&quot;))  # 返回第一个查找结果
+[1] 1
+&gt; regexpr(&quot;a&quot;, c(&quot;abca&quot;, &quot;tbbt&quot;))
+[1]  1 -1
+attr(,&quot;match.length&quot;)
+[1]  1 -1
+attr(,&quot;useBytes&quot;)
+[1] TRUE</pre>
+
+<ul>
+<li>返回逻辑值的函数: <code>grepl</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grepl(&quot;a&quot;, c(&quot;abca&quot;, &quot;tbbt&quot;))
+[1] TRUE FALSE</pre>
+
+</article></slide><slide class=''><hgroup><h2>模式查询: <code>grep</code>家族 (续)</h2></hgroup><article  id="-grep-" class="smaller">
+
+<ul>
+<li>返回列表的函数: <code>gregexpr</code>, <code>regexec</code></li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; gregexpr(&quot;a&quot;, c(&quot;abca&quot;, &quot;tbbt&quot;))  # 返回全部查找结果
+[[1]]
+[1] 1 4
+attr(,&quot;match.length&quot;)
+[1] 1 1
+attr(,&quot;useBytes&quot;)
+[1] TRUE
+
+[[2]]
+[1] -1
+attr(,&quot;match.length&quot;)
+[1] -1
+attr(,&quot;useBytes&quot;)
+[1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>&gt; regexec(&quot;a&quot;, c(&quot;abca&quot;, &quot;tbbt&quot;))  # 返回第一个查找结果
+[[1]]
+[1] 1
+attr(,&quot;match.length&quot;)
+[1] 1
+attr(,&quot;useBytes&quot;)
+[1] TRUE
+
+[[2]]
+[1] -1
+attr(,&quot;match.length&quot;)
+[1] -1
+attr(,&quot;useBytes&quot;)
+[1] TRUE</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>模式替换: <code>grep</code>家族<code>sub</code>, <code>gsub</code></h2></hgroup><article  id="-grepsub-gsub">
+
+<ul>
+<li>替换第一个: <code>sub</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; sub(&quot;a&quot;, &quot;x&quot;, c(&quot;abca&quot;, &quot;tbbt&quot;))
+[1] &quot;xbca&quot; &quot;tbbt&quot;</pre>
+
+<ul>
+<li>全局替换: <code>gsub</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; gsub(&quot;a&quot;, &quot;x&quot;, c(&quot;abca&quot;, &quot;tbbt&quot;))
+[1] &quot;xbcx&quot; &quot;tbbt&quot;</pre>
+
+<ul>
+<li>不用<code>replace</code>或<code>substitute</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; replace(1:5, c(3,5), &#39;a&#39;)
+[1] &quot;1&quot; &quot;2&quot; &quot;a&quot; &quot;4&quot; &quot;a&quot;
+&gt; subsitute(y~x)
+y ~ x</pre>
+
+</article></slide><slide class=''><hgroup><h2>定制输出</h2></hgroup><article  class="smaller">
+
+<ul>
+<li><code>strtrim</code>: 定制输出宽度</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; strtrim(rep(&quot;abcde&quot;, 3), c(1, 5, 10))
+[1] &quot;a&quot;     &quot;abcde&quot; &quot;abcde&quot;</pre>
+
+<ul>
+<li><code>trimws</code>: 去空格</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; trimws(&quot;  abcd &quot;)
+[1] &quot;abcd&quot;</pre>
+
+<ul>
+<li><code>strwrap</code>: 缩进和宽度</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; strwrap(stringi::stri_rand_lipsum(1), width=40, exdent=4)
+ [1] &quot;Lorem ipsum dolor sit amet, in ornare&quot;
+ [2] &quot;    vehicula proin lorem duis platea&quot;
+ [3] &quot;    aliquam ridiculus tortor. Tellus&quot;
+ [4] &quot;    conubia nibh elementum, quam lectus&quot;
+ [5] &quot;    odio duis eleifend. Sed dictumst&quot;
+ [6] &quot;    morbi laoreet dignissim, sapien&quot;
+ ...</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>正则表达式</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>何为正则表达式 (Regular Expression)</h2></hgroup><article  id="-regular-expression">
+
+<ul>
+<li>用单个字符串来描述、匹配一系列匹配某个句法规则的字符串</li>
+<li>发端于UNIX，广泛用于计算机编程</li>
+<li><code>grep</code>家族本质上是基于正则表达式工作的</li>
+<li><code>?regex</code>可了解更多，基本组成
+
+<ul>
+<li>字符: 如\d代表数字</li>
+<li>选择: 如|表示或</li>
+<li>数量: 如{1,4}表示出现最少1次，最多4次</li>
+<li>层级: 先匹配括号内的</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>R中的正则表达式</h2></hgroup><article  id="r" class="smaller">
+
+<ul>
+<li>英文字母、数字和很多可显示的字符本身就是正则表达式，用于匹配自己</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;2&quot;, c(&quot;way&quot;, &quot;2&quot;, &quot;go&quot;))
+[1] 2</pre>
+
+<ul>
+<li>一些特殊字符不能用于匹配自身，如. \ | ( ) <a href='#section-1' title=''></a> { } ^ $ * + ?，称为元字符</li>
+<li>元字符匹配自身需要前加\转义</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;\\.&quot;, c(&quot;4.2&quot;, &quot;1&quot;, &quot;0.4&quot;))
+[1] 1 3</pre>
+
+<ul>
+<li>支持Perl正则</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;[[:punct:]]&quot;, c(&quot;32&quot;, &quot;a&quot;, &quot;5-6&quot;), perl=TRUE)
+[1] 3</pre>
+
+</article></slide><slide class=''><hgroup><h2>示例</h2></hgroup><article  class="smaller">
+
+<h3>单词\w、数字\d、空格\s</h3>
+
+<ul>
+<li>\w = [[:alnum:]] 或 [a-zA-Z0-9], \d = [[:digit:]] 或 [0-9], \s = [[:blank:]]</li>
+<li>\W、\D、\S代表非单词、非数字、非空格</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;\\w&quot;, c(&quot;w1&quot;, &quot; &quot;, 23))
+[1] 1 3
+&gt; grep(&quot;[[:alnum:]]&quot;, c(&quot;w1&quot;, &quot; &quot;, 23), perl=TRUE)
+[1] 1 3
+&gt; grep(&quot;[[:lower:]]&quot;, c(&quot;w1&quot;, &quot; &quot;, 23), perl=TRUE)
+[1] 1
+&gt; grep(&quot;\\d&quot;, c(&quot;w1&quot;, &quot; &quot;, 23))
+[1] 1 3
+&gt; grep(&quot;[[:digit:]]&quot;, c(&quot;w1&quot;, &quot; &quot;, 23))
+[1] 1 3
+&gt; grep(&quot;\\s&quot;, c(&quot;w1&quot;, &quot; &quot;, 23))
+[1] 2
+&gt; grep(&quot;[[:blank:]]&quot;, c(&quot;w1&quot;, &quot; &quot;, 23))
+[1] 2</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>模糊匹配: <code>.</code>，含(<code>[]</code>)和不含(<code>[^]</code>)</h3>
+
+<ul>
+<li>匹配任何含&quot;hello&quot;的字符串，无论&quot;h&quot;大小写</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; string &lt;- c(&quot;Hello &quot;, &quot; world&quot;, &quot; hello&quot;, &quot; piano&quot;, &quot; cello.&quot;)
+&gt; grep(&quot;[Hh]ello&quot;, string)
+[1] 1 3</pre>
+
+<ul>
+<li>匹配任何含&quot;ello&quot;、但不包括&quot;hello&quot;的字符串，无论&quot;h&quot;大小写</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;[^Hh]ello&quot;, string)
+[1] 5</pre>
+
+<ul>
+<li>匹配任意字符</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; string &lt;- c(&quot;Grrr&quot;, &quot;small&quot;, &quot;Grrrrrr&quot;, &quot;big&quot;)
+&gt; grep(&quot;s.a&quot;, string)
+[1] 2</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>匹配行首(<code>^</code>)、行尾(<code>$</code>)</h3>
+
+<ul>
+<li>匹配&quot;hello&quot;开头的字符串，无论&quot;h&quot;大小写</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; string &lt;- c(&quot;Hello &quot;, &quot; world&quot;, &quot; hello&quot;, &quot; piano&quot;, &quot; cello.&quot;)
+&gt; grep(&quot;^[Hh]ello&quot;, string)
+[1] 1</pre>
+
+<ul>
+<li>匹配&quot;hello&quot;结尾的字符串，无论&quot;h&quot;大小写</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; string &lt;- c(&quot;Hello &quot;, &quot; world&quot;, &quot; hello&quot;, &quot; piano&quot;, &quot; cello.&quot;)
+&gt; grep(&quot;[Hh]ello$&quot;, string)
+[1] 3</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<h3>字符重复多次(?, *, +, {m,n})</h3>
+
+<ul>
+<li>匹配&quot;r&quot;出现0次或1次的字符串</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; string &lt;- c(&quot;Grrr&quot;, &quot;small&quot;, &quot;Grrrrrr&quot;, &quot;big&quot;)
+&gt; grep(&quot;r?&quot;, string)
+[1] 1 2 3 4</pre>
+
+<ul>
+<li>匹配&quot;r&quot;出现0次或多次的字符串</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;r*&quot;, string)
+[1] 1 2 3 4</pre>
+
+<ul>
+<li>匹配&quot;r&quot;出现1次或多次的字符串</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;r+&quot;, string)
+[1] 1 3</pre>
+
+<ul>
+<li>匹配&quot;r&quot;出现4到6次的字符串</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;r{4,6}&quot;, string)
+[1] 3</pre>
+
+<ul>
+<li>匹配&quot;r&quot;出现5次以上的字符串</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;r{5,}&quot;, string)
+[1] 3</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>抽取和替换: <code>sub</code>或<code>gsub</code></h3>
+
+<ul>
+<li>将&quot;hello&quot;替换成&quot;hi&quot;，无论&quot;h&quot;大小写</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; sub(&quot;[Hh]ello&quot;, &quot;Hi&quot;, &quot;Hello world, hello everyone.&quot;)
+[1] &quot;Hi world, hello everyone.&quot;
+&gt; gsub(&quot;[Hh]ello&quot;, &quot;hi&quot;, &quot;Hello world, hello everyone.&quot;)
+[1] &quot;hi world, hi everyone.&quot;</pre>
+
+<ul>
+<li>取出紧邻&quot;hello&quot;后的单词，无论&quot;h&quot;大小写</li>
+<li>\N表示模式表达式中的第N个括号中的内容</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; gsub(&quot;[Hh]ello (\\w+)[[:punct:][:blank:]]&quot;, &quot;\\1&quot;, 
++     &quot;Hello world, hello everyone.&quot;, perl=TRUE)
+[1] &quot;world everyone&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>并列模式: <code>|</code></h3>
+
+<pre class = 'prettyprint lang-r'>&gt; grep(&quot;(H|h|c)ello&quot;, c(&quot;Hello &quot;, &quot; world&quot;, &quot; hello&quot;, &quot; piano&quot;, &quot; cello.&quot;))
+[1] 1 3 5</pre>
+
+<h3>贪婪匹配</h3>
+
+<ul>
+<li>默认是贪婪匹配的，即最大程度匹配</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; gsub(&quot;[Hh]ello (.+)&quot;, &quot;\\1&quot;, &quot;Hello world, hello everyone.&quot;)
+[1] &quot;world, hello everyone.&quot;</pre>
+
+<ul>
+<li>在模式表达式后加&quot;?&quot;，即取消贪婪匹配</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; gsub(&quot;[Hh]ello (.+?)&quot;, &quot;\\1&quot;, &quot;Hello world, hello everyone.&quot;)
+[1] &quot;world, everyone.&quot;</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>格式与编码(Encoding)</h2></hgroup><article  id="encoding">
+
+</article></slide><slide class=''><hgroup><h2>格式: <code>format</code></h2></hgroup><article  id="-format">
+
+<ul>
+<li><code>format</code>函数可将非文本格式化为文本</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; format(c(&#39;aa&#39;, &#39;b&#39;, &#39;ccc&#39;), justify=&#39;right&#39;)
+[1] &quot; aa&quot; &quot;  b&quot; &quot;ccc&quot;
+
+&gt; format(c(&#39;aa&#39;, &#39;b&#39;, &#39;ccc&#39;), justify=&#39;right&#39;, width=8)
+[1] &quot;      aa&quot; &quot;       b&quot; &quot;     ccc&quot;
+
+&gt; format(pi, digits=5)
+[1] &quot;3.1416&quot;
+
+&gt; format(pi, scientific = TRUE)
+[1] &quot;3.141593e+00&quot;
+
+&gt; format(1234567890, big.mark=&#39;,&#39;)
+[1] &quot;1,234,567,890&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>格式: <code>sprintf</code></h2></hgroup><article  id="-sprintf">
+
+<ul>
+<li><code>sprintf</code>是C语言的格式化库，直观便捷</li>
+<li>最常用的<code>fmt</code>模板包括<code>%d</code>(整型), <code>%f</code>( 固定格式), <code>%e</code>(指数格式), <code>%g</code>(双精度), <code>%s</code>(文本)等, 模板标志前可加<code>%m.n</code>(整数.小数), 空格, 0, #等辅助符号</li>
+<li>可通过<code>%1$</code>, <code>%2$</code>定义模板索引号，通过<code>*1$</code>, <code>*2$</code>引用</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; sprintf(&quot;%d月销售额为￥%0.0f万元，占全年的%.1f%%。&quot;, 12, 40, 100*400/2000)
+[1] &quot;12月销售额为￥40万元,占全年的20.0%。&quot;
+
+&gt; sprintf(&quot;%5.2e&quot;, 1234567890)
+[1] &quot;1.23e+09&quot;
+
+&gt; sprintf(&quot;圆周率保留%1$d位小数，结果为%2$.*1$f&quot;, 1:4, pi)
+[1] &quot;圆周率保留1位小数,结果为3.1&quot;    &quot;圆周率保留2位小数,结果为3.14&quot;
+[3] &quot;圆周率保留3位小数,结果为3.142&quot;  &quot;圆周率保留4位小数,结果为3.1416&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>编码(Encoding)</h2></hgroup><article  id="encoding">
+
+<ul>
+<li>计算机初期只支持ASCII码: 128个字符</li>
+<li>各国分别颁布编码系统，如中文GB2312, Big5，导致混乱</li>
+<li>颁布国际标准Unicode: 100多万字符</li>
+<li>UTF-8是Unicode的一种存储方式，可根据实际情况将字符存为1-4字节，更节约空间</li>
+<li>Windows采用代码页(Code page)管理编码体系，如美国英语为1252，简体中文为936</li>
+<li>在Windows下，编码问题是一个大坑
+
+<ul>
+<li>ANSI编码: 英文ASCII，简体中文GB2312，繁体中文Big5</li>
+<li>Unicode编码: 以UCS-2编码方式存储(双字节)</li>
+<li>UTF-8编码</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>编码(Encoding) (续)</h2></hgroup><article  id="encoding-">
+
+<ul>
+<li>默认<code>sessionInfo()</code>或<code>Sys.getlocale(&quot;LC_CTYPE&quot;)</code>: &quot;English_United States.1252&quot;</li>
+<li>可通过<code>Sys.setlocale(&quot;LC_CTYPE&quot;, &quot;chs&quot;)</code>将R的环境转为简体中文</li>
+<li>涉及非英文字符时，操作不当容易出现乱码</li>
+<li>推荐的操作习惯:
+
+<ul>
+<li>R和Rstudio通用编码默认为&quot;UTF-8&quot;，但Windows下不建议通用UTF-8</li>
+<li>脚本和文本文件保存为UTF-8编码，微软相关文件存为&quot;GB2312&quot;或兼容编码</li>
+<li>读写外部文件时要弄清编码，并通过<code>encoding</code>或<code>filEncoding</code>指定正确编码</li>
+<li>如文本编码为&quot;unknown&quot;，就容易出现乱码问题。可通过<code>stringr::str_conv()</code>函数转化</li>
+<li>如的确出现乱码，分析成因并解决</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>stringr包</h2></hgroup><article  id="stringr">
+
+</article></slide><slide class=''><hgroup><h2>stringr</h2></hgroup><article  id="stringr-1">
+
+<ul>
+<li><em>Hadley Wickham</em>基于<code>stringi</code>开发的字符处理工具包</li>
+<li>可取代默认base包中的文本处理函数，包括几大类
+
+<ul>
+<li>拼截: <code>str_c</code>/<code>str_join</code>, <code>str_sub</code>, &#8230;</li>
+<li>格式: <code>str_trim</code>, <code>str_wrap</code>, &#8230;</li>
+<li>计算: <code>str_count</code>, <code>str_length</code>, &#8230;</li>
+<li>匹配: <code>str_split</code>, <code>str_subset</code>, <code>str_match</code>, &#8230;</li>
+<li>变换: <code>str_conv</code>, <code>str_to_upper</code>, &#8230;</li>
+<li>控制: <code>boundary</code>, <code>coll</code>, <code>regex</code>, &#8230;</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>拼截</h2></hgroup><article  class="smaller">
+
+<ul>
+<li><code>str_c(..., sep = &quot;&quot;, collapse = NULL)</code>: 默认不带空格拼接，NA保持NA</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(stringr)
+&gt; str_c(letters[1:2], letters[3:4], sep=&quot;-&quot;)
+[1] &quot;a-c&quot; &quot;b-d&quot;
+&gt; str_c(letters[1:2], letters[3:4], collapse=&quot;&quot;)
+[1] &quot;abcd&quot;</pre>
+
+<ul>
+<li><code>str_sub(string, start = 1L, end = -1L)</code>: 同<code>substring</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_sub(&#39;abcdefghijklm&#39;, c(1, 4), c(3, 6))
+[1] &quot;abc&quot; &quot;def&quot;
+&gt; str_sub(&#39;abcdefghijklm&#39;, c(-3, -6), c(-1, -4))
+[1] &quot;klm&quot; &quot;hij&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>格式</h2></hgroup><article  class="smaller">
+
+<ul>
+<li><code>str_trim(string, side = c(&quot;both&quot;, &quot;left&quot;, &quot;right&quot;))</code>: 去两端空格和\t</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_trim(&#39; blabla\tblabla &#39;)
+[1] &quot;blabla\tblabla&quot;</pre>
+
+<ul>
+<li><code>str_dup(string, times)</code>: 重复字符</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_dup(letters[1:3], 2)
+[1] &quot;aa&quot; &quot;bb&quot; &quot;cc&quot;</pre>
+
+<ul>
+<li><code>str_wrap(string, width = 80, indent = 0, exdent = 0)</code>: 格式输出</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; cat(str_wrap(&#39;abcdefghijklm abcdefghijklm&#39;, width=5, exdent=5))
+abcdefghijklm
+     abcdefghijklm</pre>
+
+</article></slide><slide class=''><hgroup><h2>计算</h2></hgroup><article  class="smaller">
+
+<ul>
+<li><code>str_count(string, pattern = &quot;&quot;)</code>: 字数匹配统计</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_count(c(&quot;a.&quot;, &quot;.&quot;, &quot;.a.&quot;,NA), &quot;.&quot;)
+[1]  2  1  3 NA
+&gt; str_count(c(&quot;a.&quot;, &quot;.&quot;, &quot;.a.&quot;,NA), &quot;\\.&quot;)
+[1]  1  1  2 NA</pre>
+
+<ul>
+<li><code>str_length(string)</code>: 字数统计</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_length(c(&quot;a.&quot;, &quot;.&quot;, &quot;.a.&quot;,NA))  # 等价于str_count(..., pattern=&quot;&quot;)
+[1]  2  1  3 NA</pre>
+
+<ul>
+<li><code>str_sort(x, decreasing = FALSE, na_last = TRUE, locale = &quot;&quot;, ...)</code>: 排序返值</li>
+<li><code>str_order(x, decreasing = FALSE, na_last = TRUE, locale = &quot;&quot;, ...)</code>: 排序返序号</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_sort(c(&#39;a&#39;, 1, &#39;我&#39;, 2, &#39;11&#39;), locale=&quot;en&quot;)
+[1] &quot;1&quot;  &quot;11&quot; &quot;2&quot;  &quot;a&quot;  &quot;我&quot;
+&gt; str_sort(c(&#39;a&#39;, 1, &#39;我&#39;, 2, &#39;11&#39;), locale=&quot;zh&quot;)
+[1] &quot;1&quot;  &quot;11&quot; &quot;2&quot;  &quot;我&quot; &quot;a&quot; 
+&gt; str_order(c(&#39;a&#39;, 1, &#39;我&#39;, 2, &#39;11&#39;), TRUE, locale=&quot;zh&quot;)
+[1] 1 3 4 5 2</pre>
+
+</article></slide><slide class=''><hgroup><h2>匹配</h2></hgroup><article  class="smaller">
+
+<ul>
+<li><code>str_split(string, pattern, n = Inf)</code>: 匹配切割返回列表</li>
+<li><code>str_split_fixed(string, pattern, n)</code>: 匹配切割返回矩阵</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_split(&quot;aaa,bbb;ccc.ddd&quot;, pattern=&quot;[[:punct:]]&quot;, n=3)
+[[1]]
+[1] &quot;aaa&quot;     &quot;bbb&quot;     &quot;ccc.ddd&quot;</pre>
+
+<ul>
+<li><code>str_subset(string, pattern)</code>: 返回匹配字符串</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_subset(c(&quot;ab&quot;, &quot;dc&quot;, &quot;ac&quot;), &quot;a&quot;)
+[1] &quot;ab&quot; &quot;ac&quot;</pre>
+
+<ul>
+<li><code>str_match(string, pattern)</code>: 匹配提取</li>
+<li><code>str_match_all(string, pattern)</code>: 匹配提取，返回矩阵</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_match(c(&quot;ab&quot;, &quot;dc&quot;, &quot;ac&quot;), &quot;a&quot;)
+     [,1]
+[1,] &quot;a&quot; 
+[2,] NA  
+[3,] &quot;a&quot; </pre>
+
+</article></slide><slide class=''><hgroup><h2>匹配 (续)</h2></hgroup><article  id="-" class="smaller">
+
+<ul>
+<li><code>str_detect(string, pattern)</code>: 匹配与否</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_detect(c(&quot;ab&quot;, &quot;dc&quot;, &quot;ac&quot;), &quot;a&quot;)
+[1]  TRUE FALSE  TRUE</pre>
+
+<ul>
+<li><code>word(string, start = 1L, end = start, sep = fixed(&quot; &quot;))</code>: 提取单词</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; word(&quot;aaa,bbb;ccc.ddd&quot;, 1:2, sep=&quot;[[:punct:]]&quot;)
+[1] &quot;aaa&quot; &quot;bbb&quot;</pre>
+
+<ul>
+<li><code>str_locate(string, pattern)</code>: 定位，返回首个</li>
+<li><code>str_locate_all(string, pattern)</code>: 定位，返回矩阵</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_locate(c(&quot;ab&quot;, &quot;dc&quot;, &quot;ac&quot;), &quot;a&quot;)
+     start end
+[1,]     1   1
+[2,]    NA  NA
+[3,]     1   1</pre>
+
+</article></slide><slide class=''><hgroup><h2>匹配 (续)</h2></hgroup><article  id="--1" class="smaller">
+
+<ul>
+<li><code>str_replace(string, pattern, replacement)</code>: 模式替换</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_replace(c(&quot;ab&quot;, &quot;dc&quot;, &quot;ac&quot;), &quot;a&quot;, &quot;A&quot;)
+[1] &quot;Ab&quot; &quot;dc&quot; &quot;Ac&quot;</pre>
+
+<ul>
+<li><code>str_extract(string, pattern)</code>: 提取模式，返回首个</li>
+<li><code>str_extract_all(string, pattern, simplify = FALSE)</code>: 提取模式，返回全部</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_extract(c(&quot;ab13&quot;, &quot;d2c&quot;, &quot;a_c&quot;), &quot;\\d&quot;)
+[1] &quot;1&quot; &quot;2&quot; NA </pre>
+
+</article></slide><slide class=''><hgroup><h2>变换</h2></hgroup><article  class="smaller">
+
+<ul>
+<li><code>str_conv(string, encoding)</code>: 转编码</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_conv(&quot;\u4e0a\u6d77&quot;, &quot;UTF-8&quot;)  # Unicode ==&gt; UTF-8
+[1] &quot;上海&quot;</pre>
+
+<ul>
+<li><code>str_to_upper(string, locale = &quot;&quot;)</code>: 转大写</li>
+<li><code>str_to_lower(string, locale = &quot;&quot;)</code>: 转小写</li>
+<li><code>str_to_title(string, locale = &quot;&quot;)</code>: 首字母大写</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str_to_title(c(&quot;adb&quot;, &quot;edb&quot;, &quot;db de&quot;))
+[1] &quot;Adb&quot;   &quot;Edb&quot;   &quot;Db De&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="teal">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
