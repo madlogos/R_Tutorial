@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A04-06 时间序列分析</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A04-06 时间序列分析',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A04_06_timeseries_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+  <script src="../libs/htmlwidgets-0.8/htmlwidgets.js"></script>
+  <script src="../libs/jquery-1.11.1/jquery.min.js"></script>
+  <link href="../libs/dygraphs-1.1.1/dygraph.css" rel="stylesheet" />
+  <script src="../libs/dygraphs-1.1.1/dygraph-combined.js"></script>
+  <script src="../libs/moment-2.8.4/moment.js"></script>
+  <script src="../libs/moment-timezone-0.2.5/moment-timezone-with-data.js"></script>
+  <script src="../libs/moment-fquarter-1.0.0/moment-fquarter.min.js"></script>
+  <script src="../libs/dygraphs-binding-1.1.1.4/dygraphs.js"></script>
+  <script src="../libs/Dygraph.Plotters.CandlestickPlotter-1.0/candlestick.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A04_06_timeseries_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A04_06_timeseries_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-18 21:04:52</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>数据结构</a></li>
+<li><a href='#7' title=''>可视化</a></li>
+<li><a href='#12' title=''>分解时间序列</a></li>
+<li><a href='#18' title=''>指数平滑法</a></li>
+<li><a href='#29' title=''>ARIMA模型</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>数据结构</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2><code>ts</code>、<code>xts</code>、<code>zoo</code>类</h2></hgroup><article  id="tsxtszoo" class="smaller">
+
+<ul>
+<li><code>stats</code>内置的<code>ts</code>类</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str(nhtemp)
+ Time-Series [1:60] from 1912 to 1971: 49.9 52.3 49.4 51.1 49.4 47.9 ...</pre>
+
+<ul>
+<li><code>xts</code>包的<code>xts</code>类</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str(as.xts(nhtemp))
+An ‘xts’ object on 1912-01-01/1971-01-01 containing:
+  Data: num [1:60, 1] 49.9 52.3 49.4 51.1 49.4 47.9 49.8 50.9 49.3 51.9 ...
+  Indexed by objects of class: [Date] TZ: UTC
+  xts Attributes:  
+ NULL</pre>
+
+<ul>
+<li><code>zoo</code>包的<code>zoo</code>类</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; str(as.zoo(nhtemp))
+‘zooreg’ series from 1912 to 1971
+  Data: num [1:60] 49.9 52.3 49.4 51.1 49.4 47.9 49.8 50.9 49.3 51.9 ...
+  Index:  num [1:60] 1912 1913 1914 1915 1916 ...
+  Frequency: 1 </pre>
+
+</article></slide><slide class=''><hgroup><h2>定距时间序列</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>ts(data = NA, start = 1, end = numeric(), frequency = 1,
+   deltat = 1, ts.eps = getOption(&quot;ts.eps&quot;), class = , names = )</pre>
+
+<ul>
+<li>frequency: 12(月), 4(季度), 1(年)</li>
+<li>start/end: 起止时间</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; ts(1:21, freq=12, start=1990)
+     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+1990   1   2   3   4   5   6   7   8   9  10  11  12
+1991  13  14  15  16  17  18  19  20  21  
+
+&gt; ts(1:7, freq=4, start=c(1990, 2))
+     Qtr1 Qtr2 Qtr3 Qtr4
+1990         1    2    3
+1991    4    5    6    7</pre>
+
+</article></slide><slide class=''><hgroup><h2>不规则时间序列</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>xts(x = NULL, order.by = index(x), frequency = NULL, unique = TRUE,
+    tzone = Sys.getenv(&quot;TZ&quot;), ...)</pre>
+
+<ul>
+<li>order.by: 时间/日期向量</li>
+<li>frequency: order.by的频率</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; xts(1:5, order.by=as.Date(&quot;1990-1-1&quot;)+c(0,3,5,11,12))
+           [,1]
+1990-01-01    1
+1990-01-04    2
+1990-01-06    3
+1990-01-12    4
+1990-01-13    5</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>可视化</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>时间序列图: <code>plot.ts</code></h2></hgroup><article  id="-plot.ts">
+
+<pre class = 'prettyprint lang-r'>invisible(Sys.setlocale(&quot;LC_TIME&quot;, &quot;C&quot;))
+plot(nhtemp, main=&quot;ts&quot;)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/ts1-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>时间序列图: <code>plot.xts</code></h2></hgroup><article  id="-plot.xts">
+
+<pre class = 'prettyprint lang-r'>library(xts)
+plot(xts(1:21, order.by=as.Date(&quot;1990-1-1&quot;)+cumsum(rep(c(1,3,7,11:14), 3))), main=&quot;xts&quot;)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/ts2-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>时间序列图: <code>quantmod</code>包</h2></hgroup><article  id="-quantmod">
+
+<pre class = 'prettyprint lang-r'>library(quantmod); data(sample_matrix)
+chartSeries(as.xts(sample_matrix))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/ts3-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>时间序列图: <code>dygraphs</code>包</h2></hgroup><article  id="-dygraphs">
+
+<pre class = 'prettyprint lang-r'>library(dygraphs)
+dyCandlestick(dygraph(sample_matrix))</pre>
+
+<div id="htmlwidget-b8fbce9987dbbd000335" style="width:768px;height:432px;" class="dygraphs html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b8fbce9987dbbd000335">{"x":{"attrs":{"labels":["day","Open","High","Low","Close"],"legend":"auto","retainDateWindow":false,"axes":{"x":{"pixelsPerLabel":60}}},"scale":"daily","annotations":[],"shadings":[],"events":[],"format":"date","data":[["2007-01-01T16:00:00.000Z","2007-01-02T16:00:00.000Z","2007-01-03T16:00:00.000Z","2007-01-04T16:00:00.000Z","2007-01-05T16:00:00.000Z","2007-01-06T16:00:00.000Z","2007-01-07T16:00:00.000Z","2007-01-08T16:00:00.000Z","2007-01-09T16:00:00.000Z","2007-01-10T16:00:00.000Z","2007-01-11T16:00:00.000Z","2007-01-12T16:00:00.000Z","2007-01-13T16:00:00.000Z","2007-01-14T16:00:00.000Z","2007-01-15T16:00:00.000Z","2007-01-16T16:00:00.000Z","2007-01-17T16:00:00.000Z","2007-01-18T16:00:00.000Z","2007-01-19T16:00:00.000Z","2007-01-20T16:00:00.000Z","2007-01-21T16:00:00.000Z","2007-01-22T16:00:00.000Z","2007-01-23T16:00:00.000Z","2007-01-24T16:00:00.000Z","2007-01-25T16:00:00.000Z","2007-01-26T16:00:00.000Z","2007-01-27T16:00:00.000Z","2007-01-28T16:00:00.000Z","2007-01-29T16:00:00.000Z","2007-01-30T16:00:00.000Z","2007-01-31T16:00:00.000Z","2007-02-01T16:00:00.000Z","2007-02-02T16:00:00.000Z","2007-02-03T16:00:00.000Z","2007-02-04T16:00:00.000Z","2007-02-05T16:00:00.000Z","2007-02-06T16:00:00.000Z","2007-02-07T16:00:00.000Z","2007-02-08T16:00:00.000Z","2007-02-09T16:00:00.000Z","2007-02-10T16:00:00.000Z","2007-02-11T16:00:00.000Z","2007-02-12T16:00:00.000Z","2007-02-13T16:00:00.000Z","2007-02-14T16:00:00.000Z","2007-02-15T16:00:00.000Z","2007-02-16T16:00:00.000Z","2007-02-17T16:00:00.000Z","2007-02-18T16:00:00.000Z","2007-02-19T16:00:00.000Z","2007-02-20T16:00:00.000Z","2007-02-21T16:00:00.000Z","2007-02-22T16:00:00.000Z","2007-02-23T16:00:00.000Z","2007-02-24T16:00:00.000Z","2007-02-25T16:00:00.000Z","2007-02-26T16:00:00.000Z","2007-02-27T16:00:00.000Z","2007-02-28T16:00:00.000Z","2007-03-01T16:00:00.000Z","2007-03-02T16:00:00.000Z","2007-03-03T16:00:00.000Z","2007-03-04T16:00:00.000Z","2007-03-05T16:00:00.000Z","2007-03-06T16:00:00.000Z","2007-03-07T16:00:00.000Z","2007-03-08T16:00:00.000Z","2007-03-09T16:00:00.000Z","2007-03-10T16:00:00.000Z","2007-03-11T16:00:00.000Z","2007-03-12T16:00:00.000Z","2007-03-13T16:00:00.000Z","2007-03-14T16:00:00.000Z","2007-03-15T16:00:00.000Z","2007-03-16T16:00:00.000Z","2007-03-17T16:00:00.000Z","2007-03-18T16:00:00.000Z","2007-03-19T16:00:00.000Z","2007-03-20T16:00:00.000Z","2007-03-21T16:00:00.000Z","2007-03-22T16:00:00.000Z","2007-03-23T16:00:00.000Z","2007-03-24T16:00:00.000Z","2007-03-25T16:00:00.000Z","2007-03-26T16:00:00.000Z","2007-03-27T16:00:00.000Z","2007-03-28T16:00:00.000Z","2007-03-29T16:00:00.000Z","2007-03-30T16:00:00.000Z","2007-03-31T16:00:00.000Z","2007-04-01T16:00:00.000Z","2007-04-02T16:00:00.000Z","2007-04-03T16:00:00.000Z","2007-04-04T16:00:00.000Z","2007-04-05T16:00:00.000Z","2007-04-06T16:00:00.000Z","2007-04-07T16:00:00.000Z","2007-04-08T16:00:00.000Z","2007-04-09T16:00:00.000Z","2007-04-10T16:00:00.000Z","2007-04-11T16:00:00.000Z","2007-04-12T16:00:00.000Z","2007-04-13T16:00:00.000Z","2007-04-14T16:00:00.000Z","2007-04-15T16:00:00.000Z","2007-04-16T16:00:00.000Z","2007-04-17T16:00:00.000Z","2007-04-18T16:00:00.000Z","2007-04-19T16:00:00.000Z","2007-04-20T16:00:00.000Z","2007-04-21T16:00:00.000Z","2007-04-22T16:00:00.000Z","2007-04-23T16:00:00.000Z","2007-04-24T16:00:00.000Z","2007-04-25T16:00:00.000Z","2007-04-26T16:00:00.000Z","2007-04-27T16:00:00.000Z","2007-04-28T16:00:00.000Z","2007-04-29T16:00:00.000Z","2007-04-30T16:00:00.000Z","2007-05-01T16:00:00.000Z","2007-05-02T16:00:00.000Z","2007-05-03T16:00:00.000Z","2007-05-04T16:00:00.000Z","2007-05-05T16:00:00.000Z","2007-05-06T16:00:00.000Z","2007-05-07T16:00:00.000Z","2007-05-08T16:00:00.000Z","2007-05-09T16:00:00.000Z","2007-05-10T16:00:00.000Z","2007-05-11T16:00:00.000Z","2007-05-12T16:00:00.000Z","2007-05-13T16:00:00.000Z","2007-05-14T16:00:00.000Z","2007-05-15T16:00:00.000Z","2007-05-16T16:00:00.000Z","2007-05-17T16:00:00.000Z","2007-05-18T16:00:00.000Z","2007-05-19T16:00:00.000Z","2007-05-20T16:00:00.000Z","2007-05-21T16:00:00.000Z","2007-05-22T16:00:00.000Z","2007-05-23T16:00:00.000Z","2007-05-24T16:00:00.000Z","2007-05-25T16:00:00.000Z","2007-05-26T16:00:00.000Z","2007-05-27T16:00:00.000Z","2007-05-28T16:00:00.000Z","2007-05-29T16:00:00.000Z","2007-05-30T16:00:00.000Z","2007-05-31T16:00:00.000Z","2007-06-01T16:00:00.000Z","2007-06-02T16:00:00.000Z","2007-06-03T16:00:00.000Z","2007-06-04T16:00:00.000Z","2007-06-05T16:00:00.000Z","2007-06-06T16:00:00.000Z","2007-06-07T16:00:00.000Z","2007-06-08T16:00:00.000Z","2007-06-09T16:00:00.000Z","2007-06-10T16:00:00.000Z","2007-06-11T16:00:00.000Z","2007-06-12T16:00:00.000Z","2007-06-13T16:00:00.000Z","2007-06-14T16:00:00.000Z","2007-06-15T16:00:00.000Z","2007-06-16T16:00:00.000Z","2007-06-17T16:00:00.000Z","2007-06-18T16:00:00.000Z","2007-06-19T16:00:00.000Z","2007-06-20T16:00:00.000Z","2007-06-21T16:00:00.000Z","2007-06-22T16:00:00.000Z","2007-06-23T16:00:00.000Z","2007-06-24T16:00:00.000Z","2007-06-25T16:00:00.000Z","2007-06-26T16:00:00.000Z","2007-06-27T16:00:00.000Z","2007-06-28T16:00:00.000Z","2007-06-29T16:00:00.000Z"],[50.0397819115463,50.2304961977954,50.420955209067,50.3734680543285,50.2443255196795,50.1321122972067,50.0355467742705,49.9948860954217,49.9122834457642,49.8852887132391,50.2125821224916,50.3238453485025,50.4635862266585,50.6172355897254,50.620241173435,50.7414981135498,50.4805101188755,50.4138129108681,50.3532310036568,50.1618813949374,50.3600836896748,50.0396626712588,50.1095259574076,50.2073807897632,50.1600826681477,50.0604060861532,49.9658575219043,49.8562442241656,49.8547727815966,50.0704896508826,50.2244845229791,50.4450306721515,50.3721857137319,50.4818267518265,50.523893828191,50.7166067461433,50.4932188302243,50.5853098172462,50.8333117106257,50.6892288304174,50.6784905984176,50.8898983760854,50.9005579809156,50.9528277211339,51.0633014723722,51.1287929285077,50.9772173544539,51.1841370498561,51.295021248152,51.1372463340331,50.9293966227967,50.7211101780551,50.843921143575,50.7835976504561,50.7896013042288,50.8816812795241,50.7433266638814,50.6943485629562,50.8162030132845,50.6097967963997,50.7324080081653,50.3927259270933,50.2650069647869,50.2746373900041,50.1445762543741,49.9314929048729,49.9237734835486,49.7936997386099,49.8306222453665,49.8276255602479,49.6962809106445,49.3626991517068,49.5737411878039,49.4489956783527,49.5566612908277,49.2977796860981,49.6274672147247,49.5952884965034,49.4976451429029,49.4230642938896,49.2728079548362,48.8663474774338,48.5064888202386,48.3421024422286,48.2524825106404,48.3309000601732,48.5923613368859,48.7456190083389,48.9561619747141,48.9440668539277,48.9048836271181,49.0607100610899,49.2257899841075,49.4143540745659,49.3362124203641,49.4517023124334,49.5433780166351,49.444289050952,49.55703548735,49.7454978974624,49.7507941077393,49.7070824171387,49.7415394908976,49.7470725636594,49.7491522227102,49.846975262063,49.9379395474831,50.0244086177575,49.7604232552535,49.989541304844,50.3120333961183,50.3200947473636,49.8734026465211,49.7338525835356,49.8906358262349,49.8053048313893,49.5468840391121,49.3028935291798,49.1382464427998,49.3457214583033,49.4706167078959,49.4632789128586,49.5996297158354,49.3842789199786,49.1660587256141,49.4918780475782,49.1328177423567,49.1773905424881,48.8347914561581,48.2545634885324,47.968125028333,48.0554956281431,47.644692571948,47.6064724380648,47.7206509536914,47.7942981789561,47.6501318131713,47.6555190311968,47.5621026686154,47.9658214031213,47.8183040302612,47.9359302489862,47.8904133721512,47.9823372258737,48.1452112358212,48.0101843888937,47.9014160029841,47.6566546513431,47.7886603971671,47.8284532662533,47.7443173931521,47.6022347047868,47.7121494165901,47.5151648819698,47.4109038423752,47.3658120027045,47.420985190709,47.4844872933481,47.3866882554947,47.7489862263065,47.2780696035328,47.194106912618,47.4613546517325,47.4327917992174,47.3330584316802,47.3645229105516,47.2478260931866,47.4346993610725,47.4605472647125,47.7112586675401,47.7101167781098,47.5684886049305,47.2287315871627,47.2399558001892,47.2047065698809,47.4430011919908,47.6232337843679,47.6760351295041,47.6362885503127,47.6746805308509],[50.1177772350145,50.421876002125,50.420955209067,50.3734680543285,50.2443255196795,50.2156114607262,50.1036323973342,49.9948860954217,50.130525854306,50.239103712694,50.359801769449,50.4799955346125,50.62395479761,50.6858336400418,50.7373052873552,50.7733564529701,50.6071189691962,50.5562734759594,50.3532310036568,50.4208972428836,50.4387454378126,50.1696064309279,50.2694187981265,50.2826849790742,50.1600826681477,50.0977658473744,50.0021694838495,49.930381203448,50.0218043126519,50.2257790634706,50.4137614515346,50.5348977915646,50.4691169535685,50.5550923533772,50.6978278150252,50.7166067461433,50.696932712043,50.8473366461113,50.896827622917,50.726959655694,50.91776061924,50.9665340950417,51.0029854532602,51.0469861312818,51.114008680003,51.1287929285077,51.1365256784907,51.3209005779334,51.323424806756,51.1494018613584,50.9293966227967,50.8659669412615,50.9694609683283,50.8645263373624,50.9318744899078,50.8816812795241,50.7890893188517,50.770905453827,50.8162030132845,50.7206096320916,50.7324080081653,50.4088124653177,50.3404988869915,50.3201916131904,50.2027764867291,50.0036413740678,49.9237734835486,49.8898404553457,49.8829457681315,49.9031130358205,49.7086250880523,49.5373488863704,49.6231039012457,49.6528522333934,49.5566612908277,49.6785736159034,49.6540715276625,49.6200349582181,49.5396073979361,49.4230642938896,49.2728079548362,48.8663474774338,48.5064888202386,48.4463705919766,48.4157189260319,48.5359461762133,48.6998847605209,49.0021812307077,49.097283039653,48.9781600566663,49.0839954270775,49.245253833598,49.3733496216003,49.4143540745659,49.4189994859189,49.6095030005936,49.5896809020894,49.5023417359146,49.7877576550563,49.8192485602815,49.7546976892052,49.853322329816,49.7733970805046,49.7934102661747,49.8628865946235,49.954558677343,50.0720779787385,50.0299098586477,49.9284741862485,50.2012292399203,50.337807096784,50.3200947473636,49.901838155481,49.8862227667758,49.8906358262349,49.8053048313893,49.5549664935449,49.3028935291798,49.3397448231728,49.5263478188825,49.4706167078959,49.6909716597571,49.5996297158354,49.4026580314052,49.4599885580201,49.4918780475782,49.2550693689544,49.1773905424881,48.8454913822302,48.2545634885324,48.032858055938,48.0554956281431,47.7250498159334,47.7405271861058,47.9071682801885,47.7942981789561,47.7511652769296,47.7798557548305,47.9308458230391,48.029033942613,47.9482531441853,48.0824246165765,48.0307726129326,48.1754323314596,48.1452112358212,48.0216564098931,47.9339798198289,47.8934158707544,47.9326701523078,47.8404415298449,47.7443173931521,47.7454243122342,47.7121494165901,47.5354500689903,47.482170679888,47.4123313828473,47.5063692973413,47.5308912760639,47.7476950731972,47.7489862263065,47.3088378144923,47.4183383185878,47.5200446580673,47.4327917992174,47.4049049093854,47.4046284008614,47.4724863618123,47.5633569665608,47.7335250775606,47.8175924066148,47.7101167781098,47.5926598454947,47.2477128773392,47.3028651846619,47.4277219359799,47.6161097730372,47.7167299732728,47.7046027771086,47.775634540576,47.9412667206186],[49.9504146442813,50.2304961977954,50.2641365663597,50.2210338242788,50.1112075487643,49.9918544993091,49.9697097184701,49.8045358090165,49.9122834457642,49.8852887132391,50.1717574121646,50.3238453485025,50.4635862266585,50.4735909825374,50.5662652106609,50.449321357316,50.4026921292911,50.4127813388677,50.0214153820363,50.1604405513317,50.2112913039383,50.0366991631639,50.063868338926,50.1291318545355,49.9405191078187,49.9726670534334,49.8746804186122,49.7630844122028,49.7724223081099,50.0704896508826,50.191012164208,50.3606408837506,50.298799757062,50.4020264816621,50.459767560449,50.4986480384182,50.4932188302243,50.5853098172462,50.6768581674052,50.6070733856372,50.6784905984176,50.8360446014901,50.8793493835529,50.803171907551,50.9468108768572,51.0061335218936,50.952600190595,51.1371299879095,51.1352419149073,50.9352261443787,50.6987973947919,50.6571814189883,50.7305961336348,50.7669213141213,50.7896013042288,50.7548084168209,50.6187434734297,50.5988137418271,50.5645087290095,50.5080789844205,50.4092945808094,50.2492157707179,50.2650069647869,50.1638044184635,49.9138089296028,49.8489346112531,49.7424150559387,49.7038514071734,49.760310812525,49.670494239676,49.3792415099661,49.3074568226063,49.3987553413956,49.4241619504068,49.3356413900106,49.2977796860981,49.5160420086702,49.4232068118256,49.4160965263844,49.3118358542017,48.9309517223527,48.5268371665895,48.3340927379523,48.2896926777253,48.2364771063669,48.3309000601732,48.5743179732927,48.7456190083389,48.9561619747141,48.8096186482138,48.9048836271181,48.9692750768163,49.1991258503583,49.3064111174296,49.3362124203641,49.4517023124334,49.4180628219513,49.3382782378181,49.55703548735,49.7454978974624,49.6173171733521,49.6924492458175,49.7015885221842,49.662988150532,49.7109114979342,49.7775439894587,49.9248422973257,49.8394501870147,49.6980794321414,49.989541304844,50.2478765013235,49.8757386019976,49.7276899923422,49.7338525835356,49.7489871076424,49.5081397146114,49.2918633073164,49.0567561810582,49.1149971640139,49.3457214583033,49.3426131232972,49.4632789128586,49.4137530585047,49.1031043568417,49.1660587256141,49.1357230365042,49.1328177423567,48.7270762056073,48.3800124679673,47.9690434191124,47.8926179087975,47.6620855703505,47.5821240912087,47.5179560866739,47.7091322313329,47.5513987007966,47.6501318131713,47.6053615081546,47.5621026686154,47.7807235394881,47.811546625574,47.8876326500158,47.8841269246251,47.9450716031323,47.9264941691766,47.9019342884565,47.6471764517754,47.6544603143575,47.7886603971671,47.7377986168352,47.5482040904643,47.5679622276754,47.501976670636,47.3234230750255,47.211163022771,47.2330580059869,47.3532002325846,47.4281355831578,47.3866882554947,47.2868487885989,47.1466018260288,47.1815348543221,47.4308266385453,47.3348965212827,47.2615736095983,47.2605645709109,47.2478260931866,47.3642401566334,47.4605472647125,47.668434910213,47.6110642732936,47.3254940958526,47.0914419882576,47.2093194619751,47.1340495076106,47.4430011919908,47.6001511393257,47.5724060421453,47.6173290583887,47.6746805308509],[50.1177772350145,50.3976663383861,50.3323571013133,50.3345948961691,50.1811210391819,49.9918544993091,49.988063256042,49.913329335608,49.9724600550638,50.239103712694,50.2851940807548,50.4128602347002,50.6014452374366,50.4891214813319,50.6783465243683,50.4864408302735,50.5763196086684,50.4127813388677,50.0214153820363,50.4208972428836,50.2112913039383,50.1696064309279,50.2314483010655,50.2433369933702,50.070242540723,50.0109145160256,49.8809633637625,49.9187495029809,50.0218043126519,50.2257790634706,50.3578435161537,50.3692756978625,50.4310899203875,50.5550923533772,50.6978278150252,50.4986480384182,50.6061055576287,50.8138255864256,50.6768581674052,50.695622055169,50.9115985194411,50.9665340950417,50.9010550008819,51.0469861312818,51.0518465248395,51.0216357806733,51.1365256784907,51.1515142172957,51.1789930735369,50.9352261443787,50.7732543242554,50.8659669412615,50.7649826990875,50.7953382903315,50.8477621406292,50.7548084168209,50.6920604718023,50.770905453827,50.570749692632,50.6155918666066,50.4103286523541,50.3263588179421,50.2956702271079,50.1638044184635,49.9138089296028,49.9183871340213,49.8071204530403,49.8869833529875,49.78805814558,49.7403315550003,49.3792415099661,49.5373488863704,49.496003986535,49.5950011884777,49.3471431527284,49.6546261076859,49.5458954022922,49.5068963631111,49.5180739210179,49.3968738599656,48.9309517223527,48.5268371665895,48.3397338277091,48.2896926777253,48.30850892202,48.5359461762133,48.6998847605209,48.9354567345693,48.974901416968,48.8703195118646,49.0631647734845,49.245253833598,49.3473606787059,49.3377557822211,49.4189994859189,49.5381883056603,49.4180628219513,49.5023417359146,49.7698448660165,49.7462345946245,49.7299649322951,49.7333931653161,49.7555215783115,49.7094151808194,49.8388590726778,49.954558677343,50.0720779787385,49.8394501870147,49.9110274504956,50.2012292399203,50.3255614801967,49.8853882678616,49.7276899923422,49.8847151942606,49.7920112943787,49.5081397146114,49.2918633073164,49.1352904471748,49.3397448231728,49.4713813499697,49.3852052435403,49.5867696788652,49.4137530585047,49.1031043568417,49.4599885580201,49.1357230365042,49.1893012571989,48.7270762056073,48.3800124679673,47.9690434191124,48.0193547288843,47.6620855703505,47.6592988835332,47.726862406458,47.8668317346629,47.6293786041021,47.6842280532209,47.6053615081546,47.9308458230391,47.7807235394881,47.8294556467246,47.9006826430557,48.0113049442773,48.1605755467172,47.9961340046721,47.9019342884565,47.6471764517754,47.8725213360129,47.8329083126244,47.7377986168352,47.6512305894323,47.7256907018078,47.501976670636,47.3764237289667,47.2292952802724,47.4004820908595,47.4526174659862,47.4835950385865,47.7476950731972,47.2868487885989,47.1466018260288,47.4183383185878,47.4308266385453,47.3488381779215,47.3677901566039,47.2605645709109,47.3952135245457,47.3642401566334,47.6722018616947,47.668434910213,47.6292144787367,47.3254940958526,47.2477128773392,47.2276437542817,47.4277219359799,47.6161097730372,47.6276905335225,47.6071583256498,47.6647123051268,47.7671937777376]],"plotter":"CandlestickPlotter"},"evals":[],"jsHooks":[]}</script>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>分解时间序列 Decomposition</h2></hgroup><article  id="-decomposition">
+
+</article></slide><slide class=''><hgroup><h2>季节性和非季节数据</h2></hgroup><article >
+
+<div class="columns-2">
+<ul>
+<li>季节性数据包括3种成分的变异: 趋势性、季节性、不规则部分</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>plot(as.xts(AirPassengers))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/seasonal-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>非季节性数据包括2种成分的变异: 趋势性、不规则部分</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>plot(as.xts(discoveries))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/nonseasonal-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>季节性数据(1) - <code>decompose</code>移动平均法</h2></hgroup><article  id="1---decompose" class="smaller">
+
+<p>3个成分: trend, seasonal, random</p>
+
+<div class="columns-2">
+<ul>
+<li>相加模型</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>plot(decompose(AirPassengers))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/decompose1-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>相乘模型</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>plot(decompose(AirPassengers, type=&quot;multiplicative&quot;))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/decompose2-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>季节性数据(2) - 局部加权回归法<code>STL</code></h2></hgroup><article  id="2---stl">
+
+<p>3个成分: seasonal, trend, remainder</p>
+
+<pre class = 'prettyprint lang-r'>plot(stl(AirPassengers, s.window=&quot;periodic&quot;))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/stl-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>季节性数据(3) - 调整</h2></hgroup><article  id="3---">
+
+<p>调整不关注的变异因素(如调整季节因素seasonal)</p>
+
+<pre class = 'prettyprint lang-r'>plot(AirPassengers - decompose(AirPassengers)$seasonal)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/decompose3-1.png" width="960" /></p>
+
+</article></slide><slide class=''><hgroup><h2>非季节性数据</h2></hgroup><article  class="smaller">
+
+<p>平滑法(<code>TTR::SMA</code>)移动时间序列</p>
+
+<pre class = 'prettyprint lang-r'>library(TTR); library(xts)
+plot(as.xts(discoveries))
+for (i in 1:20) lines(as.xts(SMA(discoveries, n=i)), col=topo.colors(20)[i])
+legend(&quot;topright&quot;, legend=1:20, text.col=topo.colors(20), ncol=5, title=&quot;Moving Average&quot;, title.col=&quot;black&quot;)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/sma-1.png" width="960" /></p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>指数平滑法<br>(Exponential Smoothing)</h2></hgroup><article  id="-exponential-smoothing">
+
+</article></slide><slide class=''><hgroup><h2>适用条件</h2></hgroup><article >
+
+<p>用于描述时间序列数据和作短期预测，并不试图解释和理解成因。</p>
+
+<p>指数平滑法计算出的预测区间，其预测误差必须是<strong>不相关</strong>的，且服从<strong>零均值、方差不变的正态分布</strong></p>
+
+<p>语法: <code>HoltWinters(x, alpha=NULL, beta=NULL, gamma=NULL, ...)</code></p>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">指数平滑法</th>
+<th align="left">数据模型</th>
+<th align="left">趋势</th>
+<th align="left">季节变动</th>
+<th align="left">alpha</th>
+<th align="left">beta</th>
+<th align="left">gamma</th>
+</tr>
+<tr class="odd">
+<td align="left">简单指数平滑法</td>
+<td align="left">相加模型</td>
+<td align="left">恒定水平</td>
+<td align="left">没有季节性</td>
+<td align="left">0-1</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">Holt指数平滑法</td>
+<td align="left">可描述为相加模型</td>
+<td align="left">增长或降低趋势</td>
+<td align="left">没有季节性</td>
+<td align="left">0-1</td>
+<td align="left">0-1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">Holt-Winters指数平滑法</td>
+<td align="left">可描述为相加模型</td>
+<td align="left">增长或降低趋势</td>
+<td align="left">存在季节性</td>
+<td align="left">0-1</td>
+<td align="left">0-1</td>
+<td align="left">0-1</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>简单指数平滑法(1)</h2></hgroup><article  id="1" class="smaller">
+
+<div class="columns-2">
+<p>[1] 是否满足要求</p>
+
+<pre class = 'prettyprint lang-r'>plot(as.xts(Nile))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/simple%20es1-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>[2] <code>HoltWinters</code></p>
+
+<pre class = 'prettyprint lang-r'>&gt; HoltWinters(Nile, beta=FALSE, gamma=FALSE)
+
+Holt-Winters exponential smoothing without 
+    trend and without seasonal component.
+Call:
+HoltWinters(x = Nile, beta = FALSE, gamma = FALSE)
+
+Smoothing parameters:
+ alpha: 0.2465579
+ beta : FALSE
+ gamma: FALSE
+ 
+Coefficients:
+      [,1]
+a 805.0389</pre>
+
+<p>alpha越接近0，则近期数据对预测的贡献越小</p></div>
+
+</article></slide><slide class=''><hgroup><h2>简单指数平滑法(2)</h2></hgroup><article  id="2" class="smaller">
+
+<div class="columns-2">
+
+
+<p>[3] 预测</p>
+
+<pre class = 'prettyprint lang-r'>library(forecast)
+hw &lt;- HoltWinters(Nile, beta=F, gamma=F)
+forec &lt;- forecast(hw, h=10); plot(forec)
+lines(hw$fitted[,1], col=&#39;blue&#39;, lwd=2)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/simple%20es2-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>[4] 自相关检验及Ljung-Box检验</p>
+
+<pre class = 'prettyprint lang-r'>acf(forec$residuals, lag.max=20, na=na.pass)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/simple%20es3-1.png" width="480" /></p>
+
+<pre class = 'prettyprint lang-r'>&gt; Box.test(forec$residuals, lag=20, type=&quot;Ljung-Box&quot;)
+...
+X-squared = 15.619, df = 20, p-value = 0.74</pre>
+
+<p>p值&gt;0.05，不足以判定样本内预测误差在滞后1-20阶时是非零自相关的。(可认为不规则部分是白噪声)</p>
+
+</article></slide><slide class=''><hgroup><h2>简单指数平滑法(3)</h2></hgroup><article  id="3" class="smaller">
+
+<div class="columns-2">
+<p>[5] 预测误差诊断</p>
+
+<pre class = 'prettyprint lang-r'>hist(forec$residuals, freq=FALSE)
+lines(density(forec$residuals, na.rm=T), lwd=2)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/simple%20es4-1.png" width="360" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>预测误差大体服从零均值正态分布，但前期波动较后期大(方差有变化)。 模型可能仍有改良空间。</p>
+
+<pre class = 'prettyprint lang-r'>plot(forec$residuals, main=&quot;Forecast Residuals&quot;)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/simple%20es5-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>Holt指数平滑法(1)</h2></hgroup><article  id="holt1" class="smaller">
+
+<div class="columns-2">
+<p>[1] 是否满足要求</p>
+
+<pre class = 'prettyprint lang-r'>plot(as.xts(LakeHuron))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/holt1-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>[2] <code>HoltWinters</code></p>
+
+<pre class = 'prettyprint lang-r'>&gt; HoltWinters(LakeHuron, gamma=FALSE)
+
+Holt-Winters exponential smoothing with 
+    trend and without seasonal component.
+
+Call:
+HoltWinters(x = LakeHuron, gamma = FALSE)
+
+Smoothing parameters:
+ alpha: 1
+ beta : 0.1793351
+ gamma: FALSE
+
+Coefficients:
+         [,1]
+a 579.9600000
+b   0.2300602</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>Holt指数平滑法(2)</h2></hgroup><article  id="holt2" class="smaller">
+
+<div class="columns-2">
+
+
+<p>[3] 预测</p>
+
+<pre class = 'prettyprint lang-r'>hw &lt;- HoltWinters(LakeHuron, gamma=FALSE)
+forec &lt;- forecast(hw, h=10); plot(forec)
+lines(hw$fitted[,1], col=&#39;blue&#39;, lwd=2)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/holt2-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>[4] 自相关检验及Ljung-Box检验</p>
+
+<pre class = 'prettyprint lang-r'>acf(forec$residuals, lag.max=20, na=na.pass)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/holt3-1.png" width="480" /></p>
+
+<pre class = 'prettyprint lang-r'>&gt; Box.test(forec$residuals, lag=20, type=&quot;Ljung-Box&quot;)
+...
+X-squared = 22.581, df = 20, p-value = 0.3098</pre>
+
+<p>p值&gt;0.05，不足以判定样本内预测误差在滞后1-20阶时是非零自相关的。(可认为不规则部分是白噪声)</p>
+
+</article></slide><slide class=''><hgroup><h2>Holt指数平滑法(3)</h2></hgroup><article  id="holt3" class="smaller">
+
+<div class="columns-2">
+<p>[5] 预测误差诊断</p>
+
+<pre class = 'prettyprint lang-r'>hist(forec$residuals, freq=FALSE)
+lines(density(forec$residuals, na.rm=T), lwd=2)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/holt4-1.png" width="360" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>预测误差大体服从零均值正态分布，方差前后也大体无变化。 模型可不用再改良。</p>
+
+<pre class = 'prettyprint lang-r'>plot(forec$residuals, main=&quot;Forecast Residuals&quot;)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/holt5-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>Holt-Winters指数平滑法(1)</h2></hgroup><article  id="holt-winters1" class="smaller">
+
+<div class="columns-2">
+<p>[1] 是否满足要求</p>
+
+<pre class = 'prettyprint lang-r'>plot(as.xts(co2))</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/hw1-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>[2] <code>HoltWinters</code></p>
+
+<pre class = 'prettyprint lang-r'>&gt; HoltWinters(co2)
+
+Smoothing parameters:
+ alpha: 0.5126484
+ beta : 0.009497669
+ gamma: 0.4728868
+
+Coefficients:
+           [,1]
+a   364.7616237
+b     0.1247438
+s1    0.2215275
+s2    0.9552801
+s3    1.5984744
+s4    2.8758029
+s5    3.2820088
+s6    2.4406990
+s7    0.8969433
+s8   -1.3796428
+s9   -3.4112376
+s10  -3.2570163
+s11  -1.9134850
+s12  -0.5844250</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>Holt-Winters指数平滑法(2)</h2></hgroup><article  id="holt-winters2" class="smaller">
+
+<div class="columns-2">
+
+
+<p>[3] 预测</p>
+
+<pre class = 'prettyprint lang-r'>hw &lt;- HoltWinters(co2)
+forec &lt;- forecast(hw, h=50); plot(forec)
+lines(hw$fitted[,1], col=&#39;blue&#39;, lwd=2)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/hw2-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>[4] 自相关检验及Ljung-Box检验</p>
+
+<pre class = 'prettyprint lang-r'>acf(forec$residuals, lag.max=20, na=na.pass)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/hw3-1.png" width="480" /></p>
+
+<pre class = 'prettyprint lang-r'>&gt; Box.test(forec$residuals, lag=20, type=&quot;Ljung-Box&quot;)
+...
+X-squared = 25.896, df = 20, p-value = 0.1693</pre>
+
+<p>p值&gt;0.05，不足以判定样本内预测误差在滞后1-20阶时是非零自相关的。(可认为不规则部分是白噪声)</p>
+
+</article></slide><slide class=''><hgroup><h2>Holt-Winters指数平滑法(3)</h2></hgroup><article  id="holt-winters3" class="smaller">
+
+<div class="columns-2">
+<p>[5] 预测误差诊断</p>
+
+<pre class = 'prettyprint lang-r'>hist(forec$residuals, freq=FALSE)
+lines(density(forec$residuals, na.rm=T), lwd=2)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/hw4-1.png" width="360" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>预测误差大体服从零均值正态分布，方差前后也大体无变化。 模型可不用再改良。</p>
+
+<pre class = 'prettyprint lang-r'>plot(forec$residuals, main=&quot;Forecast Residuals&quot;)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/hw5-1.png" width="480" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>ARIMA模型</h2></hgroup><article  id="arima">
+
+</article></slide><slide class=''><hgroup><h2>整合移动平均自回归(ARIMA)模型</h2></hgroup><article  id="arima">
+
+<p>ARIMA是时序分析中最常用的经典方法。它包含一个确定（explicit）的统计模型用于处理时间序列的不规则部分，而且允许不规则部分自相关。</p>
+
+<p>通常先差分，把长期趋势、固定周期等信息提取出来，将非平稳序列变为平稳(stationary)序列后进行分析。剩余部分等价于一个<code>ARMA(p,q)</code>模型：</p>
+
+<ol>
+<li>如不平稳，<code>diff</code>差分， ARIMA(p, d, q) ==&gt; ARMA(p, q)</li>
+<li><code>acf</code>自回归图，判定q系数</li>
+<li><code>pacf</code>偏自回归图，判定p阶数</li>
+<li>拟合<code>arima(p, d, q)</code>模型并预测
+
+<ol>
+<li>如有季节性，选取合理的 arima(p, d, q)(P, D, Q)<sub>m</sub> 模型</li>
+</ol></li>
+<li>检验模型残差</li>
+</ol>
+
+</article></slide><slide class=''><hgroup><h2>差分及增强的Dickey-Fuller单位根检验</h2></hgroup><article  id="dickey-fuller" class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>library(forecast)
+ap &lt;- log(tsclean(AirPassengers))
+ap1 &lt;- ts(ap[1:120], start=c(1949,1), freq=12)
+plot(as.xts(diff(ap1, 1)), main=&quot;Diff=1&quot;)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/diff-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>ADF平稳性检验</h4>
+
+<pre class = 'prettyprint lang-r'>&gt; library(tseries)
+&gt; adf.test(diff(ap1, 1), k=0)
+
+    Augmented Dickey-Fuller Test
+
+data:  diff(ap1, 1)
+Dickey-Fuller = -9.1113, Lag order = 0, p-value = 0.01
+alternative hypothesis: stationary</pre>
+
+<p>1阶差分后，AirPassengers数据(去掉季节趋势)可认为是平稳的</p></div>
+
+</article></slide><slide class=''><hgroup><h2>自回归图及偏自回归图</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>ACF: 滞后1阶起，自相关值即截尾 -&gt; q=0或1</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>acf(diff(ap1, 1), lag.max=48)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/acf-1.png" width="480" /></p>
+
+<ul>
+<li>PACF: 滞后1阶起，偏自相关值即截尾 -&gt; p=0</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>pacf(diff(ap1, 1), lag.max=48)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/pacf-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>构建Arima模型</h2></hgroup><article  id="arima" class="smaller">
+
+<div class="columns-2">
+<h4>Arima(p, d, q)(P, D, Q)<sub>m</sub>模型选择原则</h4>
+
+<ul>
+<li>AIC或BIC尽可能小</li>
+<li>参数尽可能少(尽可能简单)</li>
+<li>可参考<code>auto.arima</code></li>
+</ul>
+
+<h4>(P, D, Q)<sub>m</sub>季节性参数的确定</h4>
+
+<ul>
+<li>分解时序观察到周期为12的季节性 -&gt; D=1, m=12</li>
+<li>差分后ACF图仍有周期为12的季节性 -&gt; Q=1, m=12</li>
+<li>差分后PACF图没有显示出明显的周期性 -&gt; P=0</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>&gt; m1 &lt;- auto.arima(ap1); m1</pre>
+
+<pre >Series: ap1 
+ARIMA(0,1,1)(0,1,1)[12]            
+Coefficients:
+          ma1     sma1
+      -0.3674  -0.5686
+s.e.   0.1012   0.0892
+
+sigma^2 estimated as 0.001384:  
+    log likelihood=199.07
+AIC=-392.14   AICc=-391.9   BIC=-384.12</pre>
+
+<pre class = 'prettyprint lang-r'>&gt; m2 &lt;- Arima(ap1, order=c(0, 1, 0), 
++ seasonal=list(order=c(0, 1, 1), freq=12))
+&gt; m3 &lt;- Arima(ap1, order=c(0, 1, 1), 
++ seasonal=list(order=c(0, 1, 2), freq=12))
+&gt; sapply(list(m1, m2, m3), function(x) {
++ x[c(&#39;aic&#39;,&#39;bic&#39;)]})
+
+    [,1]      [,2]      [,3]     
+aic -392.1358 -382.356  -390.1689
+bic -384.1173 -377.0104 -379.4776</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>模型预测</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>m1 &lt;- Arima(ap1, order=c(0, 1, 1), seasonal=list(order=c(0, 1, 1), freq=12))
+plot(forecast(m1, 24)); lines(ap)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/forec-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>模型诊断: 残差自回归图</h2></hgroup><article  id="-" class="smaller">
+
+<p>残差自回归及偏自回归值基本都不超过置信边界，可认为残差是白噪声(信息提取完全)。</p>
+
+<pre class = 'prettyprint lang-r'>resid &lt;- ap1-m1$fitted
+tsdisplay(resid)</pre>
+
+<p><img src="A04_06_timeseries_files/figure-html/resid-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>模型诊断: Ljung-Box检验</h2></hgroup><article  id="-ljung-box">
+
+<pre class = 'prettyprint lang-r'>&gt; Box.test(resid, lag=20, type=&quot;Ljung-Box&quot;)
+
+    Box-Ljung test
+
+data:  resid
+X-squared = 12.679, df = 20, p-value = 0.8907</pre>
+
+<p>没有证据证明在滞后 1-20 阶中预测误差是非零自相关的，亦即可认为残差是白噪声序列(信息提取完全)。</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

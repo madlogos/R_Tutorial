@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-07 Microsoft Office自动化</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-07 Microsoft Office自动化',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_07_msDoc_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_07_msDoc_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_07_msDoc_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-22 20:40:02</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>MS Office的自动化策略</a></li>
+<li><a href='#6' title=''>高级(High-level)方法</a></li>
+<li><a href='#11' title=''>次高级(lower-level)方法</a></li>
+<li><a href='#18' title=''>低级(low-level)方法</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>MS Office的自动化策略</h2></hgroup><article  id="ms-office">
+
+</article></slide><slide class=''><hgroup><h2>绕不开的Office</h2></hgroup><article  id="office">
+
+<div class="col-2L">
+<h4>MS Office有诸多缺点</h4>
+
+<ul>
+<li>优点即缺点: 图形化操作
+
+<ul>
+<li>可重复性极差</li>
+<li>自动化难度较大</li>
+</ul></li>
+<li>Office软件依赖
+
+<ul>
+<li>难以和未安装Office的用户分享</li>
+</ul></li>
+<li>分析计算能力相对弱</li>
+<li>撰写和排版往往难以分开</li>
+</ul></div>
+
+<div class="col-2R">
+<h4>但仍是我们绕不过的山</h4>
+
+<ul>
+<li>Office仍是商业组织最常用的分析/报告工具
+
+<ul>
+<li>广泛安装部署</li>
+<li>组织的历史数据资产多以Office格式存在</li>
+<li>受众最广泛</li>
+<li>老板/客户只认可Office格式的文档</li>
+</ul></li>
+<li>Office依然有难以取代的优点
+
+<ul>
+<li>快速探索、创建文档</li>
+<li>快速开发分析工具</li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>常用的Office自动化策略</h2></hgroup><article  id="office">
+
+<blockquote>
+<p>在R中，几乎没有完美的Office自动化方案，<br/>所以——能不用Office就别用。</p>
+</blockquote>
+
+<ul>
+<li>VBA (Visual Basic for Applications)</li>
+<li>使用通用编程语言操作DCOM接口，生成Office文档，如
+
+<ul>
+<li>Python的PyWin32</li>
+</ul></li>
+<li>利用报表工具生成Office文档，如
+
+<ul>
+<li>SAS的ODS模块</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>高级(High-level)方法</h2></hgroup><article  id="high-level">
+
+</article></slide><slide class=''><hgroup><h2>knitr</h2></hgroup><article  id="knitr">
+
+<h4>优点</h4>
+
+<ul>
+<li>基本方法和生成html报告一样</li>
+<li>不纠结于排版，聚焦分析和内容
+
+<ul>
+<li>可生成后再套用自定义样式</li>
+</ul></li>
+</ul>
+
+<h4>缺点</h4>
+
+<ul>
+<li>仅支持MS Word</li>
+<li>不支持较复杂的美工效果
+
+<ul>
+<li>最多能生成wmf，无法生成OLE图表</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>knitr示例</h2></hgroup><article  id="knitr">
+
+<div class="col-2L">
+<img src='A05_07_msDoc_files/figure-html/knitr-code.png' title='fig:'/></div>
+
+<div class="col-2R">
+<img src='A05_07_msDoc_files/figure-html/knitr-doc.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>openxlsx (或xlsx, XLConnet)</h2></hgroup><article  id="openxlsx-xlsx-xlconnet">
+
+<h4>优点</h4>
+
+<ul>
+<li>通过高级函数直接操作Excel对象</li>
+<li>操作步骤完全可重复</li>
+<li>基于Rcpp，速度更快</li>
+</ul>
+
+<h4>缺点</h4>
+
+<ul>
+<li>xlsx和XLConnet依赖rJava，速度较慢</li>
+<li>openxlsx和xlsx只支持xlsx，不支持xls</li>
+<li>这几个包均只能处理Excel</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>openxlsx示例</h2></hgroup><article  id="openxlsx" class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>library(openxlsx)
+df &lt;- data.frame(
+    &quot;Date&quot; = Sys.Date()-0:19, 
+    &quot;LogicalT&quot; = TRUE,
+    &quot;Time&quot; = Sys.time()-0:19*60*60,
+    &quot;Cash&quot; = paste(&quot;$&quot;,1:20), 
+    &quot;Cash2&quot; = 31:50,
+    &quot;hLink&quot; = &quot;https://CRAN.R-project.org/&quot;,
+    &quot;Percentage&quot; = seq(0, 1, length.out=20),
+    &quot;TinyNumbers&quot; = runif(20) / 1E9, 
+    stringsAsFactors = FALSE)
+class(df$Cash) &lt;- &quot;currency&quot;
+class(df$Cash2) &lt;- &quot;accounting&quot;
+class(df$hLink) &lt;- &quot;hyperlink&quot;
+class(df$Percentage) &lt;- &quot;percentage&quot;
+class(df$TinyNumbers) &lt;- &quot;scientific&quot;
+hs &lt;- createStyle(fontColour = &quot;#ffffff&quot;, 
+    fgFill = &quot;deepskyblue&quot;, halign = &quot;center&quot;, 
+    valign = &quot;center&quot;, textDecoration = &quot;Bold&quot;,
+    border = &quot;TopBottomLeftRight&quot;)
+write.xlsx(df, file = &quot;writeXLSXTable3.xlsx&quot;, 
+    asTable = TRUE, borders = &quot;rows&quot;, 
+    headerStyle = hs)</pre></div>
+
+<div class="col-2R">
+<img src='A05_07_msDoc_files/figure-html/openxlsx.png' title='fig:'/></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>次高级(lower-level)方法</h2></hgroup><article  id="lower-level">
+
+</article></slide><slide class=''><hgroup><h2>officer</h2></hgroup><article  id="officer">
+
+<ul>
+<li>作者<a href='https://github.com/davidgohel/officer' title=''>David Gohel</a></li>
+<li>是ReporteRs的升级版，基于Rcpp，速度更快
+
+<ul>
+<li>(ReporteRs基于rJava)</li>
+</ul></li>
+<li>采用统一的语法，直接操作MS Word、PowerPoint
+
+<ul>
+<li>先初始化</li>
+<li>添加页面/占位，再添加元素</li>
+<li>通过rvg、devEMF等包扩展，输出矢量图</li>
+<li>通过flextable包扩展，输出自定义的美观表格</li>
+</ul></li>
+<li>采用%&gt;%管道化操作，代码可读性和效率更高</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>officer - <a href='https://davidgohel.github.io/officer/articles/word.html' title=''>MS Word</a></h2></hgroup><article  id="officer---ms-word" class="smaller">
+
+<div class="col-2L">
+<ul>
+<li>初始化: <code>read_docx</code></li>
+<li>可用样式: <code>styles_info</code></li>
+<li>添加/替换成段元素
+
+<ul>
+<li><code>body_add_par</code></li>
+<li><code>body_add_img</code></li>
+<li><code>body_add_table</code></li>
+<li><code>body_add_break</code></li>
+<li><code>body_add_toc</code></li>
+<li><code>body_add_gg</code></li>
+</ul></li>
+<li>添加段内元素
+
+<ul>
+<li><code>slip_in_img</code></li>
+<li><code>slip_in_seqfield</code></li>
+<li><code>slip_in_text</code></li>
+<li><code>slip_in_tableref</code></li>
+<li><code>slip_in_plotref</code></li>
+</ul></li>
+</ul></div>
+
+<div class="col-2R">
+<ul>
+<li>指针(cursor)操作
+
+<ul>
+<li><code>cursor_begin</code></li>
+<li><code>cursor_end</code></li>
+<li><code>cursor_reach</code></li>
+<li><code>cursor_backward</code></li>
+<li><code>cursor_forward</code></li>
+<li><code>cursor_bookmark</code></li>
+</ul></li>
+<li>删除内容: <code>body_remove</code></li>
+<li>章节: <code>body_end_section</code></li>
+<li>书签: <code>body_bookmark</code></li>
+<li>小结: <code>docx_summary</code></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>officer - MS Word 示例</h2></hgroup><article  id="officer---ms-word-" class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>library(officer)
+library(ggplot2)
+library(magrittr)
+gg &lt;- ggplot(iris, aes(
+    Sepal.Length, Petal.Length)) + 
+    geom_point()
+doc &lt;- read_docx() %&gt;% 
+    body_add_toc() %&gt;%
+    body_add_par(&quot;Example Doc&quot;, 
+        style = &quot;heading 1&quot;) %&gt;%
+    rvg::body_add_vg(print(gg)) %&gt;% 
+    body_add_par(&quot;Hello world!&quot;, 
+        style = &quot;Normal&quot;) %&gt;% 
+    body_add_par(&quot;&quot;, style = &quot;Normal&quot;) %&gt;% 
+    body_add_table(head(iris), 
+        style = &quot;table_template&quot;) %&gt;%
+    body_add_par(&quot;&quot;, style = &quot;Normal&quot;) %&gt;%
+    body_add_table(head(iris), 
+        style = &quot;Table Professional&quot;)
+print(doc, target = &quot;first_example.docx&quot;)</pre>
+
+<p>rvb::body_add_vg: 添加可编辑图</p></div>
+
+<div class="col-2R">
+<img src='A05_07_msDoc_files/figure-html/officer-word.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>officer - MS PPT</h2></hgroup><article  id="officer---ms-ppt">
+
+<div class="col-2L">
+<ul>
+<li>初始化: <code>read_pptx</code></li>
+<li>可用样式: <code>layout_sumamry</code></li>
+<li>添加页面: <code>add_slide</code></li>
+<li>移除页面: <code>remove_slide</code></li>
+<li>定位页面: <code>on_slide</code></li>
+<li>添加文本:
+
+<ul>
+<li><code>ph_with_text</code></li>
+<li><code>ph_add_text</code></li>
+<li><code>ph_add_par</code> / <code>ph_add_fpar</code></li>
+<li><a href='https://davidgohel.github.io/officer/reference/layout_properties.html' title=''>layout_properties</a></li>
+</ul></li>
+</ul></div>
+
+<div class="col-2R">
+<ul>
+<li>添加图片:
+
+<ul>
+<li><code>ph_with_image</code></li>
+<li><code>ph_with_image_at</code></li>
+</ul></li>
+<li>添加表格
+
+<ul>
+<li><code>ph_with_table</code></li>
+<li><code>ph_with_table_at</code></li>
+</ul></li>
+<li>页面布局: <code>slide_summary</code></li>
+<li>外部链接: <code>ph_hyperlink</code></li>
+<li>内部链接: <code>ph_slidelink</code></li>
+<li>删除内容: <code>ph_remove</code></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>officer - MS PPT示例</h2></hgroup><article  id="officer---ms-ppt" class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>pres &lt;- read_pptx() %&gt;% 
+    add_slide(layout = &quot;Two Content&quot;, 
+        master = &quot;Office Theme&quot;) %&gt;%
+    ph_with_text(type = &quot;body&quot;, 
+        str = &quot;A first text&quot;， index = 1) %&gt;%
+    ph_add_par(id_chr=&#39;2&#39;, level = 2) %&gt;%
+    ph_add_text(&quot;body (index 1) is text&quot;) %&gt;% 
+    ph_with_text(type = &quot;body&quot;, 
+        str = &quot;A second text&quot;, index = 2) %&gt;%
+    ph_with_img_at(
+        src = file.path(Sys.getenv(&quot;R_HOME&quot;), 
+            &quot;doc&quot;, &quot;html&quot;, &quot;logo.jpg&quot;), 
+        left = 5.15, top = 2.5, height = 1.06, 
+        width = 1.39) %&gt;%
+    ph_with_text(type = &quot;title&quot;, str = &quot;A title&quot;) %&gt;%
+    ph_with_text(type = &quot;ftr&quot;, 
+        str = &quot;Slide footer&quot;) %&gt;%
+    ph_with_text(type = &quot;dt&quot;, 
+        str = format(Sys.Date())) %&gt;%
+    add_slide(layout = &quot;Title and Content&quot;, 
+        master = &quot;Office Theme&quot;) %&gt;%
+    ph_with_text(type = &quot;title&quot;, str = &quot;mtcars&quot;) %&gt;%
+    ph_with_table(type = &quot;body&quot;, value = head(mtcars))
+print(pres, target = &quot;ph_with_table.pptx&quot;)</pre></div>
+
+<div class="col-2R">
+<img src='A05_07_msDoc_files/figure-html/officer-ppt.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>flextable</h2></hgroup><article  id="flextable" class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>library(flextable)
+library(data.table)
+dat &lt;- dcast(data.table(mtcars), 
+    am + vs + cyl ~., list(length, mean, sd), 
+    value.var=&quot;mpg&quot;)
+ft1 &lt;- flextable(
+    data = as.data.frame(dat)) %&gt;% 
+    theme_zebra()
+ft2 &lt;- flextable(
+    data = as.data.frame(dat)) %&gt;% 
+    theme_booktabs() %&gt;% 
+    set_header_labels(
+        mpg_length = &quot;#&quot;, mpg_mean = &quot;Mean&quot;, 
+        mpg_sd = &quot;SD&quot;) %&gt;% 
+    color(i = ~ mpg_length &gt; 3, color = &quot;red&quot;) %&gt;% 
+    autofit() 
+read_docx() %&gt;% 
+    body_add_par(value=&quot;Theme Zebra&quot;, 
+        style=&quot;table title&quot;) %&gt;%
+    body_add_flextable(ft1) %&gt;% 
+    body_add_par(&quot;&quot;) %&gt;%
+    body_add_par(value=&quot;Theme booktabs&quot;, 
+        style=&quot;table title&quot;) %&gt;%
+    body_add_flextable(ft2) %&gt;%
+    print(target = &quot;flextable.docx&quot;)</pre></div>
+
+<div class="col-2R">
+<img src='A05_07_msDoc_files/figure-html/flextable.png' title='fig:'/></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>低级(low-level)方法</h2></hgroup><article  id="low-level">
+
+</article></slide><slide class=''><hgroup><h2>COM (组建对象模型)</h2></hgroup><article  id="com-">
+
+<ul>
+<li>微软的一种面向对象的编程模式</li>
+<li>让组件和客户端无需中介即可相互通讯</li>
+<li>用一个应用程序(客户端)对另一个应用程序实现的对象(自动化服务器)进行操作</li>
+<li>MS Office广泛使用COM技术，如OLE
+
+<ul>
+<li>在Word中动态链接Excel表格，即OLE对象</li>
+<li>通过Word(客户端)操作Excel OLE对象(服务器)</li>
+</ul></li>
+<li>COM进一步衍生出了DCOM、COM+等技术</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://www.omegahat.net/RDCOMClient/' title=''>RDCOMClient</a>包</h2></hgroup><article  id="rdcomclient">
+
+<ul>
+<li>作者Duncan Temple Lang</li>
+<li>可搭配<a href='https://github.com/omegahat/SWinTypeLibs' title=''>SWinTypeLibs</a>包</li>
+<li><a href='http://www.omegahat.net/RDCOMClient/Docs/introduction.html' title=''>简介</a>
+
+<ul>
+<li>把R作为客户端访问自动化服务器(Office文档)，通过IDispatch接口操作COM对象</li>
+<li>初始化: <code>ppt = COMCreate(&quot;Powerpoint.Application&quot;)</code></li>
+<li>调用方法: <code>comObj$methodName(arg1, arg2, arg3, ...)</code></li>
+<li>对象属性: <code>comObj[[&#39;comPropertyName&#39;]]</code></li>
+<li>较类似于VBA，例子参见<a href='http://www.omegahat.net/RDCOMClient/examples' title=''>Omegahat</a></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>示例</h2></hgroup><article  class="smaller">
+
+<pre class = 'prettyprint lang-r'>library(RDCOMClient)
+# 初始化，创建COM对象，套模板
+ppt &lt;- COMCreate(&quot;Powerpoint.Application&quot;)
+ppt[[&#39;Visible&#39;]] &lt;- TRUE
+slide &lt;- ppt[[&#39;Presentations&#39;]]$add()
+slide$ApplyTheme(&quot;C:\\Program Files (x86)\\Microsoft Office\\Document Themes 14\\Urban.thmx&quot;)
+# 添加页面，标题和副标题
+slide[[&#39;Slides&#39;]]$add(1, 1)
+x &lt;- slide[[&#39;Slides&#39;]][[1]][[&#39;Shapes&#39;]][[1]][[&#39;TextFrame&#39;]][[&#39;TextRange&#39;]]
+x[[&#39;Text&#39;]] &lt;- &quot;Presentation&quot;
+x &lt;- slide[[&#39;Slides&#39;]][[1]][[&#39;Shapes&#39;]][[2]][[&#39;TextFrame&#39;]][[&#39;TextRange&#39;]]
+x[[&#39;Text&#39;]] &lt;- &quot;Sub-title&quot;
+# 第二页，标题
+slide[[&#39;Slides&#39;]]$add(2, 5)
+x &lt;- slide[[&#39;Slides&#39;]][[2]][[&#39;Shapes&#39;]][[1]][[&#39;TextFrame&#39;]][[&#39;TextRange&#39;]]
+x[[&#39;Text&#39;]] &lt;- &quot;Title&quot;
+# 第二页，左栏，四个列表
+x &lt;- slide[[&#39;Slides&#39;]][[2]][[&#39;Shapes&#39;]][[2]][[&#39;TextFrame&#39;]][[&#39;TextRange&#39;]]
+x[[&#39;Text&#39;]] &lt;- paste(paste(&quot;Point&quot;, 1:4), collapse=&quot;\r&quot;)
+# 最后一个列表缩进一档
+x &lt;- slide[[&#39;Slides&#39;]][[2]][[&#39;Shapes&#39;]][[2]][[&#39;TextFrame&#39;]][[&#39;TextRange&#39;]]$Paragraphs(4)
+x[[&#39;IndentLevel&#39;]] &lt;- 2</pre>
+
+</article></slide><slide class=''><hgroup><h2>示例(续)</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'># 第二页右栏，新建图
+x &lt;- slide[[&#39;Slides&#39;]][[2]][[&#39;Shapes&#39;]
+    ]$AddChart(4)[[&#39;Chart&#39;]] #xlLine
+# 操作内嵌数据表，修改数据
+gCd &lt;- x[[&#39;ChartData&#39;]]
+gWb &lt;- gCd[[&#39;Workbook&#39;]]
+gWs &lt;- gWb[[&#39;Worksheets&#39;]][[1]]
+xlr &lt;- gWs$Range(&quot;C1:G5&quot;)
+xlr$ClearContents()
+gWs$ListObjects(&quot;Table1&quot;)$Resize(gWs$Range(&quot;A1:B5&quot;))
+xv &lt;- gWs$Range(&quot;Table1[[#Headers],[Series 1]]&quot;)
+xv[[&#39;Value&#39;]] &lt;- &quot;Items&quot;
+xv &lt;- gWs$Range(&quot;a2&quot;); xv[[&#39;Value&#39;]] = &quot;Coffee&quot;
+xv &lt;- gWs$Range(&quot;a3&quot;); xv[[&#39;Value&#39;]] = &quot;Soda&quot;
+xv &lt;- gWs$Range(&quot;a4&quot;); xv[[&#39;Value&#39;]] = &quot;Tea&quot;
+xv &lt;- gWs$Range(&quot;a5&quot;); xv[[&#39;Value&#39;]] = &quot;Water&quot;
+xv &lt;- gWs$Range(&quot;b2&quot;); xv[[&#39;Value&#39;]] = 1000
+xv &lt;- gWs$Range(&quot;b3&quot;); xv[[&#39;Value&#39;]] = 2500
+xv &lt;- gWs$Range(&quot;b4&quot;); xv[[&#39;Value&#39;]] = 4000
+xv &lt;- gWs$Range(&quot;b5&quot;); xv[[&#39;Value&#39;]] = 3000
+gCd$Activate()
+gWb$close(TRUE)</pre></div>
+
+<div class="col-2R">
+<img src='A05_07_msDoc_files/figure-html/rdcom.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

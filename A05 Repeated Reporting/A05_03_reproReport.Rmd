@@ -1,0 +1,199 @@
+---
+title: A05-03 可重复报告理念
+subtitle: R Analyst Track
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: ../pres.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    self_contained: no
+    widescreen: yes
+    logo: ../logo.png
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A05_03_reproReport_files/figure-html/")
+```
+
+## 目录
+
+- [自动化+可重复](#3)
+- [文学化编程](#7)
+
+
+# 自动化+可重复
+
+## 痛点
+
+<div class="columns-2">
+
+#### 分析师
+
+1. 每次分析都要重复点一圈鼠标，执行数据整理
+1. 图表都要一幅一幅手动制作，再把数字手动贴到Word/PPT里
+1. 定期做例行报告，整理、分析、图表作业都要机械重复一遍
+1. 出一处错误，后面就要全部手动重来
+1. 手动，手动，手动！
+
+<p class="forceBreak"></p>
+
+#### 读者
+
+1. 只能看到报告结果，无从考究具体处理过程
+1. 即使拿到原始数据，依然难以重复数据处理过程
+1. 即使拿到清理后的数据，验证分析过程也十分困难
+1. 数据和代码分离。即使拿到代码，验证过程仍然费力
+1. 一些随机过程不知种子数，无法复现 
+1. "Words are cheap, show me the code!"
+
+</div>
+
+## 自动化
+
+- 常用的自动化分析策略，是部署商业智能(BI)工具，如Crystal Report、Tableau
+- 优点: 
+    - 开发并部署后，通常便捷易用
+- 缺点:
+    - 开发部署过程耗时费力
+    - 较不灵活。如需求微调，则需要再次开发部署
+- 建议:
+    - 分析师先在本地搭建自动化报告原型
+    - 再由数据工程师开发为自动化报告产品
+    - 不需要上线的产品，可直接在本地运行代码产生例行报告
+
+## 可重复
+
+可重复性是科学研究的基本要求
+
+- 理想的可重复性(Replicability): 能够重复实施科研/商业项目、数据采集和分析过程
+- 较现实的可重复性(Reproducibility): 基于同样的原始数据，执行分析代码，可获得同样的结果和结论
+    - 分析的透明性
+    - 数据的可及性
+        - 原始数据(及元数据)
+    - 工具的可及性
+        - 处理/分析代码
+    - 知识传递的效率
+        - 数据和代码说明文档
+
+# 文学化编程
+
+## Literate Programming
+
+$\LaTeX$之父Donald E. Knuth (1992)提出的编程范式，即按照写作逻辑思路和文学章-节结构组织文档文本和程序代码。自然语言和程序语言交织在同一篇文档中，通过特定的标志符号分割开:
+
+- `tangle`(绕)命令: 编译执行程序语言部分，供计算机释读
+- `weave`(织)命令：格式化编译自然语言部分，供人类阅读
+
+文学化编程范式与现代软件工程最优实践不甚相符(很多坑)
+
+- 在软件开发领域仍比较小众(集中于Emacs org-mode、$\TeX$等)
+- 但它却为可重复研究和技术文档撰写提供了得天独厚的武器
+    - 文档和代码按阅读逻辑组织在一起，不再分开
+    - 程序代码编译后产生图表结果，与格式文本完美融合
+
+## R与文学化编程: Sweave
+
+- R原生支持`Sweave`，基于$\LaTeX$语法
+- 开发/维护者Friedrich Leisch，是R核心开发组成员
+- 你需要
+    - 将文档组织成$\LaTeX$文本和代码块(Chunk)交织的流
+    - `<<块名>>=`标示代码块的起始
+    - `@`标示文本段落的起始
+- 但是!
+    - $\LaTeX$是一种较难学的向上标记(mark-up)语言
+    - 即便在文本中，也要写大量控制代码
+    - 一些特性缺失: 缓存、一个代码块出多图、粘合多种程序语言、灵活控制图宽
+    - 维护和更新慢
+
+## {.smaller}
+
+
+```latex
+\documentclass{article}
+\begin{document}
+
+\title{Test Doc}
+\author{Me}
+\maketitle
+
+\section*{R Markdown}
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word 
+documents. For more details on using R Markdown see \href{http://rmarkdown.rstudio.com}.
+
+When you click the \textbf{Knit} button a document will be generated that includes both content as well as 
+the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+<<cars>>=
+summary(cars)
+@
+
+\section*{Including Plots}
+You can also embed plots, for example:
+
+<<pressure, echo=FALSE>>=
+plot(pressure)
+@
+
+Note that the \texttt{echo = FALSE} parameter was added to the code chunk to prevent printing of the R code
+that generated the plot.
+
+\end{document}
+```
+
+---
+
+![](A05_03_reproReport_files/figure-html/sweave.png)
+
+
+## 更易学的knitr
+
+- Rstudio原生支持knitr，基于markdown语法
+- 开发者Yihui Xie
+- 继承Sweave的功能，并添加了大量特性
+- 支持R作为程序语言，也支持Python、C、SQL等其他语言
+- 格式文本采用markdown语法，简洁易学
+- 可一键发布到rpubs.com，便于分享
+- 可用来制作幻灯片、写作书籍(bookdown包)、撰写静态博客(blogdown包)
+
+我们将跳过Sweave大坑，直接基于knitr学习开发自动化报告
+
+## {.smaller}
+
+
+```{r knitr, comment=NA, echo=FALSE}
+cat("---\ntitle: \"Test Doc\"\nauthor: Me\noutput: html_document\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n## R Markdown\n\nThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word \ndocuments. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.\n\nWhen you click the **Knit** button a document will be generated that includes both content as well as the \noutput of any embedded R code chunks within the document. You can embed an R code chunk like this:\n\n```{r cars}\nsummary(cars)\n```\n\n## Including Plots\n\nYou can also embed plots, for example:\n\n```{r pressure, echo=FALSE}\nplot(pressure)\n```\n\nNote that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that \ngenerated the plot.")
+```
+
+---
+
+![](A05_03_reproReport_files/figure-html/knitr.png)
+
+
+## notebook
+
+- Notebook概念源自IPython项目，最常用于Python
+- R可通过R Notebook或Jupyter Notebook来实现
+- Notebook的优点
+    - 继承了Sweave和knitr文学化编程的主要优点
+    - 可逐块编辑，随写随编译，更便于探索性分析
+    - 支持更多种程序语言(包括SAS、MATLAB...)
+    - 便于以网页、幻灯、电子书等形式分享
+    - 在数据科学家中越来越流行
+
+---
+
+![[nbviewer example](http://nbviewer.jupyter.org/github/phelps-sg/python-bigdata/blob/master/src/main/ipynb/spark-mapreduce.ipynb)](A05_03_reproReport_files/figure-html/notebook.png)
+
+## {.grayblue}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+
+<br/>[回到主目录](http://madlogos.github.io/R_Tutorial)

@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-05 knitr包</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-05 knitr包',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_05_knitr_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_05_knitr_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_05_knitr_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-22 20:39:01</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>knitr基础</a></li>
+<li><a href='#24' title=''>knitr进阶</a></li>
+<li><a href='#35' title=''>其他类型</a></li>
+<li><a href='#41' title=''>bookdown</a></li>
+<li><a href='#45' title=''>blogdown</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>knitr基础</h2></hgroup><article  id="knitr">
+
+</article></slide><slide class=''><hgroup><h2><a href='https://yihui.name/knitr/' title=''>knitr</a>包</h2></hgroup><article  id="knitr">
+
+<img src='A05_05_knitr_files/figure-html/knitr.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>主要特点</h2></hgroup><article >
+
+<ul>
+<li>knitr是rmarkdown实现动态报告的“透明引擎”
+
+<ul>
+<li>完全承袭前述<a href='A05_04_markdown.html' title=''>rmarkdown</a>的文档结构</li>
+<li>包括YAML头和文档体（由文本块和代码块穿插构成）</li>
+</ul></li>
+<li>文本块
+
+<ul>
+<li>支持markdown或LaTeX语法</li>
+<li>可内嵌行内代码(Inline code)</li>
+</ul></li>
+<li>代码块(code chunk)
+
+<ul>
+<li>支持全局参数配置</li>
+<li>支持在每个代码块进行局部参数配置</li>
+<li>体现R作为胶水语言的优越性，支持多种程序语言作为分析引擎</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>局部配置</h2></hgroup><article >
+
+<p><code>```{r, &lt;选项1&gt;=..., &lt;选项2&gt;=..., ....}</code><br/><code>&lt;代码块&gt;</code><br/><code>```</code></p>
+
+<p>支持12类选项:</p>
+
+<div class="col-2L">
+<ul>
+<li><a href='#7' title=''>代码求解(evaluation)</a></li>
+<li><a href='#8' title=''>文本结果(text result)</a></li>
+<li><a href='#10' title=''>代码修饰(code decoration)</a></li>
+<li><a href='#11' title=''>缓存(cache)</a></li>
+<li><a href='#13' title=''>作图(plot)</a></li>
+<li><a href='#17' title=''>动画(animation)</a></li>
+</ul></div>
+
+<div class="col-2R&gt; - [代码块(code chunk)](#18) - [子文档(child document)](#18) - [语言引擎(language engine)](#19) - [选项模板(option template)](#20) - [提取源代码(extract source)](#20) - [其他(others)](#20) &lt;/div&gt; ## 代码求解: `eval`: (`TRUE`; 逻辑型) &lt;div class=">
+<ul>
+<li><a href='#18' title=''>代码块(code chunk)</a></li>
+<li><a href='#18' title=''>子文档(child document)</a></li>
+<li><a href='#19' title=''>语言引擎(language engine)</a></li>
+<li><a href='#20' title=''>选项模板(option template)</a></li>
+<li><a href='#20' title=''>提取源代码(extract source)</a></li>
+<li><a href='#20' title=''>其他(others)</a></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>代码求解: <code>eval</code>: (<code>TRUE</code>; 逻辑型)</h2></hgroup><article  id="-eval-true-">
+
+<div class="col-2L">
+<p><code>eval=TRUE</code>:</p>
+
+<pre class = 'prettyprint lang-r'>summary(cars)</pre>
+
+<pre >##      speed           dist       
+##  Min.   : 4.0   Min.   :  2.00  
+##  1st Qu.:12.0   1st Qu.: 26.00  
+##  Median :15.0   Median : 36.00  
+##  Mean   :15.4   Mean   : 42.98  
+##  3rd Qu.:19.0   3rd Qu.: 56.00  
+##  Max.   :25.0   Max.   :120.00</pre></div>
+
+<div class="col-2R">
+<p><code>eval=FALSE</code>:</p>
+
+<pre class = 'prettyprint lang-r'>summary(cars)</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>文本结果(1)</h2></hgroup><article  id="1">
+
+<ul>
+<li><strong><code>echo</code></strong>: (<code>TRUE</code>; 逻辑型或数值型) 是否打印源代码，或从第几行开始打印源代码</li>
+<li><strong><code>results</code></strong>: (&#39;markup&#39;; 文本型) 取值包括
+
+<ul>
+<li>&#39;markup&#39;: 装裱特定输出文本(如LaTeX)</li>
+<li>&#39;asis&#39;: 输出原始格式</li>
+<li>&#39;hold&#39;: 运行完整个代码块后才输出</li>
+<li>&#39;hide&#39;: 隐藏输出</li>
+</ul></li>
+<li><code>collapse</code>: (<code>FALSE</code>; 逻辑型，仅限markdown结果) 是否把代码和结果输出到同一个文本块</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>文本结果(2)</h2></hgroup><article  id="2">
+
+<ul>
+<li><strong><code>warning</code></strong>: (<code>TRUE</code>; 逻辑型) 是否输出警告信息</li>
+<li><strong><code>error</code></strong>: (<code>TRUE</code>; 逻辑型) 是否输出错误信息</li>
+<li><strong><code>message</code></strong>: (<code>TRUE</code>; 逻辑型) 是否输出提示信息</li>
+<li><code>split</code>: (<code>FALSE</code>; 逻辑型) 是否将输出结果分割到不同文件，仅限.Rnw, .Rtex, 和 .Rhtml</li>
+<li><strong><code>include</code></strong>: (<code>TRUE</code>; 逻辑型) 结果是否输出到结果文档</li>
+<li><code>strip.white</code>: (<code>TRUE</code>; 逻辑型) 是否移除源代码块首尾空行</li>
+<li><code>class.output</code>: (<code>NULL</code>; 文本型) 添加可以和css联用的class类型，对于HTML较实用</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>代码修饰</h2></hgroup><article >
+
+<ul>
+<li><strong><code>tidy</code></strong>: (<code>FALSE</code>; 逻辑型) 是否使用<code>formatR::tidy_source()</code>整理代码
+
+<ul>
+<li><code>tidy.opts</code>: (<code>NULL</code>; list) <code>tidy.source()</code>列表参数，如<code>tidy.opts=list(blank=FALSE,</code> <code>width.cutoff=60)</code></li>
+</ul></li>
+<li><code>prompt</code>: (<code>FALSE</code>; 逻辑型) 是否加提示符</li>
+<li><strong><code>comment</code></strong>: (&#39;##&#39;; 文本型) 输出源代码时，行前添加的前缀符</li>
+<li><code>highlight</code>: (<code>TRUE</code>; 逻辑型) 是否高亮显示代码</li>
+<li><code>size</code>: (&#39;normalsize&#39;; 文本型) 默认LaTeX输出的字号</li>
+<li><code>background</code>: (&#39;#F7F7F7&#39;; 文本型或数值型) LaTeX输出的代码块背景色</li>
+<li><code>class.source</code>: (<code>NULL</code>; 文本型) 添加可以和css联用的class类型，对于HTML较实用</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>缓存(1)</h2></hgroup><article  id="1">
+
+<ul>
+<li><code>cache</code>: (<code>FALSE</code>; 逻辑型) 是否缓存代码块结果，如设定缓存，仅当结果变化时才重新求解</li>
+<li><code>cache.path</code>: (&#39;cache/&#39;; 文本型) 缓存文件的前缀名(默认存在工作目录下的cache文件夹内)</li>
+<li><code>cache.vars</code>: (NULL) 变量名向量，规定哪些变量存入缓存数据库。NULL时，所有变量都存</li>
+<li><code>cache.globals</code>: (NULL) 不是由当前代码块产生的变量名向量</li>
+<li><code>cache.lazy</code>: (<code>TRUE</code>) <code>lazyLoad()</code>还是直接<code>load()</code>对象</li>
+<li><code>cache.comments</code>: (NULL) 如设为FALSE，修改代码块内的注释不会令缓存失效</li>
+<li><code>cache.rebuild: (</code>FALSE`) 如设为TRUE，强制重建该代码块的缓存</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>缓存(2)</h2></hgroup><article  id="2">
+
+<ul>
+<li><code>dependson</code>: (<code>NULL</code>; 文本型或数值型) 代码块标题向量，指定本代码块依赖于哪些其他代码块
+
+<ul>
+<li>如<code>dependson</code>为数值向量，则表示代码块序号。<code>dependson=c(-1, -2)</code>表示前两个代码块</li>
+</ul></li>
+<li><code>autodep</code>: (<code>FALSE</code>; 逻辑型) 是否自动找出依赖代码块</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>作图(1)</h2></hgroup><article  id="1">
+
+<ul>
+<li><strong><code>fig.path</code></strong>: (&#39;figure/&#39;; 文本型) 作图文件名前缀，可以是一个路径</li>
+<li><code>fig.keep</code>: (&#39;high&#39;; 文本型) 代码块内的图如何保留，有5种选择:
+
+<ul>
+<li>&#39;high&#39;: 只保留高水平图(低水平改动被并入);</li>
+<li>&#39;none&#39;: 都不保留;</li>
+<li>&#39;all&#39;: 均保留(低水平改动产生新图)</li>
+<li>&#39;first&#39;: 只保留第一幅图</li>
+<li>&#39;last&#39;: 只保留最后一幅图</li>
+<li>如设为数值型向量，则依此序号保留低水平图</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>作图(2)</h2></hgroup><article  id="2">
+
+<ul>
+<li><code>fig.show</code>: (&#39;asis&#39;; 文本型) 如何显示/安排这些图，有4种选择:
+
+<ul>
+<li>&#39;asis&#39;: 显示效果和在R命令行运行结果一样;</li>
+<li>&#39;hold&#39;: 直到运行完该代码块才出图;</li>
+<li>&#39;animate&#39;: 如该代码块产出多图，则将所有图整合成动画;</li>
+<li>&#39;hide&#39;: 产生图，但不显示到输出文档</li>
+</ul></li>
+<li><strong><code>dev</code></strong>: (LaTeX输出为&#39;pdf&#39;, HTML/markdown输出为&#39;png&#39;; 文本型) 指定作图设备，包括R基础作图设备及Cairo、cairoDevice、tikzDevice包中的设备</li>
+<li><code>dev.args</code>: (<code>NULL</code>) 传递给作图设备的参数，如<code>dev.args=list(bg=&#39;yellow&#39;,</code> <code>pointsize=10)</code></li>
+<li><strong><code>fig.ext</code></strong>: (<code>NULL</code>; 文本型) 图形输出文件扩展名</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>作图(3)</h2></hgroup><article  id="3">
+
+<ul>
+<li><code>dpi</code>: (72; 数值型) 位图设备分辨率DPI，(dpi * inches = pixels)</li>
+<li><strong><code>fig.width</code></strong>, <strong><code>fig.height</code></strong>: (均为7; 数值型) 图宽和图高，单位为英寸</li>
+<li><code>fig.asp</code>: (<code>NULL</code>; 数值型) 图形高宽比，一旦锁定，图高自动适配</li>
+<li><strong><code>out.width</code></strong>, <strong><code>out.height</code></strong>: (<code>NULL</code>; 文本型) 最终输出文件中的图宽及图高，单位可多样</li>
+<li><code>out.extra</code>: (<code>NULL</code>; 文本型) 图形的额外选项，如LaTeX中<code>out.extra=&#39;angle=90&#39;</code>会将图翻转90度</li>
+<li><code>fig.retina</code>: (1; 数值型) 仅用于HTML输出，对于视网膜屏，该代码块的dpi会被改为dpi * fig.retina，out.width改为fig.width * dpi / fig.retina</li>
+<li><code>resize.width</code>, <code>resize.height</code>: (<code>NULL</code>; 文本型) LaTeX中的用到的的宽和高</li>
+<li><code>fig.align</code>: (&#39;default&#39;; 文本型) 输出文档中图的对齐方式 (可以是left, right或center)</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>作图(4)</h2></hgroup><article  id="4">
+
+<ul>
+<li><code>fig.env</code>: (&#39;figure&#39;) 作图的LaTeX环境， 如设<code>fig.env=&#39;marginfigure&#39;</code>得到<code>\begin{marginfigure}</code></li>
+<li><strong><code>fig.cap</code></strong>: (<code>NULL</code>; 文本型) 在LaTeX中，作图环境所用的图标题</li>
+<li><code>fig.scap</code>: (<code>NULL</code>; 文本型) 短标题</li>
+<li><strong><code>fig.lp</code></strong>: (&#39;fig:&#39;; 文本型) 图标题前缀，用于<code>\label{}</code></li>
+<li><code>fig.pos</code>: (&#39;&#39;; 文本型) 图的位置，用于<code>\begin{figure}[fig.pos]</code></li>
+<li><code>fig.subcap</code>: (<code>NULL</code>) 子图的标题</li>
+<li><code>fig.process</code>: (<code>NULL</code>) 用于后处理图文件的函数</li>
+<li><code>fig.showtext</code>: (<code>NULL</code>) 如TRUE，作图前调用<code>showtext::showtext.begin()</code></li>
+<li><code>external</code>: (<code>TRUE</code>; 逻辑型) 是否外部化tikz设备 (将tikz设备预编译为PDF)</li>
+<li><code>sanitize</code>: (<code>FALSE</code>; 文本型) 是否清理tikz设备 (转义特殊的LaTeX字符)</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>动画</h2></hgroup><article >
+
+<ul>
+<li><code>interval</code>: (1; 数值型) 动画框之间暂停的秒数</li>
+<li><code>aniopts</code>: (&#39;controls,loop&#39;) 动画的额外选项</li>
+<li><code>ffmpeg.bitrate</code> (1M; 文本型) 传递给FFmpeg的<code>-b:v</code>参数，控制FFmpeg创建的WebM视频质量</li>
+<li><code>ffmpeg.format</code> (webm; 文本型) FFmpeg视频格式，即视频文件扩展名</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>代码块、子文档</h2></hgroup><article >
+
+<h3>代码块</h3>
+
+<ul>
+<li><code>code</code>: (<code>NULL</code>; 文本型) 如提供，则覆写当前代码块的代码</li>
+<li><code>ref.label</code>: (<code>NULL</code>; 文本型) 代码块标题构成的文本向量，当前代码块将从这些代码块继承代码</li>
+</ul>
+
+<h3>子文档</h3>
+
+<ul>
+<li><code>child</code>: (<code>NULL</code>; 文本型) 子文档文件名构成的文本向量，如指定，则引入这些文档，运行并将结果插入主文档</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>语言引擎</h2></hgroup><article >
+
+<ul>
+<li><strong><code>engine</code></strong>: (&#39;R&#39;; 文本型) 当前代码块的程序语言名称，目前可用&#39;R&#39;、&#39;python&#39;、&#39;awk&#39;/&#39;gawk&#39;，对象<code>knit_engines</code>可用于设置其他语言的引擎</li>
+<li><code>engine.path</code> (<code>NULL</code>; 文本型): 引擎可执行程序的路径，该选项允许你使用系统中其他版本的可执行程序
+
+<ul>
+<li><code>engine.path</code>也可以是一个路径列表，为多个引擎设定多个路径，如</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>knitr::opts_chunk$set(engine.path = list(
+  python = &#39;~/anaconda/bin//python&#39;,
+  ruby = &#39;/usr/local/bin/ruby&#39;
+))</pre>
+
+</article></slide><slide class=''><hgroup><h2>其他模板、提取源代码、其他选项</h2></hgroup><article ></li>
+</ul>
+
+<h3>其他模板</h3>
+
+<ul>
+<li><code>opts.label</code>: (<code>NULL</code>; 文本型) the label of options set in <code>opts_template</code>设定的选项标签，可用来保存一些常用的代码块选项</li>
+</ul>
+
+<h3>提取源代码</h3>
+
+<ul>
+<li><code>purl</code>: (<code>TRUE</code>; 逻辑型) 运行<code>purl()</code>从源文档提取源代码时，纳入还是排除代码块</li>
+</ul>
+
+<h3>其他选项</h3>
+
+<ul>
+<li><code>R.options</code>: (<code>NULL</code>) 代码块的本地R选项，它们是临时性的<code>options()</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>全局选项</h2></hgroup><article >
+
+<p>可通过<code>opts_knit</code>修改，如</p>
+
+<pre class = 'prettyprint lang-r'>opts_knit$set(progress = TRUE, verbose = TRUE)</pre>
+
+<ul>
+<li>在rmarkdown模板中，首个代码块标签为<code>r</code> <code>setup</code>，其中就包括了几个常用的全局选项</li>
+<li>建议保持该结构，将文档培植信息、全局选项都写到首个代码块中</li>
+<li>全局选项作用于文档内所有代码块
+
+<ul>
+<li>代码块选项比全局选项优先级更高，会覆写该代码块的设定</li>
+</ul></li>
+<li>一共有24个全局选项</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<ul>
+<li><code>animation.fun</code>: (hook_ffmpeg_html) 在HTML输出中创建动画的钩子函数，默认用FFmpeg将图片转为MP4视频</li>
+<li><code>aliases</code>: (<code>NULL</code>) 命名的文本向量，指定代码块选项的别称，如<code>c(h = &#39;fig.height&#39;,</code> <code>w = &#39;fig.width&#39;)</code>将<code>fig.height</code>简称为<code>h</code>，<code>fig.width</code>简称为<code>w</code>，懒人必备</li>
+<li><code>base.dir</code>: (<code>NULL</code>) 生成图形的绝对路径</li>
+<li><code>base.url</code>: (<code>NULL</code>) HTML页面的基础URL</li>
+<li><code>child.path</code>: (&#39;&#39;) 子文档的搜索路径，默认从父文档所在路径开始找</li>
+<li><code>concordance</code>: (<code>FALSE</code>) 是否产生一个同步文件匹配输出行号与输入行号</li>
+<li><code>eval.after</code>: (<code>fig.cap</code>) 选项名组成的文本向量，被指定的选项将在代码块求解之后再求解 (如指定<code>eval.after=&#39;fig.cap&#39;</code>，则将在求解完代码块，得到x的取值后，再求解<code>fig.cap=paste(&#39;p-value is&#39;,</code> <code>t.test(x)$p.value)</code></li>
+<li><code>global.par</code>: (<code>FALSE</code>) 如TRUE，前个代码块的<code>par()</code>选项会被应用到下个代码块</li>
+<li><code>header</code>: 当文档开始前，被插入到输出文档的文字 (如LaTeX中 <code>\documentclass{article}</code> 之后，或HTML中<code>&lt;head&gt;</code>之后)</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<ul>
+<li><code>latex.options.color</code>, <code>latex.options.graphicx</code> (<code>NULL</code>): 分别是LaTeX包color和graphicx的选项</li>
+<li><code>out.format</code>: (<code>NULL</code>) 可以是&#39;latex&#39;, &#39;sweave&#39;, &#39;html&#39;, &#39;markdown&#39;和&#39;jekyll&#39;</li>
+<li><code>progress</code>: (<code>TRUE</code>) 运行knitr时是否显示进度条</li>
+<li><code>root.dir</code>: (<code>NULL</code>) 求解代码块时的根目录，如NULL，则为该文档所在目录</li>
+<li><code>self.contained</code>: (<code>TRUE</code>) 输出文档是否打包为单个文件(TeX styles写入tex文档，CSS样式写入HTML文档)</li>
+<li><code>unnamed.chunk.label</code>: (<code>unnamed-chunk</code>) 未命名代码块的标题前缀，默认为&quot;unnamed-chunk&quot;</li>
+<li><code>upload.fun</code>: (<code>identity</code>) 以文件名为输入参数的函数，输出格式为HTML或Markdown时运行返回一个字符串</li>
+<li><code>verbose</code>: (<code>FALSE</code>) 是否显示详细信息 (如各代码块的R代码和提示信息)，默认只打印代码块标题和选项</li>
+<li><code>width</code>: (75) 设置R进程选项宽度</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>knitr进阶</h2></hgroup><article  id="knitr">
+
+</article></slide><slide class=''><hgroup><h2>实践要点</h2></hgroup><article >
+
+<ul>
+<li>初阶用markdown语法，中高阶可使用LaTeX或直接用html语法</li>
+<li>参考rmarkdown各类模板文档，仔细配置YAML头</li>
+<li>建议
+
+<ul>
+<li>合理搭建分析工程</li>
+<li>全局配置、全局参数放在顶部代码块</li>
+<li>给每个代码块命名</li>
+<li>复用函数存入.R脚本，通过<code>source()</code>引入</li>
+<li>控制每个代码块的范围和长度</li>
+<li>函数化、参数化，提高复用性和代码效率</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>表格(1): <code>knitr::kable</code></h2></hgroup><article  id="1-knitrkable">
+
+<div class="columns-2">
+<p>直接输出</p>
+
+<pre class = 'prettyprint lang-r'>with(mtcars, table(gear, carb))</pre>
+
+<pre >##     carb
+## gear 1 2 3 4 6 8
+##    3 3 4 3 5 0 0
+##    4 4 4 0 4 0 0
+##    5 0 2 0 1 1 1</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p>装裱数据框</p>
+
+<pre class = 'prettyprint lang-r'>knitr::kable(with(mtcars, table(gear, carb)),
+    align=&quot;llccrr&quot;)</pre>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left"></th>
+<th align="left">1</th>
+<th align="left">2</th>
+<th align="center">3</th>
+<th align="center">4</th>
+<th align="right">6</th>
+<th align="right">8</th>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">3</td>
+<td align="left">4</td>
+<td align="center">3</td>
+<td align="center">5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">4</td>
+<td align="left">4</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">0</td>
+<td align="left">2</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>表格(2): <code>xtable</code></h2></hgroup><article  id="2-xtable">
+
+<div class="col-2L">
+<p>默认LaTeX，knitr可自动适配为tibble</p>
+
+<pre class = 'prettyprint lang-r'>library(xtable)
+with(mtcars, xtable(table(gear, carb)))</pre>
+
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["1"],"name":[1],"type":["int"],"align":["right"]},{"label":["2"],"name":[2],"type":["int"],"align":["right"]},{"label":["3"],"name":[3],"type":["int"],"align":["right"]},{"label":["4"],"name":[4],"type":["int"],"align":["right"]},{"label":["6"],"name":[5],"type":["int"],"align":["right"]},{"label":["8"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"3","2":"4","3":"3","4":"5","5":"0","6":"0"},{"1":"4","2":"4","3":"0","4":"4","5":"0","6":"0"},{"1":"0","2":"2","3":"0","4":"1","5":"1","6":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script></div></div>
+
+<div class="col-2R">
+<p>如使用print()，代码块results设为&#39;asis&#39;</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- with(mtcars, xtable(table(gear, carb)))
+print(x, type=&quot;html&quot;)</pre>
+
+<!-- html table generated in R 3.3.3 by xtable 1.8-2 package -->
+
+<!-- Thu Jun 22 20:39:01 2017 -->
+
+<table border="1">
+
+<tr>
+
+<th>
+
+</th>
+
+<th>
+
+1
+
+</th>
+
+<th>
+
+2
+
+</th>
+
+<th>
+
+3
+
+</th>
+
+<th>
+
+4
+
+</th>
+
+<th>
+
+6
+
+</th>
+
+<th>
+
+8
+
+</th>
+
+</tr>
+
+<tr>
+
+<td align="right">
+
+3
+
+</td>
+
+<td align="right">
+
+3
+
+</td>
+
+<td align="right">
+
+4
+
+</td>
+
+<td align="right">
+
+3
+
+</td>
+
+<td align="right">
+
+5
+
+</td>
+
+<td align="right">
+
+0
+
+</td>
+
+<td align="right">
+
+0
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="right">
+
+4
+
+</td>
+
+<td align="right">
+
+4
+
+</td>
+
+<td align="right">
+
+4
+
+</td>
+
+<td align="right">
+
+0
+
+</td>
+
+<td align="right">
+
+4
+
+</td>
+
+<td align="right">
+
+0
+
+</td>
+
+<td align="right">
+
+0
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="right">
+
+5
+
+</td>
+
+<td align="right">
+
+0
+
+</td>
+
+<td align="right">
+
+2
+
+</td>
+
+<td align="right">
+
+0
+
+</td>
+
+<td align="right">
+
+1
+
+</td>
+
+<td align="right">
+
+1
+
+</td>
+
+<td align="right">
+
+1
+
+</td>
+
+</tr>
+
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>表格(3): <code>stargazer</code></h2></hgroup><article  id="3-stargazer">
+
+<div class="columns-2">
+<p>纯文本输出</p>
+
+<pre class = 'prettyprint lang-r'>library(stargazer)
+stargazer(iris, type=&quot;text&quot;)</pre>
+
+<pre >
+===========================================
+Statistic     N  Mean  St. Dev.  Min   Max 
+-------------------------------------------
+Sepal.Length 150 5.843  0.828   4.300 7.900
+Sepal.Width  150 3.057  0.436   2.000 4.400
+Petal.Length 150 3.758  1.765   1.000 6.900
+Petal.Width  150 1.199  0.762   0.100 2.500
+-------------------------------------------</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p>HTML输出</p>
+
+<pre class = 'prettyprint lang-r'>stargazer(iris, type=&quot;html&quot;, 
+    title=&quot;Table: iris dataset&quot;)</pre>
+
+<table style="text-align:center">
+
+<caption>
+
+<strong>Table: iris dataset</strong>
+
+</caption>
+
+<tr>
+
+<td colspan="6" style="border-bottom: 1px solid black">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left">
+
+Statistic
+
+</td>
+
+<td>
+
+N
+
+</td>
+
+<td>
+
+Mean
+
+</td>
+
+<td>
+
+St. Dev.
+
+</td>
+
+<td>
+
+Min
+
+</td>
+
+<td>
+
+Max
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="6" style="border-bottom: 1px solid black">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left">
+
+Sepal.Length
+
+</td>
+
+<td>
+
+150
+
+</td>
+
+<td>
+
+5.843
+
+</td>
+
+<td>
+
+0.828
+
+</td>
+
+<td>
+
+4.300
+
+</td>
+
+<td>
+
+7.900
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left">
+
+Sepal.Width
+
+</td>
+
+<td>
+
+150
+
+</td>
+
+<td>
+
+3.057
+
+</td>
+
+<td>
+
+0.436
+
+</td>
+
+<td>
+
+2.000
+
+</td>
+
+<td>
+
+4.400
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left">
+
+Petal.Length
+
+</td>
+
+<td>
+
+150
+
+</td>
+
+<td>
+
+3.758
+
+</td>
+
+<td>
+
+1.765
+
+</td>
+
+<td>
+
+1.000
+
+</td>
+
+<td>
+
+6.900
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left">
+
+Petal.Width
+
+</td>
+
+<td>
+
+150
+
+</td>
+
+<td>
+
+1.199
+
+</td>
+
+<td>
+
+0.762
+
+</td>
+
+<td>
+
+0.100
+
+</td>
+
+<td>
+
+2.500
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="6" style="border-bottom: 1px solid black">
+
+</td>
+
+</tr>
+
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>钩子函数</h2></hgroup><article >
+
+<ul>
+<li>钩子(hook)函数是一类特殊函数，在特定情况下才触发</li>
+<li>knitr的钩子是最主要的用户自定义API，包括两类:
+
+<ul>
+<li>代码块钩子(chunk hook)
+
+<ul>
+<li>用于自定义代码块选项(所有默认选项以外的选项)</li>
+<li>通过<code>knit_hooks</code>对象设定</li>
+<li>可以在代码段运行前或后触发</li>
+</ul></li>
+<li>输出钩子(output hook)
+
+<ul>
+<li>用于装裱输出</li>
+<li>有9种输出钩子供用户使用
+
+<ul>
+<li><code>source, output, warning, message,</code> <code>error, plot, inline, chunck, document</code></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>代码块钩子</h2></hgroup><article >
+
+<p>代码块钩子函数的基本格式</p>
+
+<pre class = 'prettyprint lang-r'>knit_hooks$set(foo_hook = function(before, options, envir) {
+    if (before) {
+        ## code to be run before a chunk
+    } else {
+        ## code to be run after a chunk
+    }
+})</pre>
+
+<ul>
+<li>before: 代码块运行前还是运行后触发
+
+<ul>
+<li>钩子函数中通过分支结构控制触发内容</li>
+</ul></li>
+<li>options: 任何合法的代码块<a href='#4' title=''>选项</a>
+
+<ul>
+<li>选项取值不能是NULL</li>
+</ul></li>
+<li>envir: 环境，当前代码块的环境</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>代码块钩子: <code>before</code>参数</h2></hgroup><article  id="-before" class="smaller">
+
+<pre class = 'prettyprint lang-r'>library(knitr)
+knit_hooks$set(foo1 = function(before, options, envir){
+    if (before) {
+        paste(&quot;&lt;p style=&#39;color:red; text-align:center; font-style:italic&#39;&gt;-------I appear &lt;b&gt;before&lt;/b&gt;&quot;, 
+              &quot;a chunk!-------&lt;/p&gt;&quot;)
+    } else {
+        paste(&quot;&lt;p style=&#39;color:blue; text-align:center; font-style:italic&#39;&gt;-------I appear &lt;b&gt;after&lt;/b&gt;&quot;,
+              &quot;a chunk!-------&lt;/p&gt;&quot;)
+    }
+})</pre>
+
+<p>代码段选项列表中要设置该函数 (<code>{r, ..., foo1=任何非NULL值}</code>)</p>
+
+<p style="color:red; text-align:center; font-style:italic">
+
+&#8212;&#8212;-I appear <b>before</b> a chunk!&#8212;&#8212;-
+
+</p>
+
+<pre class = 'prettyprint lang-r'>invisible(1+1)</pre>
+
+<p style="color:blue; text-align:center; font-style:italic">
+
+&#8212;&#8212;-I appear <b>after</b> a chunk!&#8212;&#8212;-
+
+</p>
+
+</article></slide><slide class=''><hgroup><h2>代码块钩子: <code>options</code></h2></hgroup><article  id="-options">
+
+<pre class = 'prettyprint lang-r'>knit_hooks$set(foo2 = function(before, options, envir){
+    if (!before) {
+        paste(&quot;&lt;p style=&#39;color:red&#39;&gt;fig.width of the above chunk: &quot;, 
+              options$fig.width, &quot;&lt;br&gt;fig.height of the above chunk: &quot;, 
+              options$fig.height, &quot;&lt;/p&gt;&quot;)
+    } 
+})</pre>
+
+<pre class = 'prettyprint lang-r'>invisible(1+1)</pre>
+
+<p style="color:red">
+
+fig.width of the above chunk: 8 <br>fig.height of the above chunk: 5.5
+
+</p>
+
+</article></slide><slide class=''><hgroup><h2>代码块钩子: <code>envir</code></h2></hgroup><article  id="-envir">
+
+<pre class = 'prettyprint lang-r'>knit_hooks$set(foo3 = function(before, options, envir) {
+    if (!before) {
+        paste(&quot;Objects available in the above chunk:&quot;, paste(&quot;`&quot;, ls(envir), 
+            &quot;`&quot;, sep = &quot;&quot;, collapse = &quot;, &quot;))
+    }
+})</pre>
+
+<pre class = 'prettyprint lang-r'>x1 &lt;- 1
+y1 &lt;- x1^2
+rm(x1)</pre>
+
+<p>Objects available in the above chunk: <code>x</code>, <code>y1</code></p>
+
+</article></slide><slide class=''><hgroup><h2>输出钩子</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>knit_hooks$set(warning = function(x, options) {
+    paste(&quot;&lt;p style=&#39;color:firebrick&#39;&gt;&lt;b&gt;Alarm!&lt;/b&gt;&lt;/p&gt;&quot;, &quot;&lt;p style=&#39;color:red&#39;&gt;&quot;, 
+          x, &quot;&lt;/p&gt;&quot;, &quot;&lt;p&gt;&lt;i&gt;warning option of the above chunk:&quot;, 
+          options$warning, &quot;&lt;/i&gt;&lt;/p&gt;&quot;, collapse=&quot;&lt;br&gt;&quot;)
+})</pre>
+
+<pre class = 'prettyprint lang-r'>sqrt(-1)</pre>
+
+<p style="color:firebrick">
+
+<b>Alarm!</b>
+
+</p>
+
+<p style="color:red">
+
+## Warning in sqrt(-1): 产生了NaNs
+
+</p>
+
+<p>
+
+<i>warning option of the above chunk: TRUE </i>
+
+</p>
+
+<pre >## [1] NaN</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>其他类型</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>rticles</h2></hgroup><article  id="rticles">
+
+<div class="columns-2">
+<ul>
+<li>rticles包内置了一系列期刊模板
+
+<ul>
+<li>ACM, ACS, AEA, AMS, ASA, ctex, elsevier_article, JSS, PLOS, PNAS, R Journal, Royal Statistical Society Journal, Statistics in Medicine</li>
+</ul></li>
+<li>选取模板后，在指定路径下生成工程文件夹</li>
+<li>基于.rmd框架编辑文档</li>
+<li>Knit编译</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<img src='A05_05_knitr_files/figure-html/rticles-template.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="columns-2">
+<img src='A05_05_knitr_files/figure-html/rticles-code.png' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<img src='A05_05_knitr_files/figure-html/rticles-doc.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://support.rstudio.com/hc/en-us/sections/200130218-R-Presentations' title=''>rpres幻灯片</a></h2></hgroup><article  id="rpres">
+
+<div class="columns-2">
+<ul>
+<li>R Presentation是RStudio提供的一种HTML5网页幻灯片框架</li>
+<li>基于markdown语法，也支持LaTeX和MathJax</li>
+<li>可以简单地修改css，实现分栏等效果</li>
+<li>即时预览</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<img src='A05_05_knitr_files/figure-html/rpres-new.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>rpres基本要点</h2></hgroup><article  id="rpres" class="smaller">
+
+<div class="col-2L">
+<ul>
+<li>每页标题下添加<code>========</code>，下面可加配置参数
+
+<ul>
+<li>type支持section, sub-section, prompt, alert</li>
+<li>left: 表示分两栏，指定左栏占比</li>
+<li>transition支持none, linear, rotate, fade, zoom, concave</li>
+<li>transition-speed支持default, slow, fast</li>
+<li>incremental如true，则逐行展示</li>
+<li>通过id、(#/id)交叉引用</li>
+<li>font-import、font-family指定字体</li>
+<li>css引用自定义css样式文件</li>
+<li>class套用自定义样式</li>
+</ul></li>
+<li>分栏需要用<code>***</code>指定位置</li>
+<li>即时预览，也可点击Preview按钮</li>
+<li>可一键发布到rpubs.com</li>
+</ul></div>
+
+<div class="col-2R">
+<img src='A05_05_knitr_files/figure-html/rpres-code.png' title='fig:'/><p class='caption'><a href='A05_05_knitr_files/files/rpres.html' title=''>点击查看示例</a></p></div>
+
+</article></slide><slide class=''><hgroup><h2>其他rmarkdown幻灯片</h2></hgroup><article  id="rmarkdown">
+
+<div class="col-2L">
+<h4><a href='http://rmarkdown.rstudio.com/ioslides_presentation_format.html' title=''>ioslides</a>, <a href='http://rmarkdown.rstudio.com/slidy_presentation_format.html' title=''>slidy</a>, <a href='http://rmarkdown.rstudio.com/beamer_presentation_format.html' title=''>beamer</a></h4>
+
+<ul>
+<li>ioslides<sup><a href='https://github.com/rstudio/ShinyDeveloperConference/tree/master/Debugging' title=''>样例</a></sup>, slidy<sup><a href='https://rpubs.com/sdplus/vulcan74' title=''>样例</a></sup>均为HTML幻灯片，beamer<sup><a href='http://svmiller.com/rmarkdown-example.pdf' title=''>样例</a></sup>为PDF幻灯片</li>
+<li>本系列幻灯片均基于iosildes</li>
+<li>需要懂一点html和css</li>
+</ul>
+
+<img src='A05_05_knitr_files/figure-html/deck-new.png' title='fig:'/></div>
+
+<div class="col-2R">
+<h4><a href='http://rmarkdown.rstudio.com/revealjs_presentation_format.html' title=''>Reveal.js</a></h4>
+
+<ul>
+<li>基于Reveal.js的HTML幻灯片<sup><a href='https://github.com/rstudio/ShinyDeveloperConference/tree/master/Reactivity' title=''>样例</a></sup></li>
+<li>放映效果更佳</li>
+<li>需要懂一点html和css</li>
+</ul>
+
+<img src='A05_05_knitr_files/figure-html/revealjs-new.png' title='fig:'/></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>bookdown</h2></hgroup><article  id="bookdown">
+
+</article></slide><slide class=''><hgroup><h2>简介</h2></hgroup><article >
+
+<ul>
+<li>Yihui Xie开发的另一个基于rmarkdown的包</li>
+<li>可快速生成电子出版物，如epub、kindle、html、pdf电子书籍
+
+<ul>
+<li><a href='https://www.gitbook.com' title=''>GitBook</a>、Bootstrap、Tufte等样式</li>
+<li>LaTeX/PDF</li>
+<li>epub、mobi</li>
+</ul></li>
+<li>支持图表标题、交叉引用等书籍必备特性</li>
+<li>支持嵌入HTML widgets/shiny apps等高级特性</li>
+<li>可发布到<a href='https://bookdown.org/' title=''>bookdown.org</a>网站</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_05_knitr_files/figure-html/bookdown.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>用法</h2></hgroup><article >
+
+<div class="columns-2">
+<ul>
+<li>从GitHub fork/clone <a href='https://github.com/rstudio/bookdown-demo' title=''>bookdown demo</a>，或下载<a href='https://github.com/rstudio/bookdown-demo/archive/master.zip' title=''>zip压缩包</a></li>
+<li>用RStudio打开bookdown demo，创建为一个工程</li>
+</ul>
+
+<img src='A05_05_knitr_files/figure-html/bookdown_preview.png' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>阅读/编辑文件</li>
+<li>打开index.rmd，Knit编译本章，Build Book编译全书</li>
+<li>帮助: 阅读<a href='https://bookdown.org/yihui/bookdown/software-information-and-conventions.html' title=''>Yihui的手册</a></li>
+</ul>
+
+<img src='A05_05_knitr_files/figure-html/bookdown_yaml.png' title='fig:'/></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>blogdown</h2></hgroup><article  id="blogdown">
+
+</article></slide><slide class=''><hgroup><h2>简介</h2></hgroup><article  id="-1">
+
+<ul>
+<li>Yihui Xie开发的另一个基于rmarkdown和Hugo的包</li>
+<li>可快速基于Hugo生成器生成静态博客网站</li>
+<li>将这个静态网站打包为工程，commit并push到GitHub，即生成一个公共博客</li>
+<li>GitHub本身支持创建名为<code>&lt;用户名&gt;.github.io</code>的仓库，用作博客
+
+<ul>
+<li>GitHub官方建议的方案是<a href='https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/' title=''>利用Jekyll生成静态网站</a></li>
+<li>此外也有大量第三方生成器方案，如Hexo等</li>
+<li>blogdown用Hugo替代Jekyll，速度更快</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://bookdown.org/yihui/blogdown/' title=''>用法</a></h2></hgroup><article  id="-1">
+
+<ul>
+<li>安装blogdown包</li>
+<li><code>install_hugo()</code> 安装Hugo</li>
+<li><code>install_theme()</code> 从GitHub安装博客主题</li>
+<li><code>new_site()</code> 创建新网站</li>
+<li>配置config.toml等</li>
+<li><code>new_content()</code> 在工作目录创建新文档</li>
+<li><code>build_site()</code> 利用Hugo编译所有.rmd文档</li>
+<li><code>serve_site()</code> 本地预览静态网站</li>
+<li>commit ==&gt; push</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

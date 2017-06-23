@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A03-07 动态及交互图</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A03-07 动态及交互图',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A03_07_interactive_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+  <script src="../libs/htmlwidgets-0.8/htmlwidgets.js"></script>
+  <link href="../libs/plotlyjs-1.16.3/plotly-htmlwidgets.css" rel="stylesheet" />
+  <script src="../libs/plotlyjs-1.16.3/plotly-latest.min.js"></script>
+  <script src="../libs/plotly-binding-4.5.6/plotly.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A03_07_interactive_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A03_07_interactive_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-04-27 22:23:09</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>基础</a></li>
+<li><a href='#7' title=''>animation</a></li>
+<li><a href='#10' title=''>htmlwidgets家族</a></li>
+<li><a href='#25' title=''>rCharts</a></li>
+<li><a href='#34' title=''>其他</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>基础</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>静态图 vs 动态图、交互图</h2></hgroup><article  id="-vs-" class="smaller">
+
+<div class="columns-2">
+<h4>静态图</h4>
+
+<ul>
+<li>静态呈现</li>
+<li>多用于文稿</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(ggplot2)
+p &lt;- ggplot(diamonds, aes(x=cut, fill=clarity)) +
+    geom_bar(position=&quot;dodge&quot;)
+print(p)</pre>
+
+<p><img src="A03_07_interactive_files/figure-html/static-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>动态/交互图</h4>
+
+<ul>
+<li>动态呈现/支持交互（点击、轻拂…）</li>
+<li>多用于网页</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(plotly)
+ggplotly(p, width=400, height=300)</pre>
+
+<div id="htmlwidget-64187509bd38e1094ce6" style="width:400px;height:300px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-64187509bd38e1094ce6">{"x":{"data":[{"x":[0.60625,1.60625,2.60625,3.60625,4.60625],"y":[210,96,84,205,146],"text":["count: 210<br>cut: Fair<br>clarity: I1","count: 96<br>cut: Good<br>clarity: I1","count: 84<br>cut: Very Good<br>clarity: I1","count: 205<br>cut: Premium<br>clarity: I1","count: 146<br>cut: Ideal<br>clarity: I1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"I1","legendgroup":"I1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[0.71875,1.71875,2.71875,3.71875,4.71875],"y":[466,1081,2100,2949,2598],"text":["count: 466<br>cut: Fair<br>clarity: SI2","count: 1081<br>cut: Good<br>clarity: SI2","count: 2100<br>cut: Very Good<br>clarity: SI2","count: 2949<br>cut: Premium<br>clarity: SI2","count: 2598<br>cut: Ideal<br>clarity: SI2"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(205,150,0,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"SI2","legendgroup":"SI2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[0.83125,1.83125,2.83125,3.83125,4.83125],"y":[408,1560,3240,3575,4282],"text":["count: 408<br>cut: Fair<br>clarity: SI1","count: 1560<br>cut: Good<br>clarity: SI1","count: 3240<br>cut: Very Good<br>clarity: SI1","count: 3575<br>cut: Premium<br>clarity: SI1","count: 4282<br>cut: Ideal<br>clarity: SI1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(124,174,0,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"SI1","legendgroup":"SI1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[0.94375,1.94375,2.94375,3.94375,4.94375],"y":[261,978,2591,3357,5071],"text":["count: 261<br>cut: Fair<br>clarity: VS2","count: 978<br>cut: Good<br>clarity: VS2","count: 2591<br>cut: Very Good<br>clarity: VS2","count: 3357<br>cut: Premium<br>clarity: VS2","count: 5071<br>cut: Ideal<br>clarity: VS2"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,190,103,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VS2","legendgroup":"VS2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.05625,2.05625,3.05625,4.05625,5.05625],"y":[170,648,1775,1989,3589],"text":["count: 170<br>cut: Fair<br>clarity: VS1","count: 648<br>cut: Good<br>clarity: VS1","count: 1775<br>cut: Very Good<br>clarity: VS1","count: 1989<br>cut: Premium<br>clarity: VS1","count: 3589<br>cut: Ideal<br>clarity: VS1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VS1","legendgroup":"VS1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.16875,2.16875,3.16875,4.16875,5.16875],"y":[69,286,1235,870,2606],"text":["count: 69<br>cut: Fair<br>clarity: VVS2","count: 286<br>cut: Good<br>clarity: VVS2","count: 1235<br>cut: Very Good<br>clarity: VVS2","count: 870<br>cut: Premium<br>clarity: VVS2","count: 2606<br>cut: Ideal<br>clarity: VVS2"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,169,255,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VVS2","legendgroup":"VVS2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.28125,2.28125,3.28125,4.28125,5.28125],"y":[17,186,789,616,2047],"text":["count: 17<br>cut: Fair<br>clarity: VVS1","count: 186<br>cut: Good<br>clarity: VVS1","count: 789<br>cut: Very Good<br>clarity: VVS1","count: 616<br>cut: Premium<br>clarity: VVS1","count: 2047<br>cut: Ideal<br>clarity: VVS1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(199,124,255,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VVS1","legendgroup":"VVS1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.39375,2.39375,3.39375,4.39375,5.39375],"y":[9,71,268,230,1212],"text":["count: 9<br>cut: Fair<br>clarity: IF","count: 71<br>cut: Good<br>clarity: IF","count: 268<br>cut: Very Good<br>clarity: IF","count: 230<br>cut: Premium<br>clarity: IF","count: 1212<br>cut: Ideal<br>clarity: IF"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(255,97,204,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"IF","legendgroup":"IF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"}],"layout":{"margin":{"t":25.7412480974125,"r":7.30593607305936,"b":39.6955859969559,"l":48.9497716894977},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[0.4,5.6],"ticktext":["Fair","Good","Very Good","Premium","Ideal"],"tickvals":[1,2,3,4,5],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"cut","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[-253.55,5324.55],"ticktext":["0","1000","2000","3000","4000","5000"],"tickvals":[0,1000,2000,3000,4000,5000],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":"count","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.896062992125984},"annotations":[{"text":"clarity","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"barmode":"stack","bargap":0,"hovermode":"closest","width":400,"height":300},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script></div>
+
+</article></slide><slide class=''><hgroup><h2>动态图</h2></hgroup><article >
+
+<ul>
+<li>可通过animation包实现</li>
+<li>动画呈现，但不支持交互</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>library(animation)
+saveGIF({
+    dev.control(&quot;enable&quot;)
+    for (col in levels(diamonds$color)){
+        print(ggplot(
+            diamonds[diamonds$color==col, ], 
+            aes(x=cut, fill=clarity)
+            ) + geom_bar(position=&quot;dodge&quot;) +
+            ggtitle(paste(&quot;color:&quot;, col))) 
+    }
+}, &quot;diamonds.gif&quot;)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_07_interactive_files/figure-html/diamonds.gif" height="75%" width="90%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>交互图</h2></hgroup><article >
+
+<ul>
+<li>交互图(htmlwidgets家族、ggvis等)是动态图中的特例，更便于用户挖掘信息</li>
+<li>支持通过控件、图形元素交互（点击、轻拂、框选、…）</li>
+<li>多用于网页</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>ggplotly(p, height=300)</pre>
+
+<div id="htmlwidget-db04139c8a966287ee76" style="width:768px;height:300px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-db04139c8a966287ee76">{"x":{"data":[{"x":[0.60625,1.60625,2.60625,3.60625,4.60625],"y":[210,96,84,205,146],"text":["count: 210<br>cut: Fair<br>clarity: I1","count: 96<br>cut: Good<br>clarity: I1","count: 84<br>cut: Very Good<br>clarity: I1","count: 205<br>cut: Premium<br>clarity: I1","count: 146<br>cut: Ideal<br>clarity: I1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"I1","legendgroup":"I1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[0.71875,1.71875,2.71875,3.71875,4.71875],"y":[466,1081,2100,2949,2598],"text":["count: 466<br>cut: Fair<br>clarity: SI2","count: 1081<br>cut: Good<br>clarity: SI2","count: 2100<br>cut: Very Good<br>clarity: SI2","count: 2949<br>cut: Premium<br>clarity: SI2","count: 2598<br>cut: Ideal<br>clarity: SI2"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(205,150,0,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"SI2","legendgroup":"SI2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[0.83125,1.83125,2.83125,3.83125,4.83125],"y":[408,1560,3240,3575,4282],"text":["count: 408<br>cut: Fair<br>clarity: SI1","count: 1560<br>cut: Good<br>clarity: SI1","count: 3240<br>cut: Very Good<br>clarity: SI1","count: 3575<br>cut: Premium<br>clarity: SI1","count: 4282<br>cut: Ideal<br>clarity: SI1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(124,174,0,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"SI1","legendgroup":"SI1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[0.94375,1.94375,2.94375,3.94375,4.94375],"y":[261,978,2591,3357,5071],"text":["count: 261<br>cut: Fair<br>clarity: VS2","count: 978<br>cut: Good<br>clarity: VS2","count: 2591<br>cut: Very Good<br>clarity: VS2","count: 3357<br>cut: Premium<br>clarity: VS2","count: 5071<br>cut: Ideal<br>clarity: VS2"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,190,103,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VS2","legendgroup":"VS2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.05625,2.05625,3.05625,4.05625,5.05625],"y":[170,648,1775,1989,3589],"text":["count: 170<br>cut: Fair<br>clarity: VS1","count: 648<br>cut: Good<br>clarity: VS1","count: 1775<br>cut: Very Good<br>clarity: VS1","count: 1989<br>cut: Premium<br>clarity: VS1","count: 3589<br>cut: Ideal<br>clarity: VS1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VS1","legendgroup":"VS1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.16875,2.16875,3.16875,4.16875,5.16875],"y":[69,286,1235,870,2606],"text":["count: 69<br>cut: Fair<br>clarity: VVS2","count: 286<br>cut: Good<br>clarity: VVS2","count: 1235<br>cut: Very Good<br>clarity: VVS2","count: 870<br>cut: Premium<br>clarity: VVS2","count: 2606<br>cut: Ideal<br>clarity: VVS2"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,169,255,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VVS2","legendgroup":"VVS2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.28125,2.28125,3.28125,4.28125,5.28125],"y":[17,186,789,616,2047],"text":["count: 17<br>cut: Fair<br>clarity: VVS1","count: 186<br>cut: Good<br>clarity: VVS1","count: 789<br>cut: Very Good<br>clarity: VVS1","count: 616<br>cut: Premium<br>clarity: VVS1","count: 2047<br>cut: Ideal<br>clarity: VVS1"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(199,124,255,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"VVS1","legendgroup":"VVS1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"},{"x":[1.39375,2.39375,3.39375,4.39375,5.39375],"y":[9,71,268,230,1212],"text":["count: 9<br>cut: Fair<br>clarity: IF","count: 71<br>cut: Good<br>clarity: IF","count: 268<br>cut: Very Good<br>clarity: IF","count: 230<br>cut: Premium<br>clarity: IF","count: 1212<br>cut: Ideal<br>clarity: IF"],"key":null,"type":"bar","marker":{"autocolorscale":false,"color":"rgba(255,97,204,1)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"IF","legendgroup":"IF","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text"}],"layout":{"margin":{"t":34.6788432267884,"r":7.30593607305936,"b":48.6331811263318,"l":48.9497716894977},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[0.4,5.6],"ticktext":["Fair","Good","Very Good","Premium","Ideal"],"tickvals":[1,2,3,4,5],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"cut","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[-253.55,5324.55],"ticktext":["0","1000","2000","3000","4000","5000"],"tickvals":[0,1000,2000,3000,4000,5000],"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":"count","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.896062992125984},"annotations":[{"text":"clarity","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"barmode":"stack","bargap":0,"hovermode":"closest","height":300},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>animation</h2></hgroup><article  id="animation">
+
+</article></slide><slide class=''><hgroup><h2><a href='https://yihui.name/animation' title=''>animation</a>包</h2></hgroup><article  id="animation">
+
+<ul>
+<li>生成多个静态图片，再调用第三方工具压制为动画（gif、flash、pdf）</li>
+<li><code>saveGIF</code> 系统要求:
+
+<ul>
+<li>ImageMagick (<a href='http://imagemagick.org' title=''>http://imagemagick.org</a>) 或</li>
+<li>GraphicsMagick (<a href='http://www.graphicsmagick.org' title=''>http://www.graphicsmagick.org</a>) 或</li>
+<li>LyX (<a href='http://www.lyx.org' title=''>http://www.lyx.org</a>)</li>
+</ul></li>
+<li><code>saveLatex</code> 系统要求: (PDF)LaTeX</li>
+<li><code>saveSWF</code> 系统要求: SWF Tools (<a href='http://swftools.org' title=''>http://swftools.org</a>)</li>
+<li><code>saveVideo</code> 系统要求:
+
+<ul>
+<li>FFmpeg (<a href='http://ffmpeg.org' title=''>http://ffmpeg.org</a>) 或</li>
+<li>avconv (<a href='https://libav.org/avconv.html' title=''>https://libav.org/avconv.html</a>)</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>用例</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>library(readr); library(ggmap)
+earthquake &lt;- read_csv(
+    &quot;A03_07_interactive_files/files/earthquake.csv&quot;
+names(earthquake)[c(1, 3, 4, 5, 6)] &lt;- c(
+    &quot;Date&quot;, &quot;lat&quot;, &quot;long&quot;, &quot;Depth&quot;, &quot;Grat&quot;)
+earthquake$Year &lt;- as.integer(
+    format(earthquake[[&quot;Date&quot;]], &quot;%Y&quot;))
+earthquake$Grat &lt;- as.numeric(
+    gsub(&quot;^M(.+)$&quot;, &quot;\\1&quot;, earthquake[[&quot;Grat&quot;]]))
+saveGIF({
+    gg.map &lt;- ggmap(get_googlemap(&quot;China&quot;, zoom=4))
+    for (yr in sort(unique(earthquake$Year))){
+        print(gg.map + geom_point(
+            aes(long, lat, size=Grat, alpha=Depth),
+            data=earthquake[earthquake$Year==yr,], 
+            color=&#39;red&#39;) + scale_alpha(range=c(1, 0.2))+
+            ggtitle(paste(&quot;Earthquake as of&quot;, yr)))
+    }
+}, &quot;earthquake.gif&quot;)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_07_interactive_files/figure-html/earthquake.gif" height="100%" width="100%"></img></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>htmlwidgets家族</h2></hgroup><article  id="htmlwidgets">
+
+</article></slide><slide class=''><hgroup><h2><a href='http://www.htmlwidgets.org/' title=''>htmlwidgets</a>包</h2></hgroup><article  id="htmlwidgets" class="smaller">
+
+<div class="columns-2">
+<p><img src="A03_07_interactive_files/figure-html/htmlwidgets.png" width="400px"></img></p>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>RStuio Inc. 出品的基建包</h4>
+
+<ul>
+<li>开发者贡献了庞大的htmlwidgets家族包: 基于htmlwidgets框架开发API，将第三方JavaScript可视化库移植到R</li>
+<li>用户用R直接调用可视化JS库: 可嵌入Rmarkdown文档、Shiny应用</li>
+</ul>
+
+<h4>htmlwidgets框架</h4>
+
+<pre >R/
+|-- &lt;fun&gt;.R
+inst/
+|-- htmlwidgets/
+|   |-- &lt;pkg&gt;.js
+|   |-- &lt;pkg&gt;.yaml
+|   |-- lib/
+|   |   |-- &lt;lib folder&gt;/
+|   |   |   |-- &lt;some&gt;.js
+|   |   |   |-- plugins/
+|   |   |   |   |-- &lt;some&gt;.js</pre></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://madlogos.github.io/recharts/index_cn.html' title=''>recharts</a>包</h2></hgroup><article  id="recharts" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: 本人</li>
+<li>简介: 基于百度ECharts库，支持点、条、线、雷达、饼、力导、漏斗、和弦、事件河流图及地图。</li>
+<li>安装: 不能直接通过CRAN。需要<code>devtools::install_github( &quot;madlogos/recharts&quot;)</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(recharts)
+totGDP &lt;- data.table::dcast(
+    ChinaGDP, Prov~., sum, value.var=&#39;GDP&#39;)
+ChinaGDP &lt;- ChinaGDP[order(ChinaGDP$Year),]
+echartr(ChinaGDP, Prov, GDP, Year, 
+    type=&quot;map_china&quot;) %&gt;% 
+    setDataRange(splitNumber=0, 
+        valueRange=range(totGDP[, 2]), 
+        color=c(&#39;red&#39;,&#39;orange&#39;,&#39;yellow&#39;,
+                &#39;limegreen&#39;,&#39;green&#39;)
+    ) %&gt;% setTheme(width=400, height=400) %&gt;%
+    setTitle(&quot;China GDP by Provice, 2012-2014&quot;)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0701_recharts.html' title=''>点击查看</a> <iframe src="A03_0701_recharts.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://rstudio.github.io/leaflet' title=''>leaflet</a>包</h2></hgroup><article  id="leaflet" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Rstudio Inc.</li>
+<li>简介: 基于Leaflet库，可绘制各类动态地图，并添加丰富的指示图层(标点、多边形、弹出框等)。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(leaflet)
+pal &lt;- colorQuantile(&quot;YlOrRd&quot;, NULL, n = 4)
+leaflet(quakes[1:100,]) %&gt;% 
+  addProviderTiles(&quot;Esri.WorldTopoMap&quot;) %&gt;%
+  addCircleMarkers(~long, ~lat, 
+    popup=~as.character(mag),
+    label=~as.character(mag), 
+    color=~pal(mag))</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0702_leaflet.html' title=''>点击查看</a> <iframe src="A03_0702_leaflet.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://plot.ly/r/' title=''>plotly</a>包</h2></hgroup><article  id="plotly" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Plotly</li>
+<li>简介: 基于plotly库，可绘制各类动态图，并支持直接将ggplot2对象转换为plotly。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>d &lt;- diamonds[sample(nrow(diamonds), 500), ]
+plot_ly(d, x = d$carat, y = d$price, 
+        text = paste(&quot;Clarity: &quot;, d$clarity),
+        mode = &quot;markers&quot;, color = d$carat, 
+        size = d$carat)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0703_plotly.html' title=''>点击查看</a> <iframe src="A03_0703_plotly.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://rstudio.github.io/DT/' title=''><strong>D</strong>ata<strong>T</strong>ables</a>包</h2></hgroup><article  id="datatables" class="smaller">
+
+<ul>
+<li>作者: Rstudio Inc.</li>
+<li>简介: 基于DT库，可将数据框或矩阵绘制成交互表格，支持筛选、排序。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(DT)
+datatable(iris, options=list(pageLength = 5))</pre>
+
+<p><a href='A03_0704_datatable.html' title=''>点击查看</a> <iframe src="A03_0704_datatable.html"></iframe></p>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://github.ocm/lchiffon/wordcloud2' title=''>wordcloud2</a>包</h2></hgroup><article  id="wordcloud2" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Dawei Lang</li>
+<li>简介: 基于wordcloud2库，可绘制交互词云，且支持自定义图形词云等。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(wordcloud2)
+wordcloud2(demoFreq[1:100,], size=0.5)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0705_wordcloud2.html' title=''>点击查看</a> <iframe src="A03_0705_wordcloud2.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://jkunst.com/highcharter/' title=''>Highcharter</a>包</h2></hgroup><article  id="highcharter" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Joshua Kunst</li>
+<li>简介: 基于Highcharts库，可绘制点、线、柱、地图、股价图等多种图形。商业用途需要申请许可。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(magrittr)
+library(highcharter)
+highchart() %&gt;% 
+  hc_title(
+    text=&quot;Scatter chart with size and color&quot;) %&gt;% 
+  hc_add_series(
+    mtcars[, c(&quot;wt&quot;, &quot;mpg&quot;,&quot;drat&quot;, &quot;hp&quot;)], 
+    type=&quot;scatter&quot;, 
+    mapping=hcaes(wt, mpg, size=drat, color=hp))</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0706_highcharter.html' title=''>点击查看</a> <iframe src="A03_0706_highcharter.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://rstudio.github.io/dygraphs/' title=''>dygraphs</a>包</h2></hgroup><article  id="dygraphs" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Rstudio Inc.</li>
+<li>简介: 基于dygraphs库，用于绘制各类时间序列图，支持缩放、高亮等交互。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(dygraphs)
+lungDeaths &lt;- cbind(mdeaths, fdeaths)
+dygraph(lungDeaths)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0707_dygraph.html' title=''>点击查看</a> <iframe src="A03_0707_dygraph.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://datastorm-open.github.io/visNetwork/' title=''>visNetwork</a>包</h2></hgroup><article  id="visnetwork" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: datastorm-open</li>
+<li>简介: 基于vis.js库，可绘制多种交互网络图。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>edges &lt;- data.frame(
+    from = sample(1:10,8), to = sample(1:10, 8), 
+    label = paste(&quot;Edge&quot;, 1:8),
+    length = c(100,500), width = c(4,1), 
+    arrows = c(&quot;to&quot;, &quot;from&quot;, &quot;middle&quot;,
+        &quot;middle;to&quot;),
+    dashes = c(TRUE, FALSE), title = paste(&quot;Edge&quot;, 1:8),
+    smooth = c(FALSE, TRUE), 
+    shadow = c(FALSE, TRUE, FALSE, TRUE)) 
+nodes &lt;- data.frame(id = 1:10, 
+    group = c(&quot;A&quot;, &quot;B&quot;))
+library(visNetwork)
+visNetwork(nodes, edges)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0708_visnetwork.html' title=''>点击查看</a> <iframe src="A03_0708_visnetwork.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://christophergandrud.github.io/networkD3/' title=''>networkD3</a>包</h2></hgroup><article  id="networkd3" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Christopher Gandrud</li>
+<li>简介: 基于D3.js库，可绘制多种交互网络图。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(networkD3)
+data(MisLinks, MisNodes)
+forceNetwork(
+    Links = MisLinks, Nodes = MisNodes, 
+    Source = &quot;source&quot;, Target = &quot;target&quot;, 
+    Value = &quot;value&quot;, NodeID = &quot;name&quot;,
+    Group = &quot;group&quot;, opacity = 0.4)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0709_networkD3.html' title=''>点击查看</a> <iframe src="A03_0709_networkD3.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://github.com/rstudio/d3heatmap' title=''>d3heatmap</a>包</h2></hgroup><article  id="d3heatmap" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Rstudio Inc.</li>
+<li>简介: 基于D3.js库，可绘制多种交互热力图。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(d3heatmap)
+d3heatmap(mtcars, scale = &quot;column&quot;, 
+    colors = &quot;Spectral&quot;)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0710_d3heatmap.html' title=''>点击查看</a> <iframe src="A03_0710_d3heatmap.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://github.com/bwlewis/rthreejs' title=''>threejs</a>包</h2></hgroup><article  id="threejs" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: B. W. Lewis</li>
+<li>简介: 基于three.js库，可绘制3D散点图、3D球图等。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(&quot;threejs&quot;)
+library(maps)
+earth &lt;- paste0(&quot;A03_07_interactive_files/&quot;,
+    &quot;figure-html/world.topo.bathy.jpg&quot;)
+cities &lt;- world.cities[order(world.cities$pop,
+    decreasing=TRUE)[1:1000],]
+value &lt;- 100 * cities$pop / max(cities$pop)
+col &lt;- colorRampPalette(c(&quot;red&quot;, &quot;gold&quot;))(
+    10)[floor(10 * value/100) + 1]
+globejs(img=earth, bg=&quot;white&quot;, emissive=&quot;#aaaacc&quot;,
+    lat=cities$lat, long=cities$long, value=value,
+    color=col, atmosphere=TRUE)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0711_threejs.html' title=''>点击查看</a> <iframe src="A03_0711_threejs.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://rich-iannone.github.io/DiagrammeR/' title=''>DiagrammeR</a>包</h2></hgroup><article  id="diagrammer" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Richard Iannone</li>
+<li>简介: 基于d3.js + viz.js + mermaid.js库，可绘制流程图、关系图等。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(DiagrammeR)
+library(magrittr)
+mermaid(&quot;
+    graph TD
+    A(Rounded)--&gt;B[Rectangular]
+    B--&gt;C{A Rhombus}
+    C--&gt;D[Rectangle One]
+    C--&gt;E[Rectangle Two]
+&quot;)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0712_DiagrammeR.html' title=''>点击查看</a> <iframe src="A03_0712_DiagrammeR.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://hafen.github.io/rbokeh' title=''>rbokeh</a>包</h2></hgroup><article  id="rbokeh" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>作者: Bokeh</li>
+<li>简介: 基于bokeh库，可绘制多种交互图。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(rbokeh)
+z &lt;- lm(dist ~ speed, data = cars)
+p &lt;- figure(width = 400, height = 400) %&gt;%
+  ly_points(cars, hover = cars) %&gt;%
+  ly_lines(lowess(cars), legend = &quot;lowess&quot;) %&gt;%
+  ly_abline(z, type = 2, legend = &quot;lm&quot;)
+p</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><a href='A03_0713_rbokeh.html' title=''>点击查看</a> <iframe src="A03_0713_rbokeh.html"></iframe></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>rCharts</h2></hgroup><article  id="rcharts">
+
+</article></slide><slide class=''><hgroup><h2>简介</h2></hgroup><article >
+
+<ul>
+<li>作者: Ramnath Vaidyanathan</li>
+<li>简介: 集成多个JavaScript库。语法类似于lattice，可生成常用的主要交互图。
+
+<ul>
+<li>基于<a href='https://github.com/Polychart/polychart2' title=''>Ploychart</a>库: 主函数<code>rPlot</code></li>
+<li>基于<a href='https://github.com/oesmith/morris.js' title=''>MorrisJS</a>库: <code>mPlot</code></li>
+<li>基于<a href='http://nvd3.org/' title=''>NVD3</a>库: <code>nPlot</code></li>
+<li>基于<a href='https://github.com/tenXer/xcharts/' title=''>XCharts</a>库: <code>xPlot</code></li>
+<li>基于<a href='http://www.highcharts.com/' title=''>HighCharts</a>库: <code>hPlot</code></li>
+<li>基于<a href='http://leafletjs.com/' title=''>leaflet</a>库: <code>Leaflet</code></li>
+<li>基于<a href='https://github.com/shutterstock/rickshaw' title=''>Rickshaw</a>库: <code>Rickshaw</code></li>
+</ul></li>
+<li>安装: 未部署到CRAN，需要<code>devtools::install_github( &#39;ramnathv/rCharts&#39;)</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>rPlot: 常用交互图</h2></hgroup><article  id="rplot-" class="smaller">
+
+<pre class = 'prettyprint lang-r'>library(rCharts); library(knitr)
+hair_eye = as.data.frame(HairEyeColor)
+r1 &lt;- rPlot(Freq ~ Hair | Eye, color = &#39;Eye&#39;, data = hair_eye, type = &#39;bar&#39;)
+r1$show(&quot;iframesrc&quot;)</pre>
+
+<iframe src="A03_0715_rplot.html">
+
+</iframe>
+
+</article></slide><slide class=''><hgroup><h2>mPlot: 常用交互图</h2></hgroup><article  id="mplot-" class="smaller">
+
+<pre class = 'prettyprint lang-r'>data(economics, package = &quot;ggplot2&quot;)
+econ &lt;- transform(economics, date = as.character(date))
+m1 &lt;- mPlot(x = &quot;date&quot;, y = c(&quot;psavert&quot;, &quot;uempmed&quot;), type = &quot;Line&quot;, data = econ)
+m1$set(pointSize = 0, lineWidth = 1)
+m1$show(&quot;iframesrc&quot;)</pre>
+
+<iframe src="A03_0716_mplot.html">
+
+</iframe>
+
+</article></slide><slide class=''><hgroup><h2>nPlot: d3.js交互图</h2></hgroup><article  id="nplot-d3.js" class="smaller">
+
+<pre class = 'prettyprint lang-r'>hair_eye_male &lt;- subset(as.data.frame(HairEyeColor), Sex == &quot;Male&quot;)
+n1 &lt;- nPlot(Freq ~ Hair, group = &quot;Eye&quot;, data = hair_eye_male, type = &quot;multiBarChart&quot;)
+n1$print(n1$params$dom, include_assets=TRUE)</pre>
+
+<iframe src="A03_0717_nplot.html">
+
+</iframe>
+
+</article></slide><slide class=''><hgroup><h2>xPlot: 常用交互图</h2></hgroup><article  id="xplot-" class="smaller">
+
+<pre class = 'prettyprint lang-r'>uspexp &lt;- reshape2::melt(USPersonalExpenditure)
+x1 &lt;- xPlot(value ~ Var2, group=&quot;Var1&quot;, data = uspexp, type = &quot;line-dotted&quot;)
+x1$show(&#39;iframesrc&#39;)</pre>
+
+<iframe src="A03_0718_xplot.html">
+
+</iframe>
+
+</article></slide><slide class=''><hgroup><h2>hPlot: 常用交互图</h2></hgroup><article  id="hplot-" class="smaller">
+
+<pre class = 'prettyprint lang-r'>h1 &lt;- hPlot(x = &quot;Wr.Hnd&quot;, y = &quot;NW.Hnd&quot;, data = MASS::survey, 
+    type = c(&quot;line&quot;, &quot;bubble&quot;, &quot;scatter&quot;), group = &quot;Clap&quot;, size = &quot;Age&quot;)
+h1$show(&#39;iframesrc&#39;)</pre>
+
+<iframe src="A03_0719_hplot.html">
+
+</iframe>
+
+</article></slide><slide class=''><hgroup><h2>Leaflet: 交互地图</h2></hgroup><article  id="leaflet-" class="smaller">
+
+<pre class = 'prettyprint lang-r'>map3 &lt;- Leaflet$new()
+map3$setView(c(51.505, -0.09), zoom = 13)
+map3$marker(c(51.5, -0.09), bindPopup = &quot;&lt;p&gt; Hi. I am a popup &lt;/p&gt;&quot;)
+map3$marker(c(51.495, -0.083), bindPopup = &quot;&lt;p&gt; Hi. I am another popup &lt;/p&gt;&quot;)
+map3$show(&#39;iframesrc&#39;)</pre>
+
+<iframe src="A03_0720_rleaflet.html">
+
+</iframe>
+
+</article></slide><slide class=''><hgroup><h2>Rickshaw: 常用交互图</h2></hgroup><article  id="rickshaw-" class="smaller">
+
+<pre class = 'prettyprint lang-r'>usp &lt;- reshape2::melt(USPersonalExpenditure)
+usp$Var2 &lt;- as.numeric(as.POSIXct(paste0(usp$Var2, &quot;-01-01&quot;)))
+p4 &lt;- Rickshaw$new();  p4$layer(value ~ Var2, group = &quot;Var1&quot;, data = usp, type = &quot;area&quot;)
+p4$set(slider = TRUE, height = 350);  p4$show(&#39;iframesrc&#39;)</pre>
+
+<iframe src="A03_0721_rickshaw.html">
+
+</iframe>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>其他</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2><a href='https://davidgohel.github.io/ggiraph' title=''>ggiraph</a>包</h2></hgroup><article  id="ggiraph" class="smaller">
+
+<ul>
+<li>作者: David Gohel</li>
+<li>简介: 基于d3.js库，可使用ggplot2语法生成SVG交互图。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>library(maps); library(ggiraph)
+crimes &lt;- data.frame(state = tolower(
+    rownames(USArrests)), USArrests)
+states_ &lt;- sprintf(&quot;&lt;p&gt;%s&lt;/p&gt;&quot;, 
+    as.character(crimes$state) )
+table_ &lt;- paste0(&quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;UrbanPop&lt;/td&gt;&quot;, 
+    sprintf(&quot;&lt;td&gt;%.0f&lt;/td&gt;&quot;, crimes$UrbanPop),
+    &quot;&lt;/tr&gt;&lt;tr&gt;&quot;, &quot;&lt;td&gt;Assault&lt;/td&gt;&quot;, 
+    sprintf(&quot;&lt;td&gt;%.0f&lt;/td&gt;&quot;, crimes$Assault), 
+    &quot;&lt;/tr&gt;&lt;/table&gt;&quot;)
+onclick &lt;- sprintf(&quot;window.open(\&quot;%s%s\&quot;)&quot;, 
+    &quot;http://en.wikipedia.org/wiki/&quot;,
+    as.character(crimes$state))</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>crimes$labs &lt;- paste0(states_, table_)
+crimes$onclick &lt;- onclick
+states_map &lt;- map_data(&quot;state&quot;)
+gg_map &lt;- ggplot(crimes, aes(map_id = state)) +
+    geom_map_interactive(aes(
+        fill = Murder, tooltip = labs,
+        data_id = state, onclick = onclick),
+    map = states_map) + coord_map() +
+    expand_limits(x = states_map$long, 
+        y = states_map$lat)
+ggiraph(code = print(gg_map))</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><a href='A03_0714_ggiraph.html' title=''>点击查看</a> <iframe src="A03_0714_ggiraph.html"></iframe></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://ggvis.rstudio.com/' title=''>ggvis</a>包</h2></hgroup><article  id="ggvis">
+
+<ul>
+<li>作者: RStudio Inc.</li>
+<li>简介: 基于vega库，借鉴ggplot2语法和shiny框架（必须），生成SVG交互图。</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(ggvis)
+mtcars %&gt;% 
+  ggvis(~wt, ~mpg) %&gt;% 
+  layer_points(
+    fill = ~factor(cyl),
+    size := input_slider(100, 1000, value = 100)) %&gt;%
+  layer_smooths(span = input_slider(0.5, 1, value = 1))</pre>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://github.com/mages/googleVis#googlevis' title=''>googleVis</a>包: Google Charts库的R语言接口</h2></hgroup><article  id="googlevis-google-chartsr" class="smaller">
+
+<ul>
+<li>作者: Gesmann Markus</li>
+<li>安装: CRAN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(googleVis)
+op &lt;- options(gvis.plot.tag=&#39;chart&#39;)
+Geo &lt;- gvisGeoChart(Exports, locationvar=&#39;Country&#39;, colorvar=&#39;Profit&#39;, options=list(height=300, width=500)) 
+Tbl &lt;- gvisTable(Exports, options=list(height=300, width=200))
+plot(gvisMerge(Geo, Tbl, horizontal=TRUE))</pre>
+
+<!-- GeoChart generated in R 3.3.3 by googleVis 0.6.2 package -->
+
+<!-- Thu Apr 27 22:23:12 2017 -->
+
+<!-- jsHeader -->
+
+<script type="text/javascript">
+ 
+// jsData 
+function gvisDataGeoChartID6bbc2a99f647 () {
+var data = new google.visualization.DataTable();
+var datajson =
+[
+ [
+"Germany",
+3
+],
+[
+"Brazil",
+4
+],
+[
+"United States",
+5
+],
+[
+"France",
+4
+],
+[
+"Hungary",
+3
+],
+[
+"India",
+2
+],
+[
+"Iceland",
+1
+],
+[
+"Norway",
+4
+],
+[
+"Spain",
+5
+],
+[
+"Turkey",
+1
+] 
+];
+data.addColumn('string','Country');
+data.addColumn('number','Profit');
+data.addRows(datajson);
+return(data);
+}
+
+
+// jsData 
+function gvisDataTableID6bbcade66d1 () {
+var data = new google.visualization.DataTable();
+var datajson =
+[
+ [
+"Germany",
+3,
+true
+],
+[
+"Brazil",
+4,
+false
+],
+[
+"United States",
+5,
+true
+],
+[
+"France",
+4,
+true
+],
+[
+"Hungary",
+3,
+false
+],
+[
+"India",
+2,
+true
+],
+[
+"Iceland",
+1,
+false
+],
+[
+"Norway",
+4,
+true
+],
+[
+"Spain",
+5,
+true
+],
+[
+"Turkey",
+1,
+false
+] 
+];
+data.addColumn('string','Country');
+data.addColumn('number','Profit');
+data.addColumn('boolean','Online');
+data.addRows(datajson);
+return(data);
+}
+ 
+// jsDrawChart
+function drawChartGeoChartID6bbc2a99f647() {
+var data = gvisDataGeoChartID6bbc2a99f647();
+var options = {};
+options["width"] = 500;
+options["height"] = 300;
+
+    var chart = new google.visualization.GeoChart(
+    document.getElementById('GeoChartID6bbc2a99f647')
+    );
+    chart.draw(data,options);
+    
+
+}
+  
+
+
+// jsDrawChart
+function drawChartTableID6bbcade66d1() {
+var data = gvisDataTableID6bbcade66d1();
+var options = {};
+options["allowHtml"] = true;
+options["height"] = 300;
+options["width"] = 200;
+
+    var chart = new google.visualization.Table(
+    document.getElementById('TableID6bbcade66d1')
+    );
+    chart.draw(data,options);
+    
+
+}
+  
+ 
+// jsDisplayChart
+(function() {
+var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+var chartid = "geochart";
+  
+// Manually see if chartid is in pkgs (not all browsers support Array.indexOf)
+var i, newPackage = true;
+for (i = 0; newPackage && i < pkgs.length; i++) {
+if (pkgs[i] === chartid)
+newPackage = false;
+}
+if (newPackage)
+  pkgs.push(chartid);
+  
+// Add the drawChart function to the global list of callbacks
+callbacks.push(drawChartGeoChartID6bbc2a99f647);
+})();
+function displayChartGeoChartID6bbc2a99f647() {
+  var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+  var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+  window.clearTimeout(window.__gvisLoad);
+  // The timeout is set to 100 because otherwise the container div we are
+  // targeting might not be part of the document yet
+  window.__gvisLoad = setTimeout(function() {
+  var pkgCount = pkgs.length;
+  google.load("visualization", "1", { packages:pkgs, callback: function() {
+  if (pkgCount != pkgs.length) {
+  // Race condition where another setTimeout call snuck in after us; if
+  // that call added a package, we must not shift its callback
+  return;
+}
+while (callbacks.length > 0)
+callbacks.shift()();
+} });
+}, 100);
+}
+
+
+// jsDisplayChart
+(function() {
+var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+var chartid = "table";
+  
+// Manually see if chartid is in pkgs (not all browsers support Array.indexOf)
+var i, newPackage = true;
+for (i = 0; newPackage && i < pkgs.length; i++) {
+if (pkgs[i] === chartid)
+newPackage = false;
+}
+if (newPackage)
+  pkgs.push(chartid);
+  
+// Add the drawChart function to the global list of callbacks
+callbacks.push(drawChartTableID6bbcade66d1);
+})();
+function displayChartTableID6bbcade66d1() {
+  var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+  var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+  window.clearTimeout(window.__gvisLoad);
+  // The timeout is set to 100 because otherwise the container div we are
+  // targeting might not be part of the document yet
+  window.__gvisLoad = setTimeout(function() {
+  var pkgCount = pkgs.length;
+  google.load("visualization", "1", { packages:pkgs, callback: function() {
+  if (pkgCount != pkgs.length) {
+  // Race condition where another setTimeout call snuck in after us; if
+  // that call added a package, we must not shift its callback
+  return;
+}
+while (callbacks.length > 0)
+callbacks.shift()();
+} });
+}, 100);
+}
+ 
+// jsFooter
+</script>
+
+<!-- jsChart -->
+
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartGeoChartID6bbc2a99f647"></script>
+
+<!-- jsChart -->
+
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartTableID6bbcade66d1"></script>
+
+<table border="0">
+
+<tr>
+
+<td>
+
+<!-- divChart -->
+
+<div id="GeoChartID6bbc2a99f647" style="width: 500; height: 300;">
+</div>
+
+</td>
+
+<td>
+
+<!-- divChart -->
+
+<div id="TableID6bbcade66d1" style="width: 200; height: 300;">
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!doctype HTML>
+<html>
+  <head>
+    <link rel='stylesheet' href='../libs/rickshaw/css/rickshaw.min.css'>
+    <link rel='stylesheet' href='../libs/rickshaw/css/jquery-ui.css'>
+    
+    <script src='../libs/rickshaw/js/d3.v2.min.js' type='text/javascript'></script>
+    <script src='../libs/rickshaw/js/rickshaw.min.js' type='text/javascript'></script>
+    <script src='../libs/rickshaw/js/jquery.min.js' type='text/javascript'></script>
+    <script src='../libs/rickshaw/js/jquery-ui.min.js' type='text/javascript'></script>
+    
+    <style>
+    .chart_container {
+        position: relative;
+        display: inline-block;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .rChart {
+        display: inline-block;
+        margin-left: 40px;
+    }
+   .yAxis {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+   }
+   .legend {
+        position: absolute;
+        top: 0;
+        right: -160px;
+        vertical-align: top;
+    }
+    .slider {
+      margin-left: 40px;
+      margin-top: 12px;
+    }
+    </style>
+    
+  </head>
+  <body>
+    <div class='chart_container'>
+      <div id='yAxischart735a6872254d' class='yAxis'></div>
+      <div id='chart735a6872254d' class='rChart rickshaw'></div>
+      <div id='xAxischart735a6872254d' class='xAxis'></div>
+      <div id='legendchart735a6872254d' class='legend'></div>
+      <div id='sliderchart735a6872254d' class='slider'></div>
+    </div>
+    
+    <script type='text/javascript'> 
+  var palette = new Rickshaw.Color.Palette({ scheme: "colorwheel" });
+  var chartParams = {
+ "dom": "chart735a6872254d",
+"width":            800,
+"height":            400,
+"scheme": "colorwheel",
+"series": [
+ {
+ "data": [
+ {
+ "x":     -946800000,
+"y":           22.2 
+},
+{
+ "x":     -788947200,
+"y":           44.5 
+},
+{
+ "x":     -631180800,
+"y":           59.6 
+},
+{
+ "x":     -473414400,
+"y":           73.2 
+},
+{
+ "x":     -315648000,
+"y":           86.8 
+} 
+],
+"name": "Food and Tobacco",
+"info": {
+ "-946800000": {
+ "Var1": "Food and Tobacco",
+"Var2":     -946800000 
+},
+"-788947200": {
+ "Var1": "Food and Tobacco",
+"Var2":     -788947200 
+},
+"-631180800": {
+ "Var1": "Food and Tobacco",
+"Var2":     -631180800 
+},
+"-473414400": {
+ "Var1": "Food and Tobacco",
+"Var2":     -473414400 
+},
+"-315648000": {
+ "Var1": "Food and Tobacco",
+"Var2":     -315648000 
+} 
+},
+"color":  palette.color()  
+},
+{
+ "data": [
+ {
+ "x":     -946800000,
+"y":           10.5 
+},
+{
+ "x":     -788947200,
+"y":           15.5 
+},
+{
+ "x":     -631180800,
+"y":             29 
+},
+{
+ "x":     -473414400,
+"y":           36.5 
+},
+{
+ "x":     -315648000,
+"y":           46.2 
+} 
+],
+"name": "Household Operation",
+"info": {
+ "-946800000": {
+ "Var1": "Household Operation",
+"Var2":     -946800000 
+},
+"-788947200": {
+ "Var1": "Household Operation",
+"Var2":     -788947200 
+},
+"-631180800": {
+ "Var1": "Household Operation",
+"Var2":     -631180800 
+},
+"-473414400": {
+ "Var1": "Household Operation",
+"Var2":     -473414400 
+},
+"-315648000": {
+ "Var1": "Household Operation",
+"Var2":     -315648000 
+} 
+},
+"color":  palette.color()  
+},
+{
+ "data": [
+ {
+ "x":     -946800000,
+"y":           3.53 
+},
+{
+ "x":     -788947200,
+"y":           5.76 
+},
+{
+ "x":     -631180800,
+"y":           9.71 
+},
+{
+ "x":     -473414400,
+"y":             14 
+},
+{
+ "x":     -315648000,
+"y":           21.1 
+} 
+],
+"name": "Medical and Health",
+"info": {
+ "-946800000": {
+ "Var1": "Medical and Health",
+"Var2":     -946800000 
+},
+"-788947200": {
+ "Var1": "Medical and Health",
+"Var2":     -788947200 
+},
+"-631180800": {
+ "Var1": "Medical and Health",
+"Var2":     -631180800 
+},
+"-473414400": {
+ "Var1": "Medical and Health",
+"Var2":     -473414400 
+},
+"-315648000": {
+ "Var1": "Medical and Health",
+"Var2":     -315648000 
+} 
+},
+"color":  palette.color()  
+},
+{
+ "data": [
+ {
+ "x":     -946800000,
+"y":           1.04 
+},
+{
+ "x":     -788947200,
+"y":           1.98 
+},
+{
+ "x":     -631180800,
+"y":           2.45 
+},
+{
+ "x":     -473414400,
+"y":            3.4 
+},
+{
+ "x":     -315648000,
+"y":            5.4 
+} 
+],
+"name": "Personal Care",
+"info": {
+ "-946800000": {
+ "Var1": "Personal Care",
+"Var2":     -946800000 
+},
+"-788947200": {
+ "Var1": "Personal Care",
+"Var2":     -788947200 
+},
+"-631180800": {
+ "Var1": "Personal Care",
+"Var2":     -631180800 
+},
+"-473414400": {
+ "Var1": "Personal Care",
+"Var2":     -473414400 
+},
+"-315648000": {
+ "Var1": "Personal Care",
+"Var2":     -315648000 
+} 
+},
+"color":  palette.color()  
+},
+{
+ "data": [
+ {
+ "x":     -946800000,
+"y":          0.341 
+},
+{
+ "x":     -788947200,
+"y":          0.974 
+},
+{
+ "x":     -631180800,
+"y":            1.8 
+},
+{
+ "x":     -473414400,
+"y":            2.6 
+},
+{
+ "x":     -315648000,
+"y":           3.64 
+} 
+],
+"name": "Private Education",
+"info": {
+ "-946800000": {
+ "Var1": "Private Education",
+"Var2":     -946800000 
+},
+"-788947200": {
+ "Var1": "Private Education",
+"Var2":     -788947200 
+},
+"-631180800": {
+ "Var1": "Private Education",
+"Var2":     -631180800 
+},
+"-473414400": {
+ "Var1": "Private Education",
+"Var2":     -473414400 
+},
+"-315648000": {
+ "Var1": "Private Education",
+"Var2":     -315648000 
+} 
+},
+"color":  palette.color()  
+} 
+],
+"renderer": "area",
+"id": "chart735a6872254d" 
+}
+  chartParams.element = document.querySelector('#chart735a6872254d')
+  
+  var graphchart735a6872254d = new Rickshaw.Graph(chartParams);
+  
+  graphchart735a6872254d.render();
+  
+  var xAxischart735a6872254d = new Rickshaw.Graph.Axis.Time({
+ "graph":  graphchart735a6872254d  
+})
+var yAxischart735a6872254d = new Rickshaw.Graph.Axis.Y({
+ "graph":  graphchart735a6872254d ,
+"orientation": "left",
+"element":  document.getElementById('yAxischart735a6872254d') ,
+"tickFormat":  Rickshaw.Fixtures.Number.formatKMBT  
+})
+graphchart735a6872254d.render()
+var legendchart735a6872254d = new Rickshaw.Graph.Legend({
+ "graph":  graphchart735a6872254d ,
+"element":  document.getElementById('legendchart735a6872254d')  
+})
+var shelvingchart735a6872254d = new Rickshaw.Graph.Behavior.Series.Toggle({
+ "graph":  graphchart735a6872254d ,
+"legend":  legendchart735a6872254d  
+})
+var hoverDetailchart735a6872254d = new Rickshaw.Graph.HoverDetail({
+ "graph":  graphchart735a6872254d  
+})
+var highlightchart735a6872254d = new Rickshaw.Graph.Behavior.Series.Highlight({
+ "graph":  graphchart735a6872254d ,
+"legend":  legendchart735a6872254d  
+})
+
+  
+  graphchart735a6872254d.render();
+  
+</script> 
+    
+  </body>
+</html>

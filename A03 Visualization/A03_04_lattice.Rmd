@@ -1,0 +1,256 @@
+---
+title: A03-04 Lattice绘图系统
+subtitle: R Analyst Track
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: ../pres.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    self_contained: no
+    widescreen: yes
+    logo: ../logo.png
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A03_04_lattice_files/figure-html/")
+```
+
+## 目录
+
+- [作图基础](#3)
+- [基础图](#6)
+- [进阶图](#13)
+
+
+# 作图基础
+
+## 基本的高级函数
+
+类似于S-Plus中的Trellis，调用grid作图系统产生Trellis对象
+
+- `xyplot`: 散点图、折线图
+- `barchart`: 柱图
+- `bwplot`: box-and-whiskers plots (箱式图)
+- `histogram`: 直方图
+- `densityplot`: 密度曲线图
+- `stripplot`: 散点密度图
+- `dotplot`: 琴弦散点密度图
+- `splom`: 类似于`pairs`，散点图矩阵
+- `levelplot`, `contourplot`: 像素图
+- ...
+
+## 基本语法
+
+```r
+<作图函数名>(x, data, ...)
+```
+
+- data: 作图数据源，一般是data.frame
+- x: 公式(formula)，一般格式:
+    - `y ~ x | g1 * g2 * ...` 或 `y ~ x | g1 + g2 + ...`
+    - 公式结构:
+        - y: 因变量，映射到y轴
+        - x: 自变量， 映射到x轴
+        - g1, g2, ...: 条件变量，交叉堆积后生成分面(facet)
+
+
+# 基础图
+
+## 散点图
+
+<div class="columns-2">
+
+连续型变量的关联
+
+```{r scatter, fig.height=4, fig.width=4.5}
+library(lattice)
+xyplot(mpg~wt, data=mtcars)
+```
+
+<p class="forceBreak"></p>
+
+文本型变量也可以用于绘制散点图
+
+```{r points, fig.height=4, fig.width=4.5}
+xyplot(decrease~treatment, data=OrchardSprays)
+```
+
+</div>
+
+## 直方图
+
+<div class="columns-2">
+
+单变量密度分布
+
+```{r hist, fig.height=4, fig.width=4.5}
+histogram(~mpg, data=mtcars)
+```
+
+<p class="forceBreak"></p>
+
+或用密度曲线图
+
+```{r hist line, fig.height=4, fig.width=4.5}
+densityplot(~mpg, data=mtcars)
+```
+
+</div>
+
+## 箱式图 boxplot
+
+<div class="columns-2">
+
+连续性变量的分布
+
+```{r boxplot, fig.height=4, fig.width=4.5}
+bwplot(~len, ToothGrowth)
+```
+
+<p class="forceBreak"></p>
+
+多个箱式图
+
+```{r multi boxplot, fig.height=4, fig.width=4.5}
+bwplot(len~dose, data = ToothGrowth, 
+       horizontal=FALSE)
+```
+
+</div>
+
+## stripplot和dotplot
+
+<div class="columns-2">
+
+stripplot和bwplot功能相近
+
+```{r stripplot, fig.height=3.5, fig.width=4.5}
+stripplot(len~dose, data = ToothGrowth, 
+          horizontal=FALSE)
+```
+
+<p class="forceBreak"></p>
+
+dotplot把点画在琴弦上
+
+```{r dotplot, fig.height=3.5, fig.width=4.5}
+dotplot(len~dose, data = ToothGrowth, 
+        horizontal=FALSE)
+```
+
+</div>
+
+## 柱/条形图 barplot
+
+<div class="columns-2">
+
+文本型变量为y，条图
+
+```{r col, fig.height=3.5, fig.width=4.5}
+hp <- data.frame(hp=mtcars$hp, 
+                 car=row.names(mtcars))
+barchart(car~hp, data=hp)
+```
+
+<p class="forceBreak"></p>
+
+颠倒x和y，柱形图
+
+```{r bar, fig.height=3.5, fig.width=4.5}
+hp <- data.frame(hp=mtcars$hp, 
+                 car=row.names(mtcars))
+barchart(hp~car, data=hp)
+```
+
+</div>
+
+## 折线图 lines
+
+<div class="columns-2">
+
+表示趋势
+
+```{r line, fig.height=3.5, fig.width=4.5}
+xyplot(AirPassengers, type="l")
+# type类似于base系统
+```
+
+<p class="forceBreak"></p>
+
+阶梯折线
+
+```{r stair, fig.height=3.5, fig.width=4.5}
+xyplot(AirPassengers, type='s')  # 阶梯图
+```
+
+</div>
+
+# 进阶图
+
+## 散点图矩阵 splom
+
+```{r pairs, fig.height=4.5,fig.width=9}
+splom(~iris[1:4], groups=Species, data=iris, 
+      main = "Anderson's Iris Data -- 3 species")
+```
+
+## 平形图矩阵
+
+Parallel特别适合展示高维数据
+
+```{r parallel, fig.height=4.5}
+parallelplot(~iris[1:4] | Species, data=iris)
+```
+
+## 多重面板图
+
+多重面板图是lattice最大的利器
+
+<div class="columns-2">
+
+```{r panel 1 , fig.height=3.5, fig.width=4.5}
+xyplot(Sepal.Width ~ Petal.Width | Species, 
+       data=iris)
+```
+
+<p class="forceBreak"></p>
+
+```{r panel 2 , fig.height=4, fig.width=4.5}
+xyplot(mpg ~ wt | am * vs, data=mtcars)
+## 交叉am和vs
+```
+
+## levelplot
+
+下图显示，气温越高、风速越小，则臭氧浓度越高(映射到色阶通道)。
+
+```{r levelplot, fig.height=4.5}
+levelplot(Ozone ~ Wind * Temp, data=airquality)
+```
+
+## 3-D散点图
+
+```{r cloud scatter, fig.height=4.5}
+cloud(Ozone ~ Wind * Temp, data=airquality)
+```
+
+## 3-D柱形图
+
+```{r cloud bar, fig.height=4.5}
+library(latticeExtra)
+cloud(Ozone ~ Wind * Temp, data=airquality, panel.3d.cloud=panel.3dbars)
+```
+
+## {.grayblue}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+
+

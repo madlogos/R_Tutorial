@@ -32,8 +32,8 @@
       // Author information
       presenters: [
             {
-        name:  'HMS' ,
-        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
         gplus: '',
         twitter: '',
         www: '',
@@ -42,6 +42,19 @@
             ]
     };
   </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
 
   <style type="text/css">
 
@@ -86,20 +99,7 @@
     }
   </style>
 
-  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
-
-  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
-  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
-  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
-  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
-  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
-  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
-  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
-  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
 
 </head>
 
@@ -114,7 +114,7 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2016-12-14 11:22:35</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-01-15 13:37:21</p>
           </hgroup>
   </slide>
 
@@ -125,13 +125,6 @@
 <li><a href='#9' title=''>编码风格约定</a></li>
 <li><a href='#21' title=''>语言规则</a></li>
 </ul>
-
-<p class="footer">
-
-Copyright © 2016 Aetna Inc. <span class="cranberry">
-内部使用，请勿外传。</span>
-
-</p>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>代码风格</h2></hgroup><article >
 
@@ -227,7 +220,7 @@ Copyright © 2016 Aetna Inc. <span class="cranberry">
 
 <p>Rstudio中Tools -&gt; Global Options -&gt; Code -&gt; Display-&gt; General -&gt; Show margin -&gt; Margin column = 80。</p>
 
-<img src='A01_05_style_files/figure-html/margin.PNG' title='fig:'/>
+<img src='A01_05_style_files/figure-html/margin.png' title='fig:'/>
 
 <h3>缩进 Indentation</h3>
 
@@ -237,7 +230,7 @@ Copyright © 2016 Aetna Inc. <span class="cranberry">
 
 <p>Rstudio中Tools -&gt; Global Options -&gt; Code -&gt; Editing -&gt; General -&gt; Insert spaces for tab -&gt; Tab width=4。</p>
 
-<img src='A01_05_style_files/figure-html/indent.PNG' title='fig:'/></div>
+<img src='A01_05_style_files/figure-html/indent.png' title='fig:'/></div>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="smaller">
 
@@ -508,7 +501,7 @@ hist(df$pctSpent,
 <li>避免混用 S3 和 S4: S4 方法会忽略 S3 中的继承，反之亦然。</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-8" class="teal">
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-8" class="grayblue">
 
 <p style="font-size:100px;font-family:'Arial Black'">
 
@@ -526,7 +519,7 @@ hist(df$pctSpent,
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "libs/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

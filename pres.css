@@ -1,0 +1,354 @@
+slides > slide.title-slide   {
+	background-image: url("cover.png");    
+	background-position: center center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+	background-size: cover;
+	-webkit-background-size: contain;
+	-moz-background-size: contain;
+}
+
+slides > slide:not(.nobackground):before {
+    -webkit-background-size: 113px 30px;
+    -moz-background-size: 113px 30px;
+    -o-background-size: 113px 30px;
+    background-size: 113px 30px;
+    padding-left: 40px;
+    height: 30px;
+	width: 115px;
+    line-height: 1.9;
+}
+
+.title-slide hgroup {
+  top: 150px;
+  left: 50px;  
+}
+
+slides > slide.title-slide hgroup h1 {
+  color: #7090A5;
+  /*grayblue*/
+}
+
+slides > hgroup h2 code {
+	color: white;
+}
+
+slides h1 {
+	font-family: "Open Sans", Arial, 'Microsoft YaHei UI';
+	font-size: 2.5em;
+    color: #7090A5;  /*graylbue*/
+	margin-bottom: .6em;
+}
+
+slides h2 {
+	font-family: "Open Sans", Arial, 'Microsoft YaHei UI';
+	font-size: 2em;
+	color: #7090A5; /*grayblue*/
+	margin-bottom: .6em;
+}
+
+slides h3 {
+	font-family: 'Calibri Light', Arial, 'Microsoft YaHei UI';
+	font-size: 1.5em;
+	color: #00BCE4; 	/*blue*/
+	margin-bottom: .6em;
+}
+
+slides h4 {
+	font-family: 'Cambria', Arial, 'Microsoft YaHei UI';
+	font-size: 1.25em;
+	color: #F47721; 
+	/*#orange*/
+	margin-bottom: .6em;  
+}
+
+slides h5 {
+	font-family: 'Segoe UI Light', Arial, 'Microsoft YaHei UI';
+	font-size: 1.1em;
+	color: #00A78E; 
+	/*teal*/
+	margin-bottom: .6em;  
+}
+
+slides h6 {
+	font-family: "Open Sans", Arial, 'Microsoft YaHei UI';
+	font-size: 1.05em;
+	color: black;
+    margin-bottom: .6em;    
+}
+
+slides p, slides a, slides ul, slides ol {
+	font-family: "Open Sans", Arial, "Microsoft YaHei";
+}
+
+slides strong {
+	font-weight: bold;
+}
+
+slides em {
+	font-style: italic;
+}
+
+.footer {
+    color: black; 
+	background-color: #E8E8E8;
+	position: absolute;
+	bottom: 5%;
+	width: 100%;
+    text-align: center; 
+    font-family: Arial, Arial, 'Microsoft YaHei UI';
+	font-size: 0.85em;
+}
+
+del {
+   text-decoration: line-through;
+   color: #AAB1BA;
+}
+
+slides table.rmdtable {
+	font-family: "Open Sans", Arial, "Microsoft YaHei";
+}
+
+slides table.rmdtable th {
+  color: white;
+  font-size: 18px;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(40%, #7D3F98), color-stop(80%, #7030A0)) no-repeat;
+  background: -webkit-linear-gradient(top, #7D3F98 40%, #7030A0 80%) no-repeat;
+  background: -moz-linear-gradient(top, #7D3F98d 40%, #7030A0 80%) no-repeat;
+  background: -o-linear-gradient(top, #7D3F98 40%, #7030A0 80%) no-repeat;
+  background: linear-gradient(top, #7D3F98 40%, #7030A0 80%) no-repeat;
+  background: #7090A5; /*grayblue*/
+}
+
+slides table.rmdtable th code {
+	color: white;
+}
+
+slides .prettyprint {
+	margin-left: 0;
+	left: 0;
+	padding-left: 10px;
+}
+
+slides .forceBreak {
+	-webkit-column-break-before: always;
+	-webkit-column-break-after: always;
+	-moz-column-break-before: always;
+	-moz-column-break-after: always;
+	-ms-column-break-before: always;
+	-ms-column-break-after: always;
+	-o-column-break-before: always;
+	-o-column-break-after: always;
+	break-before: column;
+}
+
+slides .col-2L {
+	display: block;
+	float: left;
+	width: 48%;
+	text-align: left;
+}
+
+slides .col-2R {
+	display: block;
+	float: right;
+	width: 48%;
+	text-align: left;
+}
+
+slides .col-3L {
+	float: left;
+	width: 32%;
+	text-align: left;
+}
+
+slides .col-3C {
+	display: inline-block;
+	width: 32%;
+	text-align: left;
+}
+
+slides .col-3R {
+	float: right;
+	width: 32%;
+	text-align: left;
+}
+
+slides blockquote {
+  font-family: Georgia, KaiTi, 楷体; 
+  display: block;
+  position: relative;
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+  box-shadow:none;
+}
+
+slides blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.2em;
+  position: absolute;
+  margin-right: 0.25em;
+  vertical-align: 0.4em;
+}
+
+slides blockquote:after {
+  color: #ccc;
+  display: inline;
+  line-height: 0.1em;
+  content: close-quote;
+  font-size: 2em;
+  line-height: 0.1em;
+  position: absolute;
+  right: 3px;
+  vertical-align: 0em;
+  bottom: 0;
+}
+
+slides blockquote p {
+  display: block;
+}
+
+.gdbar img {
+  width: 160px !important;
+  height: 40px !important;
+  margin: 8px 8px;
+}
+
+.gdbar {
+  width: 200px !important;
+  height: 60px !important;
+  top: 60px !important;
+}
+
+.orange {
+   color: #F47721; 
+}
+
+.cranberry {
+   color: #D20962;
+}
+
+.blue {
+   color: #00BCE4;
+}
+
+.green {
+   color: #7AC143;
+}
+
+.teal {
+   color: #00A78E;
+}
+
+.violet {
+   color: #7D3F98;
+}
+
+.lime {
+   color: #B8D936;
+}
+
+.gold {
+   color: #FDB933;
+}
+
+.pink {
+   color: #F58F9F;
+}
+
+.pistachio {
+   color: #60C3AE;
+}
+
+.periwinkle {
+   color: #5F78BB;
+}
+
+.sand {
+   color: #CEA979;
+}
+
+.red {
+   color: #EF4135;
+}
+
+.darkgreen {
+   color: #5E9732;
+}
+
+.darkpink {
+   color: #EE3D94;
+}
+
+.grayblue {
+   color: #7090A5;
+}
+
+ora {
+   color: #F47721; 
+}
+
+crb {
+   color: #D20962;
+}
+
+blu {
+   color: #00BCE4;
+}
+
+gre {
+   color: #7AC143;
+}
+
+tea {
+   color: #00A78E;
+}
+
+vio {
+   color: #7D3F98;
+}
+
+lim {
+   color: #B8D936;
+}
+
+gld {
+   color: #FDB933;
+}
+
+pnk {
+   color: #F58F9F;
+}
+
+pst {
+   color: #60C3AE;
+}
+
+prw {
+   color: #5F78BB;
+}
+
+snd {
+   color: #CEA979;
+}
+
+red {
+   color: #EF4135;
+}
+
+dgr {
+   color: #5E9732;
+}
+
+dpk {
+   color: #EE3D94;
+}
+
+gbl {
+   color: #7090A5;
+}

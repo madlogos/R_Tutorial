@@ -1,22 +1,20 @@
 ---
 title: A01-01 R入门简介
 subtitle: R Analyst Track
-author: 
-  name: "HMS"
-  company: "[Aetna International](https://www.aetnainternational.com)"
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
 date: "`r Sys.time()`"
 output: 
   ioslides_presentation: 
-    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    css: ../pres.css
     df_print: paged
     fig_caption: yes
     fig_height: 5.5
     fig_width: 8
     highlight: pygments
     lib_dir: libs
-    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
     self_contained: no
     widescreen: yes
+    logo: ../logo.png
 ---
 
 ```{r setup, include=FALSE}
@@ -32,7 +30,6 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 - [R单机作业环境的搭建](#15)
 - [典型应用套路](#22)
 
-<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
 
 # 为什么学R？ 
 
@@ -62,7 +59,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 </div>
 
-## R有何用？
+## R有何用？ {.smaller}
 
 <div class='columns-2'>
 
@@ -76,11 +73,11 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
     + 变形/标签
 - 数据分析
     + 描述分析
-
-<p class="forceBreak"></p>
--
     + 统计推断
     + 挖掘预测
+    
+<p class="forceBreak"></p>
+
 - 可视化
     + 制图
     + 数据产品(*本deck即knit而成*)
@@ -254,8 +251,8 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 ## 下载并安装R
 
-1. 访问Aetna AppStore，下载安装[Open Source R 3.2.4](https://appstore.aetna.com/Product/Details/72475)(须装在虚拟机上)，或
-1. ~~访问R官网，下载[R for windows](https://cloud.r-project.org)并解压到C盘；安装32-bit版本~~
+- 访问R官网，下载[R for windows](https://cloud.r-project.org)并解压到C盘，建议安装64-bit版本（前提是安装了64位操作系统 ）
+- **更推荐用Linux**
 
 ![](A01_01_intro_files/figure-html/rgui.png)
 
@@ -300,8 +297,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 - Edit PATH， 将R安装路径添加进去
 
 ### 基础组件
-- [RTools](https://cran.r-project.org/bin/windows/Rtools) : 包含`gcc`, `mingw`等编译工具
-- ~~[MikTex](https://miktex.org/) : 用于生成pdf文档~~
+
+- [RTools](https://cran.r-project.org/bin/windows/Rtools) (对于Windows): 包含`gcc`, `mingw`等编译工具
+- [MikTex on Windows](https://miktex.org/) / [Texmaker on Linux](http://www.xm1math.net/texmaker/): 用于生成pdf文档
 
 </div>
 
@@ -439,7 +437,7 @@ dev.off()
 ```bat
 @echo off
 : If Rscript is not in PATH, define the location manually 
-C:\Docs\R\R-3.3.2\bin\Rscript.exe intro.R
+Rscript.exe intro.R
 @pause
 ```
 
@@ -464,6 +462,7 @@ C:\Docs\R\R-3.3.2\bin\Rscript.exe intro.R
 | 2 | 文学化编程 | 需要一定的构思 |
 
 <p class="forceBreak"></p>
+
 #### 例子
 
 - 创建的.Rmd文档本身自带示例代码，可尝试Knit
@@ -533,6 +532,6 @@ print("Hello, world!")
 
 </div>
 
-## {.teal}
+## {.grayblue}
 
 <p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

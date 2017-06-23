@@ -1,0 +1,348 @@
+---
+title: "New York Flights"
+params:
+  day: '01'
+  month: '02'
+  year: '2013'
+output:
+  html_document:
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+  html_notebook:
+    fig_caption: yes
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    warning = FALSE, message = FALSE, echo=FALSE,
+    fig.path = "../../assets/figure/")
+sapply(c("readr", "ggplot2", "data.table", "magrittr"), function(pkg) {
+    invisible(require(pkg, quietly=TRUE, character.only=TRUE))
+})
+# def params
+raw.dir <- paste0(getwd(), "/../../data/raw/")
+proc.dir <- paste0(getwd(), "/../../data/processed/")
+```
+
+```{r get raw data}
+# 从params中提取文件名
+cur.days <- as.Date(paste(params$year, params$month, params$day, sep="-"))
+# 往前追溯20天
+days.range <- c(seq(from=min(cur.days)-20, to=min(cur.days)-1, by="days"),
+                cur.days)
+files <- paste0(days.range, ".csv")
+# unz可以从zip中读一个文件，因此lapply循环读取
+dat.files <- lapply(files, function(f) unz(paste0(raw.dir, "flights.zip"), f))
+# read_csv读入，然后合并
+dat <- do.call("rbind", lapply(dat.files, read_csv))
+```
+
+```{r get meta data}
+library(nycflights13)
+data(airports)
+data(airlines)
+```
+
+```{r data clean}
+# 定义晚点与否
+## ahead: 提前5分钟以上
+## on time: 准点
+## almost: 晚点5-15分钟
+## delay: 晚点15分钟以上
+## miss: 晚点半小时以上
+dat$delay_dep <- dat$delay_arr <- 'on time'
+dat$delay_dep[dat$dep_delay < -5] <- "ahead"
+dat$delay_arr[dat$arr_delay < -5] <- "ahead"
+dat$delay_dep[dat$dep_delay > 5] <- "almost"
+dat$delay_arr[dat$arr_delay > 5] <- "almost"
+dat$delay_dep[dat$dep_delay > 15] <- "delay"
+dat$delay_arr[dat$arr_delay > 15] <- "delay"
+dat$delay_dep[dat$dep_delay > 30] <- "miss"
+dat$delay_arr[dat$arr_delay > 30] <- "miss"
+
+dat$delay_dep <- factor(dat$delay_dep, levels=c(
+    "ahead", "on time", "almost", "delay", "miss"))
+dat$delay_arr <- factor(dat$delay_arr, levels=c(
+    "ahead", "on time", "almost", "delay", "miss"))
+
+# 只保留完整数据
+dat <- dat[complete.cases(dat[,c(
+    "year", "month", "day", "dep_delay", "arr_delay", "origin", "dest")]),]
+dat <- as.data.table(dat)
+dt <- dat[as.Date(dat$time_hour) >= max(cur.days)]
+```
+
+# 基本情况
+
+`r cur.days`纽约离港航班的基本情况:
+
+- 航班总数: `r dt[, .N]`
+- 其中，各机场航班数如下:
+    
+```{r summ tbl}
+summ <- dt[, .N, by="origin"]
+summ <- merge(summ, airports[, c("faa", "name")], by.x="origin", by.y="faa")
+summ[, .(name, origin, N)] %>% knitr::kable(caption="Table: Flights by Airports, NY")
+```
+
+## 流量
+
+### 按出发地统计
+
+```{r flow origin hr}
+flow <- dt[, .N, by="hour"]
+flow %>% knitr::kable(caption="Table: Flights by Hour", align="lr")
+```
+
+```{r flow origin hr fig}
+flow <- dt[, .N, by=c("hour", "origin")]
+flow$origin <- factor(flow$origin, levels=c("EWR", "LGA", "JFK"))
+ggplot(flow, aes(hour, N, color=origin, fill=origin)) + 
+    geom_area(stat='identity', position='stack', alpha=0.5) + 
+    labs(title="Flights by Hour, Airport") +
+    theme_minimal() 
+```
+
+### 按目的地统计
+
+```{r flow dest hr fig, fig.height=15, fig.width=7}
+flow <- dt[, .N, by= "dest"]
+flow <- merge(flow, airports[,c("faa", "name", "lat", "lon")],
+              by.x="dest", by.y="faa")
+flow$name <- factor(flow$name, levels=flow$name[order(flow$N)])
+flow[order(-N),.(name, N)] %>% head(10) %>% 
+    knitr::kable(caption="Table: Top Flight Destinations", align="lr")
+ggplot(flow, aes(name, N)) + geom_bar(stat="identity", fill="deepskyblue") + 
+    labs(title="Flights by Airport") + theme_minimal() + coord_flip()
+```
+
+```{r flow dest hr map, fig.height=6, fig.width=9}
+library(maps)
+library(maptools)
+usmap <- map('state', plot=FALSE, fill=TRUE)
+usmap <- map2SpatialPolygons(usmap, IDs=usmap$names)
+usmap <- broom::tidy(usmap)
+ggplot() + geom_polygon(aes(long, lat, group=group), data=usmap, 
+                        fill="lightgray", color="white") +
+    geom_point(aes(lon, lat, size=N, color=N), data=flow) + 
+    labs(title="Fig: Flights by Destination") + theme_minimal() +
+    coord_map('polyconic') + scale_color_continuous(low="cyan", high="darkblue") +
+    scale_size_continuous(range=c(0.5, 4))
+```
+
+
+## 准点率
+
+组标签  | 定义 
+:-------|:---------
+ahead   | 提前5分钟以上
+on time | 准点
+almost  | 晚点5-15分钟
+delay   | 晚点15分钟以上
+miss    | 晚点30分钟以上
+
+### 趋势
+
+#### 准点率
+
+```{r ontime rate trend, fig.width=8}
+dat$delay_dep_tf <- dat$delay_dep %in% c("ahead", "on time")
+dat$delay_arr_tf <- dat$delay_arr %in% c("ahead", "on time")
+d1 <- dcast(as.data.frame(dat), time_hour~delay_dep_tf, length, 
+           margins="delay_dep_tf")
+d1$ontime <- d1$`TRUE` / d1$`(all)` 
+d1$type <- "Dep"
+d2 <- dcast(as.data.frame(dat), time_hour~delay_arr_tf, length, 
+           margins="delay_arr_tf")
+d2$ontime <- d2$`TRUE` / d2$`(all)` 
+d2$type <- "Arr"
+d <- rbind(d1, d2)
+sumd <- data.table(d)[, list(F=sum(`FALSE`), T=sum(`TRUE`)), by="type"]
+sumd$ontime <- sumd$T/rowSums(sumd[,`T`,`F`])
+ggplot(d, aes(time_hour, ontime)) + geom_line(color="deepskyblue") +
+    geom_hline(aes(yintercept=ontime), data=sumd, color="tomato") +
+    geom_text(aes(max(d$time_hour), ontime+0.05, label=scales::percent(ontime)), 
+              data=sumd, color="tomato", hjust=1) +
+    labs(title="Flights On Time, by Hour") + facet_grid(~type) +
+    theme_minimal() + scale_y_continuous(labels=scales::percent)
+
+d <- melt(d[,c("time_hour", "ontime", "type", "FALSE", "TRUE")], 
+          id=c("time_hour","type"))
+d <- dcast(d, as.Date(time_hour)+type~variable, sum)
+names(d) <- gsub("as\\.Date\\(time_hour\\)", "day", names(d))
+d$ontime <- d$`TRUE`/ rowSums(d[,c("TRUE", "FALSE")])
+ggplot(d, aes(day, ontime, color=type)) + geom_line(color="deepskyblue") +
+    geom_hline(aes(yintercept=ontime), data=sumd, color="tomato") +
+    geom_text(aes(max(d$day), ontime+0.05, label=scales::percent(ontime)), 
+              data=sumd, color="tomato", hjust=1) + 
+    labs(title="Flights On Time Rate, by Day") + facet_grid(~type) +
+    theme_minimal() + scale_y_continuous(labels=scales::percent)
+```
+
+
+#### 延误程度
+
+```{r ontime trend, fig.width=8}
+d1 <- dat[, list(mean=mean(dep_delay),
+                 sd=sd(dep_delay)), by="time_hour"]
+d1$type <- "Dep"
+d2 <- dat[, list(mean=mean(arr_delay),
+                 sd=sd(arr_delay)), by="time_hour"]
+d2$type <- "Arr"
+d <- rbind(d1, d2)
+sumd <- melt(dat[, list(Dep=mean(dep_delay),
+                   Arr=mean(arr_delay))])
+names(sumd) <- c("type", "mean")
+
+ggplot(d, aes(time_hour, mean)) + geom_line(color="deepskyblue") +
+    geom_ribbon(aes(x=time_hour, ymin=mean-sd, ymax=mean+sd), alpha=0.2,
+                fill="cyan") +
+    geom_hline(aes(yintercept=mean), data=sumd, color="tomato") +
+    geom_text(aes(max(d$time_hour), mean+5, label=round(mean,2)), 
+              data=sumd, color="tomato", hjust=1) + 
+    labs(title="Flights Delay (Minutes), by Hour") + facet_grid(~type) +
+    theme_minimal()
+
+d1 <- dat[, list(mean=mean(dep_delay),
+                 sd=sd(dep_delay)), by=as.Date(time_hour)]
+d1$type <- "Dep"
+d2 <- dat[, list(mean=mean(arr_delay),
+                 sd=sd(arr_delay)), by=as.Date(time_hour)]
+d2$type <- "Arr"
+d <- rbind(d1, d2)
+names(d)[1] <- "day"
+ggplot(d, aes(day, mean)) + geom_line(color="deepskyblue") +
+    geom_ribbon(aes(x=day, ymin=mean-sd, ymax=mean+sd), alpha=0.2,
+                fill="cyan") +
+    geom_hline(aes(yintercept=mean), data=sumd, color="tomato") +
+    geom_text(aes(max(d$day), mean+5, label=round(mean,2)), 
+              data=sumd, color="tomato", hjust=1) + 
+    labs(title="Flights Delay (Minutes), by Day") + facet_grid(~type) +
+    theme_minimal() 
+```
+
+
+# 分层分析
+
+## 机场
+
+### 各出发机场准点情况
+
+```{r, ontime summ origin, fig.width=8}
+summ <- dt[, .N, by=c("origin", "delay_dep", "delay_arr")]
+dcast(as.data.frame(summ), delay_dep~origin, sum, margins="origin") %>% 
+    knitr::kable(caption="Table: Delay on Departure by Airport")
+dcast(as.data.frame(summ), delay_arr~origin, sum, margins="origin") %>% 
+    knitr::kable(caption="Table: Delay on Arrival by Airport")
+summ <- melt(summ, id=c("origin", "N"))
+names(summ)[3:4] <- c("type", "delay")
+summ$type <- gsub("delay_", "", summ$type)
+summ$delay <- factor(summ$delay, levels=levels(dat$delay_arr))
+ggplot(summ, aes(origin, N, fill=delay)) + 
+    geom_bar(stat="identity", position="fill") +
+    labs(title="Fig: Delay by Origin") + theme_minimal() +
+    facet_grid(~type) + ylab("Percent") +
+    scale_y_continuous(labels=scales::percent)
+```
+
+### 各目的地机场准点情况
+
+```{r, ontime summ dest}
+summ <- dt[, .N, by=c("dest", "delay_dep", "delay_arr")]
+summ <- merge(summ, airports[,c("faa", "name")], by.x="dest", by.y="faa", all.x=TRUE)
+```
+
+#### 按起飞统计
+
+```{r, ontime summ dest dep, fig.height=9}
+d <- dcast(as.data.frame(summ), name~delay_dep, sum, value.var="N", 
+           margins="delay_dep") 
+d <- d[order(d$`(all)`, decreasing=TRUE),] %>% head(20) 
+d %>% knitr::kable(caption="Table: Delay on Departure by Destination")
+d$name <- factor(d$name, levels=d$name[order(rowSums(d[,c("on time","ahead")])/d$`(all)`)])
+d <- melt(d[!is.na(d$name), -which(names(d)=="(all)")], id="name")
+ggplot(d, aes(name, value, fill=variable)) + 
+    geom_bar(stat="identity", position="fill") + 
+    labs(title="Flights Delay On Departure, by Destination (Top 20)") + 
+    theme_minimal() + coord_flip() +
+    ylab("Percent") + scale_y_continuous(labels=scales::percent)
+```
+
+#### 按着陆统计
+
+```{r, ontime summ dest arr,fig.height=9}
+d <- dcast(as.data.frame(summ), name~delay_arr, sum, value.var="N", 
+           margins="delay_arr") 
+d <- d[order(d$`(all)`, decreasing=TRUE),] %>% head(20) 
+d %>% knitr::kable(caption="Table: Delay on Departure by Destination")
+d$name <- factor(d$name, levels=d$name[order(rowSums(d[,c("on time","ahead")])/d$`(all)`)])
+d <- melt(d[!is.na(d$name), -which(names(d)=="(all)")], id="name")
+ggplot(d, aes(name, value, fill=variable)) + 
+    geom_bar(stat="identity", position="fill") + 
+    labs(title="Flights Delay On Arrival, by Destination (Top 20)") + 
+    theme_minimal() + coord_flip() +
+    ylab("Percent") + scale_y_continuous(labels=scales::percent)
+```
+
+## 时段
+
+#### 按起飞统计
+
+```{r, ontime summ hr dep}
+d <- dcast(as.data.frame(dt), hour~delay_dep, length, margins="delay_dep") 
+d %>% knitr::kable(caption="Table: Delay on Departure by Hour")
+d <- melt(d[!is.na(d$hour), -which(names(d)=="(all)")], id="hour")
+ggplot(d, aes(hour, value, fill=variable)) + 
+    geom_bar(stat="identity", position="fill") + 
+    labs(title="Flights Delay On Departure, by Hour") + 
+    theme_minimal() + 
+    ylab("Percent") + scale_y_continuous(labels=scales::percent)
+
+d <- dt[, list(mean=mean(dep_delay), sd=sd(dep_delay)), by="hour"]
+ggplot(d, aes(hour, mean)) + geom_line(color="deepskyblue") +
+    geom_ribbon(aes(hour, ymin=mean-sd, ymax=mean+sd), fill="cyan", alpha=0.2) +
+    theme_minimal()
+```
+
+#### 按着陆统计
+
+```{r, ontime summ hr arr}
+d <- dcast(as.data.frame(dt), hour~delay_arr, length, margins="delay_arr") 
+d %>% knitr::kable(caption="Table: Delay on Arrival by Hour")
+d <- melt(d[!is.na(d$hour), -which(names(d)=="(all)")], id="hour")
+ggplot(d, aes(hour, value, fill=variable)) + 
+    geom_bar(stat="identity", position="fill") + 
+    labs(title="Flights Delay On Arrival, by Hour") + 
+    theme_minimal() + 
+    ylab("Percent") + scale_y_continuous(labels=scales::percent)
+
+d <- dt[, list(mean=mean(arr_delay), sd=sd(arr_delay)), by="hour"]
+ggplot(d, aes(hour, mean)) + geom_line(color="deepskyblue") +
+    geom_ribbon(aes(hour, ymin=mean-sd, ymax=mean+sd), fill="cyan", alpha=0.2) +
+    theme_minimal()
+```
+
+## 航空公司
+
+```{r, ontime summ corp, fig.width=8}
+summ <- dt[, .N, by=c("carrier", "delay_dep", "delay_arr")]
+dcast(as.data.frame(summ), delay_dep~carrier, sum, margins="carrier") %>% 
+    knitr::kable(caption="Table: Delay on Departure by carrier")
+dcast(as.data.frame(summ), delay_arr~carrier, sum, margins="carrier") %>% 
+    knitr::kable(caption="Table: Delay on Arrival by Carrier")
+summ <- melt(summ, id=c("carrier", "N"))
+names(summ)[3:4] <- c("type", "delay")
+summ$type <- gsub("delay_", "", summ$type)
+summ$delay <- factor(summ$delay, levels=levels(dat$delay_arr))
+ggplot(summ, aes(carrier, N, fill=delay)) + 
+    geom_bar(stat="identity", position="fill") +
+    labs(title="Fig: Delay by Carrier") + theme_minimal() +
+    facet_grid(~type) + ylab("Percent") +
+    scale_y_continuous(labels=scales::percent)
+```
+

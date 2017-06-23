@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A04-02 定量数据统计推断</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A04-02 定量数据统计推断',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A04_02_quantitative_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A04_02_quantitative_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A04_02_quantitative_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-18 21:03:11</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>统计推断</a></li>
+<li><a href='#9' title=''>参数估计</a></li>
+<li><a href='#12' title=''>检验指定分布</a></li>
+<li><a href='#16' title=''>单组或两组样本</a></li>
+<li><a href='#20' title=''>多组样本</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>统计推断</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>什么是统计推断 (statistic inference)</h2></hgroup><article  id="-statistic-inference">
+
+<blockquote>
+<p>统计学中，研究如何根据样本数据去<strong>推断总体数量特征</strong>的方法。 它是在对样本数据进行描述的基础上，对统计总体的未知数量特征做出以概率形式表述的推断。更概括地说，是在一段有限的时间内，通过对一个随机过程的观察来进行推断的。 <br/> &#8211; Wikipedia</p>
+</blockquote>
+
+<ul>
+<li>总体 (population): 全中国公民的年收入</li>
+<li>样本 (sample): 上海市民的年收入</li>
+<li>问题: 上海市民的年收入是否比全国水平高?</li>
+<li>统计推断: 通过对H0做假设检验，判断是否改为接受H1
+
+<ul>
+<li>H0 (无效假设null hypothesis): “上海市民的年收入与全国水平相同”</li>
+<li>H1 (备择假设alternative hypothesis): “上海市民的年收入与全国水平不同”</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>参数估计 (parameter estimation)</h2></hgroup><article  id="-parameter-estimation">
+
+<blockquote>
+<p>用样本统计量的来估计相应总体参数，称为参数估计。</p>
+</blockquote>
+
+<ul>
+<li><p>回答前面的问题，需要转化推断指标。如:假定收入服从正态分布，可以均数作为收入的估计。</p></li>
+<li><strong>点估计</strong>(point estimation): 用某一样本统计量的值来估计相应总体参数的值
+
+<ul>
+<li>通常要假定总体服从某种分布（如正态分布）</li>
+<li>计算样本该分布的参数统计量（如算术均数、几何均数、标准差）</li>
+</ul></li>
+<li><strong>区间估计</strong>(inteval estimation): 以样本统计量的抽样分布（概率分布）为理论依据，按一定概率要求，由样本统计量的值估计总体参数值的所在范围
+
+<ul>
+<li>通常使用参数统计量的置信区间(confidence interval)来衡量</li>
+<li>置信区间的宽度(可靠性)取决于置信度(1-\(\alpha\))，一般取95%</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>假设检验 (hypothesis testing)</h2></hgroup><article  id="-hypothesis-testing">
+
+<blockquote>
+<p>假设检验是一种统计检验，用于确定样本数据中是否有足够证据来推断特定条件对总体是否为真。</p>
+</blockquote>
+
+<p>基于“无罪推定”的原则，步骤：</p>
+
+<ol>
+<li>列出H0(无效假设，希望拒绝的那个假设)和H1(备择假设，希望接受的那个假设)</li>
+<li>根据问题和样本性质选择合适的统计方法 (样本性质的判定，同样是一次假设检验的过程)</li>
+<li>计算 <em>P</em> 值: 当<strong>原假设为真时</strong>，比所得到的样本观察结果更极端的结果出现的概率
+
+<ul>
+<li><em>P</em> \(&lt;\alpha\) &#8211;&gt; 统计显著: 推翻无效假设，接受备择假设</li>
+<li><em>P</em> \(\geq\alpha\) &#8211;&gt; 统计不显著: <strong>暂不能</strong>推翻无效假设</li>
+</ul></li>
+</ol>
+
+</article></slide><slide class=''><hgroup><h2>I类和II类错误</h2></hgroup><article  id="iii">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">研究结论 \ 实际情况</th>
+<th align="left">H0正确</th>
+<th align="left">H0错误</th>
+</tr>
+<tr class="odd">
+<td align="left">拒绝H0</td>
+<td align="left">I类错误(概率=\(\alpha\))</td>
+<td align="left">正确(概率=1-\(\alpha\))</td>
+</tr>
+<tr class="even">
+<td align="left">接受H0</td>
+<td align="left">正确(概率=1-\(\beta\))</td>
+<td align="left">II类错误(概率=\(\beta\))</td>
+</tr>
+</table>
+
+<p><br></p>
+
+<ul>
+<li>两类错误此消彼长：样本量一定时，无法同时减小I类错误和II类错误的概率</li>
+<li>样本量增加，统计效能(power)(1-\(\beta\))增加，则II类错误概率下降</li>
+<li>出于审慎原则，通常对I类错误的容忍度更低</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<p>以t检验为例，假设样本量=100，效应大小为0.3</p>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>library(pwr)
+alpha &lt;- seq(0, 1, 0.01)
+beta &lt;- 1 - sapply(alpha, function(a) {
+    pwr.t.test(100, d=0.3, sig.level=a)$power})
+df &lt;- rbind(
+    data.frame(alpha, class=&quot;beta&quot;, 
+               Value=beta),
+    data.frame(alpha, class=&quot;alpha+beta&quot;, 
+               Value=alpha+beta))
+dfmin &lt;- c(alpha[which.min(alpha+beta)], 
+           min(alpha+beta))
+
+library(ggplot2)
+ggplot(df, aes(alpha, Value, color=class)) +
+    geom_point() + geom_line() +
+    geom_vline(xintercept=dfmin[1]) +
+    geom_hline(yintercept=dfmin[2]) +
+    annotate(&quot;text&quot;, label=dfmin[1], 
+        x=dfmin[1]+0.05, y=dfmin[2]-0.02) +
+    ggtitle(expression(paste(
+        &quot;Prob. of Type I Error (&quot;, 
+        alpha, &quot;) And Type II Error (&quot;,
+        beta, &quot;)&quot;))) +
+    xlab(expression(alpha)) + 
+    theme_minimal() + 
+    theme(legend.position=&#39;bottom&#39;)</pre>
+
+<p><img src="A04_02_quantitative_files/figure-html/pwr-1.png" width="480" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>参数估计</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>点估计</h2></hgroup><article >
+
+<div class="columns-2">
+<h4>均数</h4>
+
+<p>总体均值\(\mu\)的最小方差无偏估计为样本的均值\(\bar{x}\)</p>
+
+<blockquote>
+<p>Edgar Anderson iris数据Sepal.Width的总体均数?</p>
+</blockquote>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- iris$Sepal.Width
+&gt; sum(x)/length(x) # 或
+&gt; mean(x)
+3.057333</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>方差</h4>
+
+<p>\[s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2\]</p>
+
+<blockquote>
+<p>Sepal.Width的总体方差?</p>
+</blockquote>
+
+<pre class = 'prettyprint lang-r'>&gt; sum((x-3.057333)^2)/(length(x)-1) # 或
+&gt; var(x)
+0.1899794</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>区间估计</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<h4>均数</h4>
+
+<h5>总体方差已知</h5>
+
+<p>样本均数服从正态分布</p>
+
+<p>\[z=\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\]</p>
+
+<blockquote>
+<p>假设总体方差是0.1899794，Sepal.Width均数区间?</p>
+</blockquote>
+
+<pre class = 'prettyprint lang-r'>&gt; mean(x) + qnorm(c(0.025, 0.975))*0.1899794/
++ sqrt(length(x))
+[1] 3.026931 3.087736</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>(通常情况)总体方差未知</h5>
+
+<p>样本均数服从t分布</p>
+
+<p>\[\bar{x} \pm t_{n - 1, 1 - \alpha / 2}{\frac{s}{\sqrt{n}}}\]</p>
+
+<pre class = 'prettyprint lang-r'>&gt; mean(x) + qt(p=c(0.025, 0.975), df=length(x))*
++ sd(x)/sqrt(length(x))
+[1] 2.987014 3.127653</pre>
+
+<h4>方差</h4>
+
+<p>\[[\frac{(n - 1) s^2}{\chi_{n - 1, \alpha/2}^{2}}, \frac{(n - 1) s^2}{\chi_{n - 1, 1 - \alpha / 2}^{2}}]\]</p>
+
+<pre class = 'prettyprint lang-r'>&gt; (length(x)-1) * var(x) / 
++ qchisq(c(0.025, 0.975), length(x)-1)
+[1] 0.2417372 0.1532698</pre></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>检验指定分布</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>正态性检验: Shapiro-Wilk Test</h2></hgroup><article  id="-shapiro-wilk-test" class="smaller">
+
+<p>样本量必须在3-5000之间</p>
+
+<ul>
+<li>H0: 样本服从正态分布</li>
+<li>H1: 样本<strong>不</strong>服从正态分布</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; shapiro.test(rnorm(100))
+
+    Shapiro-Wilk normality test
+data:  rnorm(100)
+W = 0.98802, p-value = 0.5099</pre>
+
+<p><img src="A04_02_quantitative_files/figure-html/shapiro1-1.png" width="432" /></p>
+
+<pre class = 'prettyprint lang-r'>&gt; shapiro.test(runif(100, -2, 2))
+
+    Shapiro-Wilk normality test
+data:  runif(100, -2, 2)
+W = 0.94369, p-value = 0.0003262</pre>
+
+<p><img src="A04_02_quantitative_files/figure-html/shapiro2-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>通用检验: Kolmogorov-Smirnov Test</h2></hgroup><article  id="-kolmogorov-smirnov-test" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>H0: 样本服从某类分布</li>
+<li>H1: 样本不服从某类分布</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; ks.test(rnorm(100), &quot;pnorm&quot;)
+
+    One-sample Kolmogorov-Smirnov test
+data:  rnorm(100)
+D = 0.079472, p-value = 0.5528
+alternative hypothesis: two-sided</pre>
+
+<p><img src="A04_02_quantitative_files/figure-html/ks1-1.png" width="432" /></p>
+
+<ul>
+<li>H0: 样本服从参数为&#8230;的某类分布</li>
+<li>H1: 样本不服从参数为&#8230;的某类分布</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; ks.test(rnorm(100), &quot;pnorm&quot;, 1, 2)
+
+    One-sample Kolmogorov-Smirnov test
+data:  rnorm(100)
+D = 0.32728, p-value = 9.941e-10
+alternative hypothesis: two-sided</pre>
+
+<p><img src="A04_02_quantitative_files/figure-html/ks2-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>通用检验(续): Kolmogorov-Smirnov Test</h2></hgroup><article  id="-kolmogorov-smirnov-test">
+
+<ul>
+<li>H0: 两个样本分布相同</li>
+<li>H1: 两个样本分布不同</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- rnorm(50)
+&gt; y &lt;- runif(30, -2, 2)
+&gt; ks.test(x, y)
+
+    Two-sample Kolmogorov-Smirnov test
+    
+data:  x and y
+D = 0.23333, p-value = 0.2264
+alternative hypothesis: two-sided</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A04_02_quantitative_files/figure-html/ks3-1.png" width="432" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>单组或两组样本</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>单样本: 直接与总体参数比较</h2></hgroup><article  id="-" class="smaller">
+
+<div class="columns-2">
+<h4>正态数据</h4>
+
+<ul>
+<li>Student t检验 (<code>t.test</code>)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t.test(rnorm(100), mu=0)
+
+    One Sample t-test
+data:  rnorm(100)
+t = -1.3261, df = 99, p-value = 0.1879
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ -0.33597711  0.06679886
+sample estimates:
+ mean of x 
+-0.1345891 </pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>非正态数据</h4>
+
+<ul>
+<li>正态变换后<code>t.test</code> (一般不这样做)</li>
+<li>非参数检验: Wilcoxon秩和检验/Mann-Whitney U检验</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; wilcox.test(rpois(1:100, 1), mu=0)
+
+    Wilcoxon signed rank test with continuity correction
+data:  rpois(1:100, 1)
+V = 2016, p-value = 1.282e-12
+alternative hypothesis: true location is not equal to 0</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>两组正态样本</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<h5>Step1: 方差齐性F检验</h5>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- rnorm(100)
+&gt; y &lt;- rnorm(100, 1)
+&gt; var.test(x, y)
+
+    F test to compare two variances
+data:  x and y
+F = 0.79822, num df = 99, denom df = 99, 
+p-value = 0.2639
+alternative hypothesis: true ratio of variances 
+is not equal to 1
+95 percent confidence interval:
+ 0.5370739 1.1863377
+sample estimates:
+ratio of variances 
+         0.7982174 </pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>Step2: Student t检验 (<code>t.test</code>)</h5>
+
+<pre class = 'prettyprint lang-r'>&gt; t.test(x, y)
+
+    Welch Two Sample t-test
+data:  x and y
+t = -5.7058, df = 195.54, p-value = 4.236e-08
+alternative hypothesis: true difference in means is 
+not equal to 0
+95 percent confidence interval:
+ -1.0780640 -0.5242426
+sample estimates:
+mean of x mean of y 
+0.2038993 1.0050526 </pre></div>
+
+</article></slide><slide class=''><hgroup><h2>两组非正态样本</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>非参数检验: Wilcoxon U检验
+
+<ul>
+<li>秩和检验</li>
+<li>符号秩检验</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; x &lt;- rexp(1:200, 1)
+&gt; y &lt;- rexp(1:200, 2)
+&gt; wilcox.test(x, y)
+
+    Wilcoxon rank sum test with continuity correction
+data:  x and y
+W = 26324, p-value = 4.514e-08
+alternative hypothesis: true location shift is not 
+equal to 0</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>正态变换后<code>t.test</code>(不要过度变换)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; library(forecast)
+&gt; x1 &lt;- BoxCox(x, lambda=0.3)
+&gt; y1 &lt;- BoxCox(y, lambda=0.3)
+&gt; shapiro.test(x1)  # p-value=0.1488
+&gt; shapiro.test(y1)  # p-value=0.1542
+&gt; t.test(x1, y1)
+
+    Welch Two Sample t-test
+data:  x1 and y1
+t = 5.9563, df = 380.44, p-value = 5.878e-09
+alternative hypothesis: true difference in means is 
+not equal to 0
+95 percent confidence interval:
+ 0.3402813 0.6756506
+sample estimates:
+ mean of x  mean of y 
+-0.4456814 -0.9536474 </pre></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>多组样本</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>单因素方差分析 1. 方差齐性检验</h2></hgroup><article  id="-1.-" class="smaller">
+
+<blockquote>
+<p>chickwts数据集，不同饲料(feed)喂养后体重(weight)有无差别?</p>
+</blockquote>
+
+<ul>
+<li><p>统计假设</p>
+
+<ul>
+<li>H0: 各饲料组体重都相同<br></li>
+<li>H1: 各饲料组体重<strong>不全</strong>相同</li>
+</ul></li>
+<li><p>前置条件: 两饲料组样本方差齐不齐?</p></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; bartlett.test(weight~feed, chickwts)
+
+    Bartlett test of homogeneity of variances
+data:  weight by feed
+Bartlett&#39;s K-squared = 3.2597, df = 5, p-value = 0.66</pre>
+
+<ul>
+<li>结论</li>
+</ul>
+
+<p>各组体重方差齐</p>
+
+</article></slide><slide class=''><hgroup><h2>单因素方差分析 2. One-way ANOVA</h2></hgroup><article  id="-2.-one-way-anova" class="smaller">
+
+<ul>
+<li><code>aov</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; summary(aov(weight~feed, chickwts))
+
+            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+feed         5 231129   46226   15.37 5.94e-10 ***
+Residuals   65 195556    3009                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</pre>
+
+<ul>
+<li>或 <code>anova</code> (必须配合<code>lm</code>)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; anova(lm(weight~feed, chickwts))
+
+Analysis of Variance Table
+
+Response: weight
+          Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+feed       5 231129   46226  15.365 5.936e-10 ***
+Residuals 65 195556    3009                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>均数的多重比较(1)</h2></hgroup><article  id="1" class="smaller">
+
+<div class="columns-2">
+<blockquote>
+<p>哪个饲料组体重更大?哪个更小?</p>
+</blockquote>
+
+<p><img src="A04_02_quantitative_files/figure-html/chickwts%20boxplot-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>多重比较必须修正\(\alpha\)，否则会导致I类错误增高</p>
+
+<ul>
+<li>方法1: <code>TukeyHSD</code>
+
+<ul>
+<li><code>TukeyHSD(x, which, ordered = FALSE,  conf.level = 0.95, ...)</code></li>
+</ul></li>
+<li>方法2: <code>pairwise.t.test</code>
+
+<ul>
+<li><code>pairwise.t.test(x, g, p.adjust.method = p.adjust.methods, pool.sd = !paired, paired = FALSE, alternative = c(&quot;two.sided&quot;, &quot;less&quot;, &quot;greater&quot;), ...)</code></li>
+<li>p.adjust.method: c(&quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, &quot;fdr&quot;, &quot;none&quot;)</li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>均数的多重比较(2)</h2></hgroup><article  id="2" class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; TukeyHSD(aov(weight~feed, chickwts))
+
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+Fit: aov(formula = weight ~ feed, data = chickwts)
+$feed
+                        diff      lwr    upr   p adj
+horsebean-casein    -163.383 -232.347 -94.42 0.00000
+linseed-casein      -104.833 -170.587 -39.08 0.00021
+meatmeal-casein      -46.674 -113.906  20.56 0.33246
+soybean-casein       -77.155 -140.517 -13.79 0.00836
+sunflower-casein       5.333  -60.421  71.09 0.99989
+linseed-horsebean     58.550  -10.413 127.51 0.14133
+meatmeal-horsebean   116.709   46.335 187.08 0.00011
+soybean-horsebean     86.228   19.542 152.91 0.00427
+sunflower-horsebean  168.717   99.753 237.68 0.00000
+meatmeal-linseed      58.159   -9.073 125.39 0.12770
+soybean-linseed       27.678  -35.684  91.04 0.79328
+sunflower-linseed    110.167   44.412 175.92 0.00009
+soybean-meatmeal     -30.480  -95.375  34.41 0.73913
+sunflower-meatmeal    52.007  -15.224 119.24 0.22070
+sunflower-soybean     82.488   19.123 145.85 0.00388</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>&gt; with(chickwts, pairwise.t.test(weight, feed))
+
+    Pairwise comparisons using t tests with pooled SD 
+data:  weight and feed 
+          casein  horsebean linseed meatmeal soybean
+horsebean 2.9e-08 -         -       -        -      
+linseed   0.00016 0.09435   -       -        -      
+meatmeal  0.18227 9.0e-05   0.09435 -        -      
+soybean   0.00532 0.00298   0.51766 0.51766  -      
+sunflower 0.81249 1.2e-08   8.1e-05 0.13218  0.00298
+
+P value adjustment method: holm</pre>
+
+<p><img src="A04_02_quantitative_files/figure-html/tukeyhsd-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>多因素方差分析</h2></hgroup><article >
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; summary(aov(yield~N*P*K, npk))
+
+           Df Sum Sq Mean Sq F value Pr(&gt;F)  
+N           1  189.3  189.28   6.161 0.0245 *
+P           1    8.4    8.40   0.273 0.6082  
+K           1   95.2   95.20   3.099 0.0975 .
+N:P         1   21.3   21.28   0.693 0.4175  
+N:K         1   33.1   33.14   1.078 0.3145  
+P:K         1    0.5    0.48   0.016 0.9019  
+N:P:K       1   37.0   37.00   1.204 0.2887  
+Residuals  16  491.6   30.72                 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 
+0.05 ‘.’ 0.1 ‘ ’ 1</pre>
+
+<ul>
+<li>各种肥料的交互作用不明显</li>
+<li>氮肥对收成影响显著</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A04_02_quantitative_files/figure-html/three-way%20anova-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>协方差分析(ANCOVA)</h2></hgroup><article  id="ancova">
+
+<blockquote>
+<p>将那些很难人为控制的控制因素作为协变量，在排除协变量对观测变量影响的条件下，分析控制变量对观测变量的作用， 从而更准确地评价控制因素。</p>
+</blockquote>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>&gt; summary(aov(yield~N*P*K+block, npk))
+
+           Df Sum Sq Mean Sq F value Pr(&gt;F)   
+N           1  189.3  189.28  12.26 0.0044 **
+P           1    8.4    8.40   0.54 0.4749   
+K           1   95.2   95.20   6.17 0.0289 * 
+block       5  343.3   68.66   4.45 0.0159 * 
+N:P         1   21.3   21.28   1.38 0.2632   
+N:K         1   33.1   33.14   2.15 0.1687   
+P:K         1    0.5    0.48   0.03 0.8628   
+Residuals  12  185.3   15.44                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 
+0.05 ‘.’ 0.1 ‘ ’ 1</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A04_02_quantitative_files/figure-html/ancova-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>非参数检验: Kruskal-Wallis Test</h2></hgroup><article  id="-kruskal-wallis-test">
+
+<pre class = 'prettyprint lang-r'>&gt; kruskal.test(Ozone ~ Month, data = airquality)
+
+    Kruskal-Wallis rank sum test
+
+data:  Ozone by Month
+Kruskal-Wallis chi-squared = 29.267, df = 4, p-value = 6.901e-06</pre>
+
+<p><img src="A04_02_quantitative_files/figure-html/kruskal-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

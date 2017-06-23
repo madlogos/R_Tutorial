@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A03-06 地理可视化</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A03-06 地理可视化',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A03_06_map_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A03_06_map_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A03_06_map_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-20 16:30:51</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>基础</a></li>
+<li><a href='#8' title=''>GIS数据</a></li>
+<li><a href='#11' title=''>底图</a></li>
+<li><a href='#14' title=''>数据地图</a></li>
+<li><a href='#20' title=''>用例</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>基础</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>可视化地图的构成</h2></hgroup><article >
+
+<ul>
+<li>数据: 经纬度、测量值、属性，等</li>
+<li>图层
+
+<ul>
+<li>控制: 投影、网格、比例尺、大地控制，等</li>
+<li>视觉元素: 颜色、符号、文字标注，等</li>
+<li>辅助: 标题、插图、所略图、接合表、制图说明，等</li>
+</ul></li>
+</ul>
+
+<div class="columns-2">
+<p><img src="A03_06_map_files/figure-html/sample%20maps-1.png" width="100%"></img></p>
+
+<p><img src="A03_06_map_files/figure-html/sample%20maps-2.png" width="100%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>参考地图 (Reference map)</h2></hgroup><article  id="-reference-map">
+
+<ul>
+<li>我们日常用的主要就是参考图
+
+<ul>
+<li>不包含业务数据的地图图层: 政区、地形、地质……</li>
+<li>底图的控制参数（投影方法、坐标系等）将贯彻整个可视化过程</li>
+</ul></li>
+</ul>
+
+<div class="columns-2">
+<ul>
+<li>直接用地图图片作底图</li>
+</ul>
+
+<p><img src="A03_06_map_files/figure-html/google%20basemap-1.png" width="90%"></img></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>绘制轮廓线/多边形作底图</li>
+</ul>
+
+<p><img src="A03_06_map_files/figure-html/polygon%20basemap-1.png" width="80%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://axismaps.github.io/thematic-cartography' title=''>主题地图</a> (Thematic map)</h2></hgroup><article  id="-thematic-map">
+
+<div class="columns-2">
+<ul>
+<li>等值区域地图 (Choropleth map)</li>
+</ul>
+
+<p><img src="A03_06_map_files/figure-html/choropleth-1.png" width="100%"></img></p>
+
+<ul>
+<li>比例符号图 (Proportional Symbols)</li>
+</ul>
+
+<p><img src="A03_06_map_files/figure-html/prop%20symbol-1.png" width="100%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="columns-2">
+<ul>
+<li>密度点图 (Dot density map)</li>
+</ul>
+
+<p><img src="A03_06_map_files/figure-html/dot%20density-1.png" width="100%"></img></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>不连续地图 (Non-continuous map)</li>
+</ul>
+
+<p><img width="95%" src="A03_06_map_files/figure-html/cartogram_US_pop.jpg" ><a href='https://axismaps.github.io/thematic-cartography/images/cartogram_US_pop.jpg' title=''>https://axismaps.github.io/thematic-cartography/images/cartogram_US_pop.jpg</a></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>一般作图步骤</h2></hgroup><article >
+
+<ol>
+<li>数据准备
+
+<ul>
+<li>底图栅格/矢量数据</li>
+<li>数据层元数据处理</li>
+</ul></li>
+<li>制作底图（参考地图）
+
+<ul>
+<li>直接由栅格数据合成</li>
+<li>通过矢量数据生成</li>
+</ul></li>
+<li>覆盖数据层（主题地图）
+
+<ul>
+<li>将处理后的数据映射到视觉通道</li>
+<li>合并图层并出图</li>
+</ul></li>
+</ol>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>GIS数据</h2></hgroup><article  id="gis">
+
+</article></slide><slide class=''><hgroup><h2>GIS数据结构</h2></hgroup><article  id="gis" class="smaller">
+
+<blockquote>
+<p><a href='https://zh.wikipedia.org/wiki/%E5%9C%B0%E7%90%86%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F' title=''>Wikipedia</a>: 地理信息系统(GIS)……是用于输入、存储、查询、分析和显示地理数据的计算机系统，可以分为以下五个部分…：人员，…数据，…硬件，…软件，…过程…</p>
+</blockquote>
+
+<p>其中, GIS内部数据即空间数据(spatial data)</p>
+
+<ul>
+<li>包括3方面内容
+
+<ul>
+<li>空间位置</li>
+<li>拓扑关系</li>
+<li>属性</li>
+</ul></li>
+<li>数据结构可分2大类
+
+<ul>
+<li>显式（栅格数据grid）
+
+<ul>
+<li>一系列x、y坐标定位的像元(pixel)</li>
+</ul></li>
+<li><strong>隐式</strong>（矢量数据vector）
+
+<ul>
+<li>坐标对-&gt;点(point/node)，点系列-&gt;线(line/arc)，闭合线-&gt;面(polygon)</li>
+<li>常见模型: ESRI的Shapefile，Coverage，Geodatabase， &#8230;</li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>怎样获取地理数据?</h2></hgroup><article >
+
+<ol>
+<li><del><strong>非法</strong>自行测绘</del></li>
+<li>向测绘信息部门申请</li>
+<li>从共享/开放地图数据网站获取，如
+
+<ul>
+<li><a href='http://www.diva-gis.org/Data' title=''>Diva GIS</a></li>
+<li><a href='http://www.naturalearthdata.com' title=''>Natural Earth Data</a></li>
+<li><a href='https://wiki.openstreetmap.org/wiki/Downloading_data' title=''>Open Street Map</a></li>
+<li><a href='http://sedac.ciesin.columbia.edu' title=''>NASA SEDAC</a></li>
+<li><a href='http://geodata.grid.unep.ch' title=''>UNEP Environmental Data Explore</a></li>
+<li><a href='http://www.fao.org/geonetwork' title=''>FAO GeoNetwork</a></li>
+<li><a href='http://www.osgeo.cn' title=''>开放地理空间信息科学中心</a></li>
+<li><a href='http://www.resdc.cn' title=''>中科院地理科学和资源所</a>(免费，但须实名申请)</li>
+</ul></li>
+</ol>
+
+</article></slide><slide class=''><hgroup><h2>地理数据长什么样？</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>从Diva GIS下载中国政区边界地理数据CHN_adm.zip</li>
+<li>.shp, .shx, .dbf构成ERSI地理数据集</li>
+<li><p>利用<code>rgdal::readOGR</code>包读取 -&gt; SpatialPolygonsDataFrame</p>
+
+<pre class = 'prettyprint lang-r'>df &lt;- rgdal::readOGR(&quot;~/MAP_DTA/CHN_adm/CHN_adm0.shp&quot;)
+str(df)</pre>
+
+<pre class = 'prettyprint lang-r'>..@ data : &#39;data.frame&#39;: 1 obs. of 70 variables:
+  .. ..$ ID_0      : Factor w/ 1 level &quot;49&quot;: 1
+  .. ..$ ISO       : Factor w/ 1 level &quot;CHN&quot;: 1
+  .. .. ...
+..@ polygons   :List of 1
+  .. ..$ :Formal class &#39;Polygons&#39; [package &quot;sp&quot;] with 5 slots
+  .. .. .. ..@ Polygons :List of 2013
+  .. .. .. .. ..$ :Formal class &#39;Polygon&#39; [package &quot;sp&quot;] with 5 slots
+  .. .. .. .. .. .. ..@ labpt  : num [1:2] 109.7 18.2
+  .. .. .. .. .. .. ..@ area   : num 1.75e-05
+  .. .. .. .. .. .. ..@ hole   : logi FALSE
+  .. .. .. .. .. .. ..@ ringDir: int 1
+  .. .. .. .. .. .. ..@ coords : num [1:61, 1:2] 110 110 110 110 110 ...</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<h3><code>SpatialPolygonsDataFrame</code>类</h3>
+
+<p><code>sp</code>包的标准地理数据类型，包含5个槽(slot，即属性)</p>
+
+<ul>
+<li>S4对象
+
+<ul>
+<li>较S3的封装性更好（但Google R风格指南并不推荐使用）</li>
+<li>用@（而非$）引用</li>
+</ul></li>
+<li>包含元素
+
+<ul>
+<li>多边形Polygons，含labpt、area、hole、ringDir、coords五个属性</li>
+<li>元数据data，数据框，存储数据集的基本信息</li>
+<li>绘制顺序plotOrder，数值，该SpatialPolygonsDataFrame在绘制时的顺序</li>
+<li>坐标边界bbox，数据框，坐标系四角边界</li>
+<li>投影规则proj4string，<code>CRS</code>类S4对象</li>
+</ul></li>
+<li>可以直接用于<code>maps</code>、<code>maptools</code>、<code>sp</code>等包</li>
+<li>可以通过<code>broom::tidy</code>转化为数据框</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><code>broom::tidy</code></h2></hgroup><article  id="broomtidy">
+
+<ul>
+<li><code>broom</code>包可以自动将统计分析对象转为数据框</li>
+<li><p><code>SpatialPolygonsDataFrame</code>转化后变成一个7列数据框，便于<code>ggplot2</code>制图</p>
+
+<pre class = 'prettyprint lang-r'>head(broom::tidy(df))</pre>
+
+<pre class = 'prettyprint lang-r'>      long      lat order  hole piece group id
+1 121.7179 39.44096     1 FALSE     1   0.1  0
+2 121.7179 39.44181     2 FALSE     1   0.1  0
+3 121.7182 39.44181     3 FALSE     1   0.1  0
+4 121.7182 39.44236     4 FALSE     1   0.1  0
+5 121.7185 39.44236     5 FALSE     1   0.1  0
+6 121.7185 39.44320     6 FALSE     1   0.1  0</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>坐标系偏移</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>地理数据的定位，取决于每个点的经纬度测定值
+
+<ul>
+<li>经度(<strong>long</strong>itude): 相当于x坐标，-180 ~ 180</li>
+<li>纬度(<strong>lat</strong>itude)：相当于y坐标，-90 ~ 90</li>
+</ul></li>
+<li>在国内，经常需要在不同坐标测量系统之间转换
+
+<ul>
+<li><a href='https://en.wikipedia.org/wiki/World_Geodetic_System' title=''>WGS-84</a>（世界大地测量系统）：国际通用坐标系
+
+<ul>
+<li>用于中国以外的Google Map, Bing Map, &#8230;</li>
+</ul></li>
+<li><a href='https://en.wikipedia.org/wiki/Restrictions_on_geographic_data_in_China' title=''>GCJ-02</a>（中国加密测量系统）：国测局在WGS-84基础上进行的加密偏移
+
+<ul>
+<li>用于中国境内的Google Map, 高德地图，&#8230;</li>
+</ul></li>
+<li><a href='https://en.wikipedia.org/wiki/Restrictions_on_geographic_data_in_China#BD-09' title=''>BD-09</a>（百度自主加密测量系统）：百度在GCJ-02基础上进行的加密偏移
+
+<ul>
+<li>用于百度地图</li>
+</ul></li>
+</ul></li>
+<li>转化方法
+
+<ul>
+<li>调用官方API进行偏置</li>
+<li>利用<code>recharts::convCoord</code>进行偏置</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>底图</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>栅格底图</h2></hgroup><article >
+
+<p>利用ggmap包，直接获取地图图块</p>
+
+<div class="columns-2">
+<ul>
+<li>Google Maps / 行政区划</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(ggmap)
+ggmap(get_map(&quot;shanghai&quot;, maptype=&quot;terrain&quot;))</pre>
+
+<p><img src="A03_06_map_files/figure-html/ggmap1-1.png" width="90%"></img></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>Stamen / 政区框架</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>ggmap(get_map(&quot;shanghai&quot;, 
+  maptype=&quot;terrain-lines&quot;, source=&quot;stamen&quot;))</pre>
+
+<p><img src="A03_06_map_files/figure-html/ggmap2-1.png" width="90%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>矢量底图(1) - <code>maps</code>包</h2></hgroup><article  id="1---maps">
+
+<div class="columns-2">
+<ul>
+<li>调用内置的地图集</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(maps)
+map(&quot;world&quot;)</pre>
+
+<p><img src="A03_06_map_files/figure-html/maps1-1.png" width="100%"></img></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>用<code>sp</code>包支持的地图数据格式</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>map(rgdal::readOGR(
+    &quot;CHN_adm/CHN_adm1.shp&quot;))</pre>
+
+<p><img src="A03_06_map_files/figure-html/maps2-1.png" width="105%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>矢量底图(2) - <code>ggplot2</code>包</h2></hgroup><article  id="2---ggplot2" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>调用内置的地图集，转为数据框</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(ggplot2)
+wmap &lt;- map(&#39;world&#39;, plot=FALSE, fill=TRUE)
+wmap &lt;- maptools::map2SpatialPolygons(
+    wmap, IDs=wmap$names)
+wmap &lt;- broom::tidy(wmap)
+ggplot()+geom_path(
+    aes(long, lat, group=group), data=wmap)</pre>
+
+<p><img src="A03_06_map_files/figure-html/ggplot2-1-1.png" width="80%"></img></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>用<code>sp</code>包支持的地图数据格式</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>cmap &lt;- rgdal::readOGR(
+    &quot;CHN_adm/CHN_adm1.shp&quot;)
+cmap &lt;- broom::tidy(cmap)
+ggplot()+geom_path(
+    aes(long, lat, group=group), data=cmap)</pre>
+
+<p><img src="A03_06_map_files/figure-html/ggplot2-2-1.png" width="95%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>底图子集</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<ul>
+<li><code>maps</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>map(&#39;state&#39;, region=c(
+    &#39;new york&#39;, &#39;new jersey&#39;, &#39;penn&#39;))
+txt &lt;- data.frame(
+    x=c(-76, -78, -74), y=c(42.5, 40.5, 40), 
+    txt=c(&quot;New York&quot;, &quot;Pennsylvania&quot;, &quot;New Jersey&quot;))
+text(x=txt$x, y=txt$y, labels=txt$txt)</pre>
+
+<p><img src="A03_06_map_files/figure-html/par%20map%201-1.png" width="100%"></img></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li><code>ggplot2</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>map &lt;- map(&#39;state&#39;, plot=FALSE, fill=TRUE,
+           region=c(&#39;new york&#39;, &#39;new jersey&#39;, &#39;penn&#39;))
+map &lt;- maptools::map2SpatialPolygons(
+    map, IDs=map$names)
+ggplot() + coord_map() + geom_path(
+    aes(long, lat, group=group), data=map) +
+    geom_text(aes(x, y, label=txt), data=txt)</pre>
+
+<p><img src="A03_06_map_files/figure-html/par%20map%202-1.png" width="90%"></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>复合底图</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'># 州级图层
+map1 &lt;- map(&#39;state&#39;, plot=FALSE, fill=TRUE)
+map1 &lt;- maptools::map2SpatialPolygons(
+    map1, IDs=map1$names)
+# 县级图层
+map2 &lt;- map(&#39;county&#39;, plot=FALSE, fill=TRUE)
+map2 &lt;- maptools::map2SpatialPolygons(
+    map2, IDs=map2$names)
+
+# 先画县级图层
+p &lt;- ggplot() + coord_map(&quot;cylindrical&quot;) + 
+    geom_polygon(
+        aes(long, lat, group=group), 
+        data=map2, fill=&quot;gray&quot;, 
+        color=&quot;gray95&quot;, size=0.01)
+# 添加州级图层
+p &lt;- p +
+    geom_path(
+        aes(long, lat, group=group), 
+        data=map1, color=&quot;white&quot;, size=0.75)
+p</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>准备两个图层的数据</li>
+<li>驱动低级图层，多边形上色、绘制细边</li>
+<li>上覆高级图层，绘制边界粗边</li>
+</ul>
+
+<p><img src="A03_06_map_files/figure-html/multi%20basemap-1.png" width="100%"></img></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>数据地图</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>数据和标注</h2></hgroup><article >
+
+<h4><code>ggplot2</code>包</h4>
+
+<ul>
+<li>数据层叠加在底图上方，也可下方
+
+<ul>
+<li>通过<code>group</code>关联底图，映射视觉通道</li>
+<li>直接通过坐标定位，构成独立的视觉元素</li>
+</ul></li>
+<li>标注层叠加在数据层上方，也可下方
+
+<ul>
+<li>文本、标签等一般要坐标定位</li>
+<li>图例、标题等按默认参数添加即可</li>
+</ul></li>
+</ul>
+
+<h4><code>maps</code>包</h4>
+
+<p>一般不做底图，直接将数据映射到视觉通道，并展示为地图元素</p>
+
+</article></slide><slide class=''><hgroup><h2>数据层</h2></hgroup><article  class="smaller">
+
+<p>美国失业数据集unemp和county.fips，在maps包中</p>
+
+<div class="columns-2">
+
+
+<pre class = 'prettyprint lang-r'>data(unemp)
+data(county.fips)</pre>
+
+<p>分别看看各自的结构，以<code>fips</code>关联</p>
+
+<pre class = 'prettyprint lang-r'>str(unemp)</pre>
+
+<pre class = 'prettyprint lang-r'>## &#39;data.frame&#39;:    3218 obs. of  3 variables:
+##  $ fips : int  1001 1003 1005 1007 1009 ...
+##  $ pop  : int  23288 81706 9703 8475 25306 ...
+##  $ unemp: num  9.7 9.1 13.4 12.1 9.9 16.4 ...</pre>
+
+<pre class = 'prettyprint lang-r'>str(county.fips)</pre>
+
+<pre class = 'prettyprint lang-r'>## &#39;data.frame&#39;:    3085 obs. of  2 variables:
+##  $ fips    : int  1001 1003 1005 1007 1009 ...
+##  $ polyname: Factor w/ 3085 levels &quot;alabama,autauga&quot;,..: </pre>
+
+<p class="forceBreak&gt;">
+
+</p>
+
+<ul>
+<li>将unemp、county.fips合并，关联组名polyname和数值unemp</li>
+<li>并合并后的数据合并到map2，关联每个点的坐标</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>unemp.map &lt;- merge(broom::tidy(map2), 
+    merge(unemp, county.fips, by=&quot;fips&quot;), 
+    by.x=&quot;id&quot;, by.y=&quot;polyname&quot;, all.x=TRUE)
+str(unemp.map)</pre>
+
+<pre class = 'prettyprint lang-r'>## &#39;data.frame&#39;:    87949 obs. of  10 variables:
+##  $ id   : chr  &quot;alabama,autauga&quot; &quot;alabama,autauga&quot; ...
+##  $ long : num  -86.5 -86.5 -86.5 -86.6 -86.6 ...
+##  $ lat  : num  32.3 32.4 32.4 32.4 32.4 ...
+##  $ order: int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ hole : logi  FALSE FALSE FALSE FALSE ...
+##  $ piece: Factor w/ 1 level &quot;1&quot;: 1 1 1 1 1 1 ...
+##  $ group: Factor w/ 3085 levels &quot;alabama,autauga.1&quot;,..: 
+##  $ fips : int  1001 1001 1001 1001 1001 1001 ...
+##  $ pop  : int  23288 23288 23288 23288 23288 ...
+##  $ unemp: Factor w/ 6 levels &quot;&lt;2%&quot;,&quot;2-4%&quot;,&quot;4-6%&quot;,..:</pre>
+
+</article></slide><slide class=''><hgroup><h2>映射视觉通道</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'># 失业率分段
+unemp.map$unemp &lt;- cut(unemp.map$unemp, c(
+    seq(0, 10, 2), 100), labels=c(
+    &quot;&lt;2%&quot;, &quot;2-4%&quot;, &quot;4-6%&quot;, &quot;6-8%&quot;, &quot;8-10%&quot;, &quot;10%+&quot;))
+# 自定义颜色
+colors &lt;-  c(&quot;#F1EEF6&quot;, &quot;#D4B9DA&quot;, &quot;#C994C7&quot;, 
+             &quot;#DF65B0&quot;, &quot;#DD1C77&quot;, &quot;#980043&quot;)
+names(colors) &lt;- c(
+    &quot;&lt;2%&quot;, &quot;2-4%&quot;, &quot;4-6%&quot;, &quot;6-8%&quot;, &quot;8-10%&quot;, &quot;10%+&quot;)
+
+# 作图，将底图叠在上方
+ggplot() + coord_map(&quot;cylindrical&quot;) + 
+    geom_polygon(aes(
+        long, lat, group=group, fill=unemp), 
+        data=unemp.map) +
+    scale_fill_manual(values=colors) +
+    geom_path(
+        aes(long, lat, group=group), 
+        data=map2, color=&quot;gray95&quot;, size=0.01) +
+    geom_path(
+        aes(long, lat, group=group), 
+        data=map1, color=&quot;white&quot;, size=0.75) +
+    labs(title=&quot;Unemployment by county, 2009&quot;)</pre>
+
+<p class="forceBreak&gt;">
+
+</p>
+
+<ul>
+<li>失业率数据映射到色谱(<code>fill=unemp</code>)</li>
+<li>度量方法为离散、自定义色谱</li>
+<li>两层底图采用geom_path，逐级覆盖在主题底图上</li>
+</ul>
+
+<p><img src="A03_06_map_files/figure-html/unemp%20map-1.png" width="110%"></img></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>用例</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>等值地图</h2></hgroup><article  class="smaller">
+
+<p>用<code>maps</code>实现上例</p>
+
+<pre class = 'prettyprint lang-r'>mar=c(0, 0, 1.1, 0)
+par(mar=mar)
+data(unemp)
+data(county.fips)
+
+# 定义色谱
+colors = c(&quot;#F1EEF6&quot;, &quot;#D4B9DA&quot;, &quot;#C994C7&quot;, &quot;#DF65B0&quot;, &quot;#DD1C77&quot;, &quot;#980043&quot;)
+unemp$colorBuckets &lt;- as.numeric(cut(unemp$unemp, c(seq(0, 10, 2), 100)))
+leg.txt &lt;- c(&quot;&lt;2%&quot;, &quot;2-4%&quot;, &quot;4-6%&quot;, &quot;6-8%&quot;, &quot;8-10%&quot;, &quot;&gt;10%&quot;)
+
+# 州县名与地图定义匹配
+cnty.fips &lt;- county.fips$fips[match(map(&quot;county&quot;, plot=FALSE)$names,
+                                    county.fips$polyname)]
+colorsmatched &lt;- unemp$colorBuckets [match(cnty.fips, unemp$fips)]
+map(&quot;county&quot;, col = colors[colorsmatched], fill = TRUE, resolution = 0,
+    lty = 0, projection = &quot;polyconic&quot;, mar=mar)
+map(&quot;state&quot;, col = &quot;white&quot;, fill = FALSE, add = TRUE, lty = 1, lwd = 0.2,
+    projection=&quot;polyconic&quot;, mar=mar)
+title(&quot;Unemployment by county, 2009&quot;)
+legend(&quot;bottomright&quot;, leg.txt, horiz = TRUE, fill = colors, cex=0.8)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><img src="A03_06_map_files/figure-html/choropleth-1.png" width="70%"></img></p>
+
+</article></slide><slide class=''><hgroup><h2>比例符号图</h2></hgroup><article >
+
+<p><code>maps</code>实现人口气泡图</p>
+
+<pre class = 'prettyprint lang-r'>mar=c(0, 0, 1.1, 0)
+par(mar=mar)
+map(&quot;world&quot;, lty=0, fill=TRUE, col=&quot;gray&quot;, bg=&#39;lightblue1&#39;, mar=mar)
+map(&quot;world&quot;, lwd=0.01, col=&quot;white&quot;, add=TRUE, mar=mar)
+map(&quot;world&quot;, lwd=0.02, col=&quot;lightblue1&quot;, interior=FALSE, add=TRUE, mar=mar)
+map.cities(label=FALSE, minpop=100000, maxpop=199999, cex=0.1, pch=16, col=&#39;blue&#39;)
+map.cities(label=FALSE, minpop=200000, maxpop=499999, cex=0.2, pch=16, col=&#39;cyan&#39;)
+map.cities(label=FALSE, minpop=500000, maxpop=999999, cex=0.5, pch=16, col=&#39;green&#39;)
+map.cities(label=FALSE, minpop=1000000, maxpop=4999999, cex=1, pch=19, col=&#39;yellow&#39;)
+map.cities(label=FALSE, minpop=5000000, maxpop=9999999, cex=2, pch=19, col=&#39;orange&#39;)
+map.cities(label=FALSE, minpop=10000000, cex=5, pch=19, col=&#39;red&#39;)
+title(&quot;Big cities in the world, as of Jan 2016&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><img src="A03_06_map_files/figure-html/prop%20symbol-1.png" width="80%"></img></p>
+
+</article></slide><slide class=''><hgroup><h2>比例符号图（续）</h2></hgroup><article  class="smaller">
+
+<p><code>ggplot2</code>实现上例</p>
+
+<pre class = 'prettyprint lang-r'># 底图和边界
+wmap &lt;- map(&quot;world&quot;, fill=TRUE, plot=FALSE)
+wmap &lt;- maptools::map2SpatialPolygons(wmap, IDs=wmap$names)
+wmap.bou &lt;- map(&quot;world&quot;, plot=FALSE, interior=FALSE)
+wmap.bou &lt;- maptools::map2SpatialLines(wmap.bou)
+wmap.bou &lt;- SpatialLinesDataFrame(wmap.bou, data=data.frame(ID=1:length(wmap.bou)))
+
+# 人口分段，映射颜色和尺寸
+data(world.cities)
+world.cities &lt;- subset(world.cities, pop&gt;100000)
+world.cities$popl &lt;- cut(world.cities$pop, 100000 * c(1000, 100, 50, 10, 5, 2, 1))
+world.cities$popl &lt;- factor(world.cities$popl, levels=rev(levels(world.cities$popl)))
+cols &lt;- c(&#39;red&#39;, &#39;orange&#39;, &#39;yellow&#39;, &#39;green&#39;, &#39;cyan&#39;, &#39;blue&#39;)
+sizes &lt;- c(5, 2, 1, 0.5, 0.2, 0.1)
+names(cols) &lt;- names(sizes) &lt;- levels(world.cities$popl)
+
+# 国界、海岸线底图，上覆数据层
+ggplot() + geom_polygon(aes(long, lat, group=id), data=wmap, fill=&#39;gray&#39;, color=&quot;gray95&quot;, size=0.01) +
+    geom_path(aes(long, lat, group=id), dat=wmap.bou, color=&quot;gray&quot;) +
+    theme(panel.background=element_rect(fill=&quot;lightblue1&quot;), legend.position=&quot;bottom&quot;) +
+    geom_point(aes(long, lat, color=popl, size=popl), alpha=0.5,data=world.cities) +
+    scale_color_manual(values=cols) + scale_size_manual(values=sizes, guide=&#39;none&#39;) +
+    labs(title=&quot;Big cities in the world, as of Jan 2016&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><img src="A03_06_map_files/figure-html/world%20pop-1.png" width="90%"></img></p>
+
+</article></slide><slide class=''><hgroup><h2>比例符号图（续）</h2></hgroup><article  id="-1" class="smaller">
+
+<p><code>ggplot2</code>实现地理柱形图</p>
+
+<pre class = 'prettyprint lang-r'># 底图和边界
+wmap &lt;- map(&quot;world&quot;, fill=TRUE, plot=FALSE)
+wmap &lt;- maptools::map2SpatialPolygons(wmap, IDs=wmap$names)
+wmap.bou &lt;- map(&quot;world&quot;, plot=FALSE, interior=FALSE)
+wmap.bou &lt;- maptools::map2SpatialLines(wmap.bou)
+wmap.bou &lt;- SpatialLinesDataFrame(wmap.bou, data=data.frame(ID=1:length(wmap.bou)))
+
+# 人口分段，映射颜色和尺寸
+data(world.cities)
+world.cities &lt;- subset(world.cities, pop&gt;100000)
+world.cities$popl &lt;- cut(world.cities$pop, 100000 * c(1000, 100, 50, 10, 5, 2, 1))
+world.cities$popl &lt;- factor(world.cities$popl, levels=rev(levels(world.cities$popl)))
+cols &lt;- c(&#39;red&#39;, &#39;orange&#39;, &#39;yellow&#39;, &#39;green&#39;, &#39;cyan&#39;, &#39;blue&#39;)
+sizes &lt;- c(5, 2, 1, 0.5, 0.2, 0.1)
+names(cols) &lt;- names(sizes) &lt;- levels(world.cities$popl)
+
+# 国界、海岸线底图，上覆数据层
+ggplot() + geom_polygon(aes(long, lat, group=id), data=wmap, fill=&#39;gray&#39;, color=&quot;gray95&quot;, size=0.01) +
+    geom_path(aes(long, lat, group=id), dat=wmap.bou, color=&quot;gray&quot;) +
+    theme(panel.background=element_rect(fill=&quot;lightblue1&quot;), legend.position=&quot;bottom&quot;) +
+    geom_linerange(aes(x=long, ymin=lat, ymax=lat+pop/500000, color=popl), 
+                   stat=&#39;identity&#39;, alpha=0.5, size=1, data=world.cities) +
+    scale_color_manual(values=cols, guide=&#39;none&#39;) + scale_size_manual(values=sizes, guide=&#39;none&#39;) +
+    labs(title=&quot;Big cities in the world, as of Jan 2016&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><img src="A03_06_map_files/figure-html/world%20pop%20bar-1.png" width="90%"></img></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

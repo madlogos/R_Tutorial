@@ -32,8 +32,8 @@
       // Author information
       presenters: [
             {
-        name:  'HMS' ,
-        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
         gplus: '',
         twitter: '',
         www: '',
@@ -42,6 +42,19 @@
             ]
     };
   </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
 
   <style type="text/css">
 
@@ -86,20 +99,7 @@
     }
   </style>
 
-  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
-
-  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
-  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
-  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
-  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
-  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
-  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
-  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
-  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
 
 </head>
 
@@ -114,7 +114,7 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2016-12-22 18:11:51</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-04-27 23:52:11</p>
           </hgroup>
   </slide>
 
@@ -125,13 +125,6 @@
 <li><a href='#6' title=''>读入外部数据</a></li>
 <li><a href='#25' title=''>把数据写入文件</a></li>
 </ul>
-
-<p class="footer">
-
-Copyright © 2016 Aetna Inc. <span class="cranberry">
-内部使用，请勿外传。</span>
-
-</p>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>读入内部数据</h2></hgroup><article >
 
@@ -237,7 +230,7 @@ Copyright © 2016 Aetna Inc. <span class="cranberry">
 <ul>
 <li>这是快捷但临时的方法</li>
 <li>不适合读取特别大的数据</li>
-<li><code>readClipboard</code>是<code>utils</code>包的函数，读取后返回的是一个制表符(&#39;&#39;)分隔的字符串</li>
+<li><code>readClipboard</code>是<code>utils</code>包的函数，读取后返回的是一个制表符(&#39;\t&#39;)分隔的字符串</li>
 </ul></li>
 </ul>
 
@@ -431,8 +424,7 @@ Classes &#39;tbl_df&#39; &#39;tbl&#39; and &#39;data.frame&#39;:    150 obs. of 
 <p><code>RODBC</code>包读取Access数据库</p>
 
 <pre class = 'prettyprint lang-r'>&gt; library(RODBC)                                        # 1. 加载RODBC
-&gt; db &lt;- paste0(&quot;C:/HMSProjects/Data Analytics/RWork/R_Tutorial/&quot;,
-               &quot;A02 Data Manipulation/ProvCity.accdb&quot;)  # 2. 数据库位置(dsn)
+&gt; db &lt;- &quot;ProvCity.accdb&quot;                                # 2. 数据库位置(dsn)
 &gt; con &lt;- odbcConnectAccess2007(db)                      # 3. 建立数据库连接
 &gt; tbl &lt;- sqlTables(con, tableType = &quot;Table&quot;)            # 4. 数据库所有非系统表
 &gt; tbl$TABLE_NAME                                        # 5. 打印表名
@@ -522,24 +514,24 @@ Classes &#39;tbl_df&#39; &#39;tbl&#39; and &#39;data.frame&#39;:    2 obs. of  9
 
 </article></slide><slide class=''><hgroup><h2>读网页-1: <code class="smaller">readr::read_lines</code></h2></hgroup><article  id="-1-readrread_lines">
 
-<p><img src='A02_02_io_files/figure-html/jivehome.PNG' title=''/> ==&gt; <img src='A02_02_io_files/figure-html/jivehome_sourcecode.png' title=''/></p>
+<p><img src='A02_02_io_files/figure-html/yahoofin.png' title=''/> ==&gt; <img src='A02_02_io_files/figure-html/yahoofin_sourcecode.png' title=''/></p>
 
 <p>读作页面代码文本</p>
 
-<pre class = 'prettyprint lang-r'>&gt; data &lt;- read_lines(&quot;https://aetna.jiveon.com&quot;)
+<pre class = 'prettyprint lang-r'>&gt; data &lt;- read_lines(&quot;https://finance.yahoo.com&quot;)
 &gt; str(data)
-chr [1:616] &quot;&lt;!DOCTYPE html&gt;&lt;!--[if IE 8]&gt; &lt;html class=\&quot;ie8\&quot; lang=\&quot;en\&quot;&gt;&lt;![endif]--&gt;&lt;!--[if IE 9]&gt; &lt;html class=\&quot;ie9\&quot; lang=\&quot;en\&quot;&gt;&lt;![end&quot;| __truncated__ ...</pre>
+chr [1:104] &quot;&lt;!DOCTYPE html&gt;&lt;html id=\&quot;atomic\&quot; class=\&quot;NoJs desktop\&quot; lang=\&quot;en-US\&quot;&gt;&lt;head prefix=\&quot;og: http://ogp.me/ns#\&quot;&gt;&lt;script&gt;window.&quot;| __truncated__ ...</pre>
 
 </article></slide><slide class=''><hgroup><h2>读网页-2: <code>XML</code>包</h2></hgroup><article  id="-2-xml">
 
-<img src='A02_02_io_files/figure-html/bocidx.PNG' title='fig:'/><p class='caption'>中国银行外汇牌价网页</p>
+<img src='A02_02_io_files/figure-html/bocidx.png' title='fig:'/><p class='caption'>中国银行外汇牌价网页</p>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="smaller">
 
 <ul>
 <li>把页面文件下载到本地演示</li>
 <li>读取汇率表，形成一个data.frame</li>
-<li><del>另推荐爬虫包<code>curl</code>和<code>RCurl</code> (但公司电脑不支持443/80端口SSL curl)</del></li>
+<li>另推荐爬虫包<code>rvest</code>、<code>curl</code>和<code>RCurl</code></li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>&gt; library(XML)                               # 加载XML包
@@ -649,7 +641,7 @@ chr [1:616] &quot;&lt;!DOCTYPE html&gt;&lt;!--[if IE 8]&gt; &lt;html class=\&quo
 </ul></li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-2" class="teal">
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-2" class="grayblue">
 
 <p style="font-size:100px;font-family:'Arial Black'">
 

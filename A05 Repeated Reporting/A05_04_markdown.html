@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-04 R Markdown</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-04 R Markdown',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_04_markdown_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_04_markdown_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_04_markdown_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-22 20:38:24</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>简介</a></li>
+<li><a href='#8' title=''>基本语法</a></li>
+<li><a href='#21' title=''>rmarkdown</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>简介</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>什么是markdown?</h2></hgroup><article  id="markdown">
+
+<blockquote>
+<p>Markdown is a text-to-HTML conversion tool for web writers. Markdown allows you to write using an easy-to-read, easy-to-write plain text format, then convert it to structurally valid XHTML (or HTML). <br /><br /> &#8211; <a href='http://daringfireball.net/projects/markdown' title=''>John Gruber</a></p>
+</blockquote>
+
+<ul>
+<li>作者: John Gruber 和 <a href='https://en.wikipedia.org/wiki/Aaron_Swartz' title=''>Aaron Swartz</a></li>
+<li>目标: 成为一种适用于网络的书写语言，实现“易读、易写”</li>
+<li>优点: 轻量、易学(半小时上手)，让写作者能更关注内容本身(而非排版)</li>
+<li>应用广泛: <strong>GitHub</strong>、reddit、Stack Exchange、简书、&#8230;</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>markup vs markdown</h2></hgroup><article  id="markup-vs-markdown">
+
+<p>其实markdown也是一种markup(标记)语言</p>
+
+<div class="columns-2">
+<h4>常用的markup: HTML/XML</h4>
+
+<pre class = 'prettyprint lang-html'>&lt;h1&gt;Title 1&lt;/h1&gt;
+
+&lt;p&gt;Bla &lt;b&gt;bla&lt;/b&gt; bla.&lt;/p&gt;
+&lt;hr&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;Item 1&lt;/li&gt;
+    &lt;li&gt;Item 2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;img src=&quot;image.png&quot;&gt;&lt;/img&gt;</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>对应的markdown</h4>
+
+<pre class = 'prettyprint lang-md'># Title 1
+
+Bla **bla** bla.
+
+* * *
+
+- Item 1
+- Item 2
+
+![](image.png)</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>本地编辑器: StackEdit</h2></hgroup><article  id="-stackedit">
+
+<img src='A05_04_markdown_files/figure-html/stackedit.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>GitHub</h2></hgroup><article  id="github">
+
+<img src='A05_04_markdown_files/figure-html/github.png' title='fig:'/>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>基本语法</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>标题 (h1 - h6)</h2></hgroup><article  id="-h1---h6" class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-md'># Header 1
+
+Header 1
+==========
+
+## Header 2
+
+Header 2
+-----------
+
+### Header 3
+
+#### Header 4
+
+##### Header 5
+
+###### Header 6</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<h1>
+
+Header 1
+
+</h1>
+
+<h2>
+
+Header 2
+
+</h2>
+
+<h3>
+
+Header 3
+
+</h3>
+
+<h4>
+
+Header 4
+
+</h4>
+
+<h5>
+
+Header 5
+
+</h5>
+
+<h6>
+
+Header 6
+
+</h6></div>
+
+</article></slide><slide class=''><hgroup><h2>编号</h2></hgroup><article >
+
+<div class="columns-2">
+<h5>无序</h5>
+
+<pre class = 'prettyprint lang-md'>* Item 1
+* Item 2
+    + Item 2a
+    + Item 2b
+        - Item 2b1
+        - Item 2b2</pre>
+
+<ul>
+<li>Item 1</li>
+<li>Item 2
+
+<ul>
+<li>Item 2a</li>
+<li>Item 2b
+
+<ul>
+<li>Item 2b1</li>
+<li>Item 2b2</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>有序</h5>
+
+<pre class = 'prettyprint lang-md'>1. Item 1
+1. Item 2
+1. Item 3
+1. Item 4
+    + Item 4a
+    + Item 4b</pre>
+
+<ol>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+<li>Item 4
+
+<ul>
+<li>Item 4a</li>
+<li>Item 4b</li>
+</ul></li>
+</ol></div>
+
+</article></slide><slide class=''><hgroup><h2>强调</h2></hgroup><article >
+
+<div class="columns-2">
+<h5>斜体</h5>
+
+<pre class = 'prettyprint lang-md'>*italic*
+
+_italic_*_</pre>
+
+<p><emph>italic</emph></p>
+
+<p><emph>italic</emph></p>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>粗体</h5>
+
+<pre class = 'prettyprint lang-md'>**bold**
+
+__bold__</pre>
+
+<p><b>bold</b></p>
+
+<p><b>bold</b></p></div>
+
+</article></slide><slide class=''><hgroup><h2>断行、分割</h2></hgroup><article >
+
+<div class="col-2L">
+<h5>断行</h5>
+
+<ul>
+<li>行末加两个以上空格</li>
+</ul>
+
+<pre class = 'prettyprint lang-md'>Roses are red,   
+Violets are blue.</pre>
+
+<p>Roses are red,<br/>Violets are blue.</p>
+
+<ul>
+<li>如行末不多加空格</li>
+</ul>
+
+<pre class = 'prettyprint lang-md'>Roses are red, 
+Violets are blue.</pre>
+
+<p>Roses are red, Violets are blue.</p></div>
+
+<div class="col-2R">
+
+
+<h5>分割线</h5>
+
+<p>三个或以上星号/短横杠</p>
+
+<pre class = 'prettyprint lang-md'>---
+
+***</pre>
+
+<hr>
+
+<hr>
+
+</div>
+
+</article></slide><slide class=''><hgroup><h2>链接、图片</h2></hgroup><article >
+
+<div class="columns-2">
+<h5>链接</h5>
+
+<pre class = 'prettyprint lang-md'>&lt;http://www.google.com&gt;
+[Google](http://www.google.com)</pre>
+
+<p><a href='http://www.google.com' title=''>http://www.google.com</a></p>
+
+<p><a href='http://www.google.com' title=''>Google</a></p>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>图片</h5>
+
+<pre class = 'prettyprint lang-md'>![Fig: logo](A05_04_markdown_files/logo.png)</pre>
+
+<img src='A05_04_markdown_files/logo.png' title='fig:'/><p class='caption'>Fig: logo</p></div>
+
+</article></slide><slide class=''><hgroup><h2>引文</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-md'>A friend once said:
+
+&gt; ###### Rule No.1
+&gt; - It&#39;s always better to give 
+&gt; than to receive.   
+&gt; - Refer to the above.</pre>
+
+<p>A friend once said:</p>
+
+<blockquote>
+<h6>Rule No.1</h6>
+
+<ul>
+<li>It&#39;s always better to give than to receive.<br/></li>
+<li>Refer to the above.</li>
+</ul>
+</blockquote>
+
+</article></slide><slide class=''><hgroup><h2>代码</h2></hgroup><article >
+
+<div class="columns-2">
+<h5>行内代码</h5>
+
+<ul>
+<li>功能性</li>
+</ul>
+
+<pre >There were `r nrow(cars)` cars studied</pre>
+
+<p>There were 50 cars studied</p>
+
+<ul>
+<li>无功能性</li>
+</ul>
+
+<pre >Let&#39;s use dataset `cars`.</pre>
+
+<p>Let&#39;s use dataset <code>cars</code>.</p>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>代码块</h5>
+
+<ul>
+<li>功能性</li>
+</ul>
+
+<pre >```{r}
+summary(cars$dist)
+```</pre>
+
+<pre >   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   2.00   26.00   36.00   42.98   56.00  120.00 </pre>
+
+<ul>
+<li>无功能性</li>
+</ul>
+
+<pre >```
+summary(cars$speed)
+```</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>表格</h2></hgroup><article >
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-md'>First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+Content Cell  | Content Cell</pre>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">First Header</th>
+<th align="left">Second Header</th>
+</tr>
+<tr class="odd">
+<td align="left">Content Cell</td>
+<td align="left">Content Cell</td>
+</tr>
+<tr class="even">
+<td align="left">Content Cell</td>
+<td align="left">Content Cell</td>
+</tr>
+<tr class="odd">
+<td align="left">Content Cell</td>
+<td align="left">Content Cell</td>
+</tr>
+</table>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-md'>| First Header | Second Header |
+|:-------------+--------------:|
+| Content `Cell` | Content *Cell* |
+| Content Cell | [Content](google.com) Cell |
+| Content Cell  | Content **Cell** |</pre>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">First Header</th>
+<th align="right">Second Header</th>
+</tr>
+<tr class="odd">
+<td align="left">Content <code>Cell</code></td>
+<td align="right">Content <em>Cell</em></td>
+</tr>
+<tr class="even">
+<td align="left">Content Cell</td>
+<td align="right"><a href='google.com' title=''>Content</a> Cell</td>
+</tr>
+<tr class="odd">
+<td align="left">Content Cell</td>
+<td align="right">Content <strong>Cell</strong></td>
+</tr>
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>\(\LaTeX\)公式</h2></hgroup><article  id="latex">
+
+<div class="columns-2">
+<h5>行内公式</h5>
+
+<pre >$\LaTeX$ grammar for
+ $\delta=(\alpha+\beta)/\gamma$</pre>
+
+<p>\(\LaTeX\) grammar for \(\delta=(\alpha+\beta)/\gamma\)</p>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>成块公式</h5>
+
+<pre >Bayes Equation:
+$$P(B|A)=\frac{P(A|B)P(B)}{P(A)}$$</pre>
+
+<p>Bayes Equation: \[P(B|A)=\frac{P(A|B)P(B)}{P(A)}\]</p></div>
+
+</article></slide><slide class=''><hgroup><h2>注释</h2></hgroup><article >
+
+<h5>注释型链接</h5>
+
+<pre class = 'prettyprint lang-md'>I spend so much time reading [R bloggers][1] and [Simply Statistics][2]!  
+
+[1]: http://www.r-bloggers.com/   &quot;R bloggers&quot;  
+[2]: http://simplystatistics.org/ &quot;Simply Statistics&quot;  </pre>
+
+<p>I spend so much time reading <a href='http://www.r-bloggers.com/' title='R bloggers'>R bloggers</a> and <a href='http://simplystatistics.org/' title='Simply Statistics'>Simply Statistics</a>!</p>
+
+<h5>脚注</h5>
+
+<pre class = 'prettyprint lang-md'>I spend so much time reading R bloggers[^rb]
+
+[^rb]: R-bloggers &quot;R-bloggers is a sets of blogs for R users.&quot;</pre>
+
+<p>I spend so much time reading R bloggers<a id="fnref1" href="#fn1"><sup>1</sup></a></p>
+
+</article></slide><slide class=''><hgroup><h2>锚点</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-md'>Go back to [Page 5](#5).</pre>
+
+<p>Go back to <a href='#5' title=''>Page 5</a>.</p>
+
+<pre class = 'prettyprint lang-md'>&lt;p id=&quot;anchor-1&quot;&gt;bla bla&lt;/p&gt;
+Go to [anchor1](#anchor-1)</pre>
+
+<p id="anchor-1">
+
+bla bla
+
+</p>
+
+<p>Go to <a href='#anchor-1' title=''>anchor1</a></p>
+
+</article></slide><slide class=''><hgroup><h2>其他</h2></hgroup><article >
+
+<div class="col-2L">
+<h5>上下标</h5>
+
+<pre class = 'prettyprint lang-md'>superscript^2^</pre>
+
+<p>superscript<sup>2</sup></p>
+
+<pre class = 'prettyprint lang-md'>subscript~2~</pre>
+
+<p>subscript<sub>2</sub></p></div>
+
+<div class="col-2R">
+<h5>删除线</h5>
+
+<pre class = 'prettyprint lang-md'>~~strikethrough~~</pre>
+
+<p><del>strikethrough</del></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>rmarkdown</h2></hgroup><article  id="rmarkdown">
+
+</article></slide><slide class=''><hgroup><h2><a href='http://rmarkdown.rstudio.com/index.html' title=''>rmarkdown</a>包</h2></hgroup><article  id="rmarkdown">
+
+<img src='A05_04_markdown_files/figure-html/rmarkdown.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2><a href='http://rmarkdown.rstudio.com/gallery.html' title=''>官方示例</a></h2></hgroup><article >
+
+<img src='A05_04_markdown_files/figure-html/rmd_gallery.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>在Rstudio中创建RMarkdown(.Rmd)文档</h2></hgroup><article  id="rstudiormarkdown.rmd">
+
+<div class="columns-2">
+<ul>
+<li>开发方: RStudio Inc.</li>
+<li>基于markdown语法，支持R、Python、SQL等程序语言</li>
+<li>工作界面支持notebook</li>
+<li>支持Word/HTML/PDF静态文档、交互文档、仪表盘、手册、图书、网站等</li>
+<li>可安装<code>rticles</code>包，基于内置模板生成报告</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<img src='A05_04_markdown_files/figure-html/create_rmd.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>rmarkdown文档的<a href='https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf' title=''>结构</a></h2></hgroup><article  id="rmarkdown">
+
+<img src='A05_04_markdown_files/figure-html/rmd_struc.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>YAML头</h2></hgroup><article  id="yaml">
+
+<ul>
+<li>YAML: 主要用于编写配置文件的标记语言，较XML、json等更简洁</li>
+<li>基本语法规则
+
+<ul>
+<li>大小写敏感</li>
+<li>使用缩进而非嵌套表示层级关系</li>
+<li>缩进时<strong>不允许使用Tab键</strong>，只允许使用空格。</li>
+<li>缩进的空格数目不重要，只要相同层级的元素左侧对齐即可</li>
+</ul></li>
+<li>rmarkdown头部YAML
+
+<ul>
+<li>以三连横杠起始、结束</li>
+<li>记录配置参数: title、author、date、output、reference、params等</li>
+<li>通过配置output的主要参数，即可将文档转成相应格式</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>文档体</h2></hgroup><article >
+
+<ul>
+<li>文档体包括文字和代码</li>
+<li>文字部分支持markdown和LaTeX语法</li>
+<li>代码支持R、Python、SQL、SAS等
+
+<ul>
+<li>以 <code>```{r}</code> 或 <code>```{python}</code> &#8230;起始</li>
+<li>以 ``` 结束</li>
+</ul></li>
+<li>一个<code>r, engine=python</code>的例子</li>
+</ul>
+
+<pre class = 'prettyprint lang-python'>x=&quot;Hello, python world!&quot;
+print(x.split(&#39; &#39;))</pre>
+
+<pre >## [&#39;Hello,&#39;, &#39;python&#39;, &#39;world!&#39;]</pre>
+
+</article></slide><slide class=''><hgroup><h2>参考文献 - 外部法</h2></hgroup><article  id="---">
+
+<div class="columns-2">
+<ul>
+<li>将文献导入Zotero，再导出为.bib</li>
+<li>在YAML头定义bibliography和<a href='http://citationstyles.org/' title=''>csl</a></li>
+</ul>
+
+<pre >bibliography: example.bib
+csl: the-lancet.csl</pre>
+
+<ul>
+<li>在正文中<code>@&lt;文献id&gt;</code>引用某条文献,或
+
+<ul>
+<li>例子 <span class="cite">1</span></li>
+</ul></li>
+<li><code>[@&lt;文献1id&gt;;@&lt;文献2id&gt;]</code>引用文献
+
+<ul>
+<li>例子<span class="cite"><sup>1</sup></span></li>
+</ul></li>
+<li>文献会列表显示在文档末尾</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src='A05_04_markdown_files/figure-html/bib.png' title=''/> <img src='A05_04_markdown_files/figure-html/csl.png' title=''/></p></div>
+
+</article></slide><slide class=''><hgroup><h2>参考文献 - 内部法</h2></hgroup><article  id="---" class="smaller">
+
+<ul>
+<li>直接将各条文献按YAML语法写入YAML头</li>
+<li>引用方法同外部法<span class="cite"><sup>1,2</sup></span></li>
+</ul>
+
+<pre class = 'prettyprint lang-yaml'>---
+references:
+- id: fenner2012a
+  title: One-click science marketing
+  author:
+  - family: Fenner
+    given: Martin
+  container-title: Nature Materials
+  volume: 11
+  URL: &#39;http://dx.doi.org/10.1038/nmat3283&#39;
+  DOI: 10.1038/nmat3283
+  issue: 4
+  publisher: Nature Publishing Group
+  page: 261-263
+  type: article-journal
+  issued:
+    year: 2012
+    month: 3
+---</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>params</code></h2></hgroup><article  id="params">
+
+<ul>
+<li>在YAML头指定参数列表</li>
+<li>文档代码块中直接以 <code>params$&lt;对象&gt;</code> 引用这些参数</li>
+<li>提高文档的复用性</li>
+</ul>
+
+<pre >---
+title: Sample
+output: html_document
+params:
+    data: &quot;iris&quot;
+---
+
+```{r}
+summary(params$data)
+```</pre>
+
+</article></slide><slide class=''><hgroup><h2>生成文档</h2></hgroup><article >
+
+<p><strong>.Rmd文档</strong> &#8211;[<em>knit</em>]&#8211;&gt; <strong>.md文档</strong> &#8211;[<em>Pandoc</em>]&#8211;&gt; <strong>最终文档</strong></p>
+
+<ul>
+<li>Pandoc是一个开源工具，当生成pdf时，需要调用MikTeX、TexLive等组件</li>
+</ul>
+
+<div class="columns-2">
+<h5>1. <code>Knit</code>按钮</h5>
+
+<img src='A05_04_markdown_files/figure-html/knit.png' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<h5>2. <code>render</code>函数</h5>
+
+<pre >render(input, output_format = NULL, 
+       output_file = NULL, output_dir = NULL,
+       output_options = NULL, 
+       intermediates_dir = NULL,
+       knit_root_dir = NULL,
+       runtime = c(&quot;auto&quot;, &quot;static&quot;, &quot;shiny&quot;, 
+            &quot;shiny_prerendered&quot;),
+       clean = TRUE, params = NULL, 
+       knit_meta = NULL, envir = parent.frame(),
+       run_pandoc = TRUE, quiet = FALSE, 
+       encoding = getOption(&quot;encoding&quot;))</pre></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p>
+
+</article></slide><slide class=''><hgroup><h2>参考文献</h2></hgroup><article  class="unnumbered">
+
+<div id="refs" class="references">
+<div id="ref-williams_outcomes_2017">
+<p>1 Williams TA, Lenders JWM, Mulatero P <em>et al.</em> Outcomes after adrenalectomy for unilateral primary aldosteronism: An international consensus on outcome measures and analysis of remission rates in an international cohort. <em>Lancet Diabetes Endocrinol</em> 2017; published online May. DOI:<a href='https://doi.org/10.1016/S2213-8587(17)30135-3' title=''>10.1016/S2213-8587(17)30135-3</a>.</p></div>
+
+<div id="ref-fenner2012a">
+<p>2 Fenner M. One-click science marketing. <em>Nature Materials</em> 2012; <strong>11</strong>: 261–3.</p></div></div></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,23 +1,20 @@
 ---
 title: A01-03 R的运算和函数
 subtitle: R Analyst Track
-author: 
-  name: "HMS"
-  company: "[Aetna International](https://www.aetnainternational.com)"
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
 date: "`r Sys.time()`"
 output: 
   ioslides_presentation: 
-    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    css: ../pres.css
     df_print: paged
     fig_caption: yes
     fig_height: 5.5
     fig_width: 8
     highlight: pygments
     lib_dir: libs
-    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
-    mathjax: local
     self_contained: no
     widescreen: yes
+    logo: ../logo.png
 ---
 
 ```{r setup, include=FALSE}
@@ -33,7 +30,6 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 - [矩阵运算](#11)
 - [函数](#13)
 
-<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
 
 # 算符计算 (`?Ops`)
 
@@ -411,7 +407,7 @@ Error: object 'z' not found
 [1] 2.5 5.5 3.5 7.5
 ```
 
-## {.teal}
+## {.grayblue}
 
 <p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
 

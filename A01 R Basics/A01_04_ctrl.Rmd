@@ -1,23 +1,20 @@
 ---
 title: A01-04 R的控制结构
 subtitle: R Analyst Track
-author: 
-  name: "HMS"
-  company: "[Aetna International](https://www.aetnainternational.com)"
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
 date: "`r Sys.time()`"
 output: 
   ioslides_presentation: 
-    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    css: ../pres.css
     df_print: paged
     fig_caption: yes
     fig_height: 5.5
     fig_width: 8
     highlight: pygments
     lib_dir: libs
-    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
-    mathjax: local
     self_contained: no
     widescreen: yes
+    logo: ../logo.png
 ---
 
 ```{r setup, include=FALSE}
@@ -32,7 +29,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 - [条件](#5)
 - [循环](#9)
 
-<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span><br>部分内容借鉴Johns Hopkins University Data Science Series Courses @ [Coursera](https://www.coursera.org).</p>
+<p class="footer">部分内容借鉴Johns Hopkins University Data Science Series Courses @ [Coursera](https://www.coursera.org).</p>
 
 # 控制结构
 
@@ -208,7 +205,7 @@ for (i in 1:100) {
 }
 ```
 
-## {.teal}
+## {.grayblue}
 
 <p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
 

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A03-05 ggplot2绘图系统</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A03-05 ggplot2绘图系统',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A03_05_ggplot2_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A03_05_ggplot2_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A03_05_ggplot2_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-20 16:30:23</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>作图流程</a></li>
+<li><a href='#6' title=''>快速调用</a></li>
+<li><a href='#12' title=''>逐步调用</a></li>
+<li><a href='#29' title=''>一大堆用例</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>作图流程</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>关于<a href='http://ggplot2.org' title=''>ggplot2</a></h2></hgroup><article  id="ggplot2" class="smaller">
+
+<ul>
+<li><strong>绘图语法Grammar of Graphics</strong> (by <em>Leland Wilkinson</em>)的程序实现</li>
+<li>作者是 <em>Hadley Wickham</em>，R社区最知名的开发者之一</li>
+<li>Grammar of Graphics的核心理念: 分层(layered grammar)
+
+<ul>
+<li>作图过程被抽象为一系列<strong>层的叠加</strong></li>
+<li>一幅图的元素 (名词)包括:
+
+<ul>
+<li>数据<strong>data</strong></li>
+<li>变量映射<strong>mapping</strong></li>
+<li>图层<strong>layers</strong>
+
+<ul>
+<li>几何形状<strong>geom</strong>etric object, 统计转换<strong>stat</strong>istic transforamtion, 位置偏移<strong>position</strong> adjustment, 美学映射<strong>aes</strong>thetic mapping</li>
+</ul></li>
+<li>尺度<strong>scale</strong></li>
+<li>坐标<strong>coord</strong>inate system</li>
+<li>分面<strong>facet</strong></li>
+</ul></li>
+<li>针对各类元素，封装了丰富的处理函数(动词)</li>
+<li>GoG语法用统一的结构串联这些名词、动词，提供了一个处理图层的通用框架，兼备一致性和灵活性</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>流程</h2></hgroup><article  class="smaller">
+
+<h4>快速调用方法(类似lattice): <code>qplot()</code></h4>
+
+<h4>逐步调用方法</h4>
+
+<ol>
+<li><strong>初始化 <code>ggplot()</code></strong>: 初始化一个ggplot对象</li>
+<li><strong>绘制图层 <code>geom_&lt;形状&gt;</code></strong>: <code>geom_</code>函数家族整合美学映射函数<code>aes_</code>、统计转换参数<code>stat</code>、位置偏移参数<code>position</code>、其他美学参数<code>width</code>、<code>color</code>等</li>
+<li><strong>修改尺度 <code>scale_&lt;尺度类型&gt;</code></strong>: <code>scale_</code>函数家族用来指定视觉通道的映射方法</li>
+<li><strong>坐标系 <code>coord_&lt;坐标系&gt;</code></strong>: <code>coord_</code>函数家族用来调整坐标系</li>
+<li><strong>分面 <code>facet_grid</code>/<code>facet_wrap</code></strong>: 指定分面依据</li>
+<li><strong>美学修饰</strong>
+
+<ul>
+<li><code>guides</code>: 调整尺度和视觉通道的映射关系</li>
+<li><code>theme</code>: 低级函数，修改图中每个部件的呈现形式</li>
+<li><code>ggtitle</code>, <code>xlab</code>, <code>ylab</code>: 图/坐标轴标题</li>
+<li><code>annotate</code>: 图上加注</li>
+</ul></li>
+</ol>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>快速调用</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>语法</h2></hgroup><article >
+
+<p><code>qplot</code>用来快速生成统计图，但自定义弹性不大</p>
+
+<pre class = 'prettyprint lang-r'>qplot(x, y = NULL, ..., data, facets = NULL, margins = FALSE,
+  geom = &quot;auto&quot;, xlim = c(NA, NA), ylim = c(NA, NA), log = &quot;&quot;,
+  main = NULL, xlab = deparse(substitute(x)),
+  ylab = deparse(substitute(y)), asp = NA, stat = NULL, position = NULL)</pre>
+
+<ul>
+<li>x, y, &#8230;: 传入各个图层的变量</li>
+<li>data: 数据源，一般是data.frame</li>
+<li>facets, margins: 分面公式，是否显示边际分面</li>
+<li>geom: 向量，呈现为哪种几何形状</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Hello World</h2></hgroup><article  id="hello-world">
+
+<p>指定连续变量x,y，自动适配散点图</p>
+
+<pre class = 'prettyprint lang-r'>library(ggplot2)
+qplot(displ, hwy, data = mpg)</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/hello%20world-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>添加图层</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>qplot(displ, hwy, data = mpg, geom = c(&quot;point&quot;, &quot;smooth&quot;))</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/more%20geom-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>尺度映射</h2></hgroup><article >
+
+<p>将<code>class</code>映射到颜色通道，<code>drv</code>映射到形状</p>
+
+<pre class = 'prettyprint lang-r'>qplot(displ, hwy, data = mpg, shape = drv, color = class)</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/scale%20mapping-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>分面</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>qplot(displ, hwy, data = mpg, facets = . ~ drv, margins = TRUE)</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/facet-1.png" width="768" /></p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>逐步调用</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>初始化 (<code>ggplot</code>)</h2></hgroup><article  id="-ggplot">
+
+<pre class = 'prettyprint lang-r'>ggplot(data = NULL, mapping = aes(), ..., environment = parent.frame())</pre>
+
+<ul>
+<li>语法
+
+<ul>
+<li>data: 源数据，如不是data.frame，会先被<code>fortify</code>函数预处理</li>
+<li>mapping: 美学映射，通过<code>aes</code>函数传入</li>
+</ul></li>
+<li>三种主要调用形式:
+
+<ol>
+<li><code>ggplot(df, aes(x, y, &lt;other aesthetics&gt;))</code></li>
+<li><code>ggplot(df)</code></li>
+<li><code>ggplot()</code>: 如果一幅图要用到多个独立的数据源，<code>data</code>可留空</li>
+</ol></li>
+<li>初始化以后形成一个ggplot对象，但没有任何图层，因此不能显示</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>图层 (<code>geom_</code>)</h2></hgroup><article  id="-geom_" class="smaller">
+
+<pre class = 'prettyprint lang-r'>geom_&lt;形状&gt;(mapping = NULL, data = NULL, stat, position, ..., na.rm = FALSE, 
+    show.legend = NA, inherit.aes = TRUE)</pre>
+
+<ul>
+<li>mapping: 美学映射，可通过<code>aes</code>或<code>aes_</code>函数指定。一般<code>inherit.aes</code>为TRUE，即从初始化的ggplot对象直接继承美学映射参数。</li>
+<li>data: 该图层用到的数据集
+
+<ul>
+<li>NULL: 继承初始化的ggplot对象所包含的数据</li>
+<li>一个data.frame或其他对象，将覆盖初始数据</li>
+<li>一个function，该函数返回值必须是数据框</li>
+</ul></li>
+<li>stat: 统计转换方法，如&quot;density&quot;, &quot;count&quot;</li>
+<li>position: 位置调整参数
+
+<ul>
+<li>文本，如&quot;stack&quot;, &quot;dodge&quot;</li>
+<li>函数，如<code>position_stack</code>, <code>position_dodge</code></li>
+</ul></li>
+<li>&#8230;: 通常是该图层的通用美学属性，如color, fill, 等</li>
+<li>show.legend: 可以是NA、TRUE或FALSE</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3><code>aes</code> 美学/视觉通道映射: 映射谁?</h3>
+
+<pre class = 'prettyprint lang-r'>aes(x, y, ...)</pre>
+
+<ul>
+<li>传入参数可以是变量名，也可以是函数计算式</li>
+<li>常见的美学映射属性包括（各自适用于特定geom_）</li>
+</ul>
+
+<div class="columns-2">
+<pre >- x: x轴/rho变量
+- y: y轴/theta变量
+- xmin: x最小值
+- xmax: x最大值
+- ymin: y最小值
+- ymax: y最大值
+- xend: x终点
+- yend: y终点
+- alpha: 透明度
+- colour: 边线色</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<pre >- fill: 填充色
+- group: 分组
+- linetype: 线型
+- size: 粗细/大小
+- xintercept: x截距
+- yintercept: y截距
+- slope: 斜率
+- weight: 权重
+- shape: 形状
+- stroke: 描边
+- map_id: 地图多变性id</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>尺度 (<code>scale_</code>): 怎么映射?</h2></hgroup><article  id="-scale_-" class="smaller">
+
+<pre class = 'prettyprint lang-r'>scale_&lt;视觉通道&gt;_&lt;映射方法&gt;(...)</pre>
+
+<div class="columns-2">
+<ul>
+<li>视觉通道:
+
+<ul>
+<li>x</li>
+<li>y</li>
+<li>colour</li>
+<li>fill</li>
+<li>alpha</li>
+<li>linetype</li>
+<li>radius</li>
+<li>shape</li>
+<li>size</li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>映射方法:
+
+<ul>
+<li>continuous/discrete: 连续/离散</li>
+<li>identity: 直接映射到视觉通道</li>
+<li>brewer/distiller: ColorBrewer色阶</li>
+<li>gradient/gradient2/gradientn: 渐变色阶</li>
+<li>date/datetime/time: 日期或时间</li>
+<li>grey/hue: 灰度/色谱</li>
+<li>log10/reverse/sqrt: 对数/逆序/开方</li>
+<li>manual: 手工指定(自定义)</li>
+</ul></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>坐标系 (<code>coord_</code>)</h2></hgroup><article  id="-coord_">
+
+<ul>
+<li><code>coord_cartesian</code>: 直角平面坐标系</li>
+<li><code>coord_fixed</code>: 固定长宽比的直角坐标系
+
+<ul>
+<li><code>coord_equal</code>: 特例</li>
+</ul></li>
+<li><code>coord_flip</code>: 颠倒x/y</li>
+<li><code>coord_map</code>: 地图坐标系, <code>projection</code>指定投影方法
+
+<ul>
+<li><code>coord_quickmap</code>: 快捷地图坐标系</li>
+</ul></li>
+<li><code>coord_polar</code>: 极坐标系</li>
+<li><code>coord_trans</code>: 自定义调整坐标系</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>分面 (<code>facet_</code>)</h2></hgroup><article  id="-facet_">
+
+<ul>
+<li>在网格中定义矩阵分面
+
+<ul>
+<li><code>facets</code>必须是公式(<code>行~列</code>)</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>facet_grid(facets, margins = FALSE, scales = &quot;fixed&quot;, space = &quot;fixed&quot;,
+  shrink = TRUE, labeller = &quot;label_value&quot;, as.table = TRUE,
+  switch = NULL, drop = TRUE)</pre>
+
+<ul>
+<li>把一维面板图转为二维
+
+<ul>
+<li><code>facets</code>可以是公式(<code>~a + b,</code>)或文本向量(<code>c(&quot;a&quot;, &quot;b&quot;)</code>)</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>facet_wrap(facets, nrow = NULL, ncol = NULL, scales = &quot;fixed&quot;,
+  shrink = TRUE, labeller = &quot;label_value&quot;, as.table = TRUE,
+  switch = NULL, drop = TRUE, dir = &quot;h&quot;, strip.position = &quot;top&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>修饰</h2></hgroup><article >
+
+<h3><code>guides</code>调整尺度效果</h3>
+
+<ul>
+<li><p>guides可以在定义尺度时一并定义，也可单独用<code>guides</code>函数统一定义</p></li>
+<li><p>实现同一效果:</p>
+
+<ul>
+<li><code>p + guides(colour = &quot;colorbar&quot;, size = &quot;legend&quot;, shape = &quot;legend&quot;)</code></li>
+<li><code>p + guides(colour = guide_colorbar(), size = guide_legend(),   shape = guide_legend())</code></li>
+<li><code>p +  scale_colour_continuous(guide = &quot;colorbar&quot;) +  scale_size_discrete(guide = &quot;legend&quot;) +  scale_shape(guide = &quot;legend&quot;)</code></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<h3><code>theme</code>调整图形部件</h3>
+
+<pre class = 'prettyprint lang-r'>theme(line, rect, text, title, aspect.ratio, axis.title, axis.title.x,
+  axis.title.x.top, axis.title.y, axis.title.y.right, axis.text, axis.text.x,
+  axis.text.x.top, axis.text.y, axis.text.y.right, axis.ticks, axis.ticks.x,
+  axis.ticks.y, axis.ticks.length, axis.line, axis.line.x, axis.line.y,
+  legend.background, legend.margin, legend.spacing, legend.spacing.x,
+  legend.spacing.y, legend.key, legend.key.size, legend.key.height,
+  legend.key.width, legend.text, legend.text.align, legend.title,
+  legend.title.align, legend.position, legend.direction, legend.justification,
+  legend.box, legend.box.just, legend.box.margin, legend.box.background,
+  legend.box.spacing, panel.background, panel.border, panel.spacing,
+  panel.spacing.x, panel.spacing.y, panel.grid, panel.grid.major,
+  panel.grid.minor, panel.grid.major.x, panel.grid.major.y, panel.grid.minor.x,
+  panel.grid.minor.y, panel.ontop, plot.background, plot.title, plot.subtitle,
+  plot.caption, plot.margin, strip.background, strip.placement, strip.text,
+  strip.text.x, strip.text.y, strip.switch.pad.grid, strip.switch.pad.wrap, ...,
+  complete = FALSE, validate = TRUE)</pre>
+
+<p>各部件可调用对应的<code>element_</code>函数进行编辑: <code>element_line</code>, <code>element_rect</code>, <code>element_text</code></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3><code>theme_</code>套用主题</h3>
+
+<ul>
+<li>ggplot2中提供了一些主题函数，你也可以通过<code>theme()</code>自制主题
+
+<ul>
+<li><code>theme_bw</code>: 白底主题</li>
+<li><code>theme_classic</code>: 经典主题</li>
+<li><code>theme_dark</code>: 夜色主题</li>
+<li><code>theme_gray</code>/<code>theme_grey</code>: (默认)灰色主题</li>
+<li><code>theme_light</code>: 简洁主题</li>
+<li><code>theme_linedraw</code>: 描线主题</li>
+<li><code>theme_minimal</code>: 最小化主题</li>
+<li><code>theme_void</code>: 极简主题</li>
+</ul></li>
+<li><code>ggthemes</code>包提供了包括更多主题，如<code>excel</code>, <code>gdocs</code>, <code>economist</code>, <code>wsj</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3><code>ggtitle</code>, <code>xlab</code>, <code>ylab</code>定义标题</h3>
+
+<ul>
+<li><code>labs(...)</code>: 定义title, caption, subtitle及美学属性</li>
+<li><code>xlab(label)</code> / <code>ylab(lable)</code>/ <code>ggtitle(label, subtitle = NULL)</code></li>
+</ul>
+
+<h3><code>annotate</code>定义注释</h3>
+
+<pre class = 'prettyprint lang-r'>annotate(geom, x = NULL, y = NULL, xmin = NULL, xmax = NULL,
+  ymin = NULL, ymax = NULL, xend = NULL, yend = NULL, ...,
+  na.rm = FALSE)</pre>
+
+<ul>
+<li>geom: 多边形类型，&#39;text&#39;, &#39;rect&#39;, <code>segment</code>, <code>pointrange</code></li>
+<li>x, y, xmin, ymin, xmax, ymax, xend, yend: 在图中的位置，至少用到一个</li>
+<li>&#8230;: 一般是美学属性</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>举例</h2></hgroup><article >
+
+<p>同样的例子，用逐步法实现</p>
+
+<pre class = 'prettyprint lang-r'>p = ggplot(mpg, aes(displ, hwy))
+p  # 仅初始化，什么都不显示</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/example-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>添加图层</h3>
+
+<p>将<code>class</code>映射到颜色通道，<code>drv</code>映射到形状</p>
+
+<pre class = 'prettyprint lang-r'>p = p + geom_point(aes(shape=drv, color=class)) + geom_smooth(method=&quot;loess&quot;)
+p</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/example%20more%20geom-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>尺度映射</h3>
+
+<p>调整映射方法</p>
+
+<pre class = 'prettyprint lang-r'>p1 = p + scale_shape_manual(values=c(&quot;4&quot;=1, &quot;f&quot;=2, &quot;r&quot;=3)) + scale_color_brewer()
+p1</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/example%20scale%20mapping-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>分面</h3>
+
+<pre class = 'prettyprint lang-r'>p = p + facet_grid(~drv)
+p</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/example%20facet-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>套用主题</h3>
+
+<pre class = 'prettyprint lang-r'>p + theme_light()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/example%20themes-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<h3>个性化修饰</h3>
+
+<pre class = 'prettyprint lang-r'>p + theme(panel.background=element_blank(), panel.grid.major.y=element_line(color=&quot;gray&quot;),
+          axis.line.x=element_line(color=&quot;darkgray&quot;)) +
+    guides(colour = guide_legend(&quot;Car Type&quot;, order=1), shape = guide_legend(&quot;Driver&quot;))</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/example%20guides-1.png" width="768" /></p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>一大堆用例</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>散点图 points</h2></hgroup><article  id="-points" class="smaller">
+
+<div class="columns-2">
+<p>散点图: 两变量相关性</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(mtcars, aes(wt, mpg)) + geom_point()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/scatter-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>文本型变量作散点图</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(OrchardSprays, aes(treatment, decrease)) + 
+    geom_point()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/points-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>直方图 histogram</h2></hgroup><article  id="-histogram" class="smaller">
+
+<div class="columns-2">
+<p>直方图: 单变量密度分布</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(mtcars, aes(mpg)) + geom_histogram(bins=9)</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/hist-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>或用密度图</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(mtcars, aes(mpg)) + geom_density()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/hist%20line-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>箱式图 boxplot</h2></hgroup><article  id="-boxplot" class="smaller">
+
+<div class="columns-2">
+<p>连续性变量的分布</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(ToothGrowth, aes(&quot;&quot;, len)) + geom_boxplot()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/boxplot-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>多个箱式图</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(ToothGrowth, aes(dose, len, 
+    color=factor(dose))) + geom_boxplot()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/multi%20boxplot-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>柱/条形图 barplot</h2></hgroup><article  id="-barplot" class="smaller">
+
+<div class="columns-2">
+<p>分类变量的比较</p>
+
+<pre class = 'prettyprint lang-r'>hp &lt;- data.frame(hp=mtcars$hp, 
+                 names = row.names(mtcars))
+ggplot(hp, aes(names, hp)) + geom_col()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/col-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>自变量较多时用横向条图</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(hp, aes(names, hp)) + 
+    geom_bar(stat=&quot;identity&quot;) + coord_flip()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/bar-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>折线图 lines</h2></hgroup><article  id="-lines" class="smaller">
+
+<div class="columns-2">
+<p>ts类型数据要先转换</p>
+
+<pre class = 'prettyprint lang-r'>AP &lt;- data.frame(n=as.numeric(AirPassengers), 
+                 t=zoo::as.Date(time(AirPassengers)))
+ggplot(AP, aes(t, n)) + geom_line()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/line-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>阶梯折线</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(AP, aes(t, n)) + geom_step()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/stair-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>饼图 Pies</h2></hgroup><article  id="-pies" class="smaller">
+
+<div class="columns-2">
+<p>需要用<code>coord_polar</code></p>
+
+<pre class = 'prettyprint lang-r'>admit &lt;- data.frame(Admit=c(&quot;Admitted&quot;, &quot;Rejected&quot;), 
+                    n=apply(UCBAdmissions, 1, sum))
+ggplot(admit, aes(&quot;&quot;, n, fill=Admit)) + 
+    geom_bar(stat=&quot;identity&quot;, position=&quot;stack&quot;, 
+             width=1) + coord_polar(theta=&quot;y&quot;)</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/pie-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>玫瑰图: position=&#39;dodge&#39;</p>
+
+<pre class = 'prettyprint lang-r'>ggplot(admit, aes(&quot;&quot;, n, fill=Admit)) + 
+    geom_bar(stat=&quot;identity&quot;, position=&quot;dodge&quot;, 
+             width=1) + coord_polar()</pre>
+
+<p><img src="A03_05_ggplot2_files/figure-html/rose-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

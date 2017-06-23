@@ -1,0 +1,182 @@
+---
+title: A03-01 R的绘图设备和绘图系统
+subtitle: R Analyst Track
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: ../pres.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    self_contained: no
+    widescreen: yes
+    logo: ../logo.png
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A03_01_graphicDevice_files/figure-html/")
+```
+
+## 目录
+
+- [绘图设备](#3)
+- [绘图系统](#10)
+
+<p class="footer">部分内容借鉴Johns Hopkins University Data Science Series Courses @ Coursera.</p>
+
+# 绘图设备
+
+## 什么是绘图设备(Graphics Device)
+
+图形的呈现媒介，基础的绘图设备驱动包含在grDevices包中
+
+- **屏幕** (screen device)
+    - Windows: `windows()`
+    - MacOS: `quartz()`
+    - Linux/Unix: `x11()`
+- 文件设备 (file device: pdf, jpg, svg, ...)
+    - 自带: `pdf()`, `jpg()`, ...
+    - 附加包提供的: svglite包的`svglite()`, Cairo包的`CairoPDF()`
+
+## 文件设备
+
+- 矢量图格式: 不随拉伸缩放而损失清晰度
+    - `pdf`: 便携性、缩放性较好，适用于线条图。图形元素一般不宜过多
+    - `svg`: 基于XML的可缩放矢量图形(scalable vector graphics)，对于动画和交互图(如d3)支持良好，适用于浏览器
+    - `win.metafile`: Windows metafile 格式 (仅限Windows)
+    - `postscript`: 较旧的矢量图格式，用于打印机
+- 位图格式: 会随拉伸缩放而损失清晰度
+    - `png`: 使用无损压缩的位图，多数浏览器支持良好，可以绘制大量散点、线条和色块。缩放性一般
+    - `jpeg`: 使用有损压缩的位图，多数操作系统支持良好，适合用于照片，绘制线条效果一般。缩放性一般。
+    - `tiff`: tiff格式位图，支持无损压缩
+    - `bmp`: Windows内建的位图格式
+
+## 出图到屏幕设备
+
+- 制图函数: `plot` / `lattice::xyplot` / `ggplot2::ggplot`
+- 默认出图到屏幕设备
+- 注释/加工
+
+```{r plot 2 screen, eval=FALSE}
+library(datasets)
+with(faithful, plot(eruptions, waiting))  ## 出图到屏幕
+title(main = "Old Faithful Eruptions")    ## 加工
+```
+
+## 出图到文件设备
+
+- 初始化一个新设备: 如`pdf()` / `png()`
+- 制图函数: `plot` / `lattice::xyplot` / `ggplot2::ggplot`，这时屏幕上不再出图
+- 注释/加工
+- **[必须]**关闭设备(`dev.off()`)
+
+```{r plot 2 pdf, eval=FALSE}
+pdf(file =  "old_faithful.pdf")           ## 打开一个pdf设备，在工作目录下创建'old_faithful.pdf'
+with(faithful, plot(eruptions, waiting))  ## 出图到pdf设备
+title(main = "Old Faithful Eruptions")    ## 加工标题
+dev.off()                                 ## 关闭该pdf设备
+```
+
+## 多个绘图设备
+
+- 可以打开多个设备
+- 系统会给每个设备分配一个整数序号
+- 列出所有设备: `dev.list()`
+- 查找当前设备: `dev.cur()`
+- 前一个/后一个设备: `dev.next()`, `dev.prev()`
+- 强制切换当前设备: `dev.set(<序号>)`
+
+## 设备间拷贝
+
+> 写了很多代码作出一张满意的图，但出在了屏幕上，想把它出到pdf。不想重新敲一遍代码，有什么快捷的办法？
+
+- `dev.copy`: 将图形元素从一个设备拷贝到另一个
+    - `dev.copy2pdf`: 拷贝到pdf设备
+    - `dev.copy2eps`: 拷贝到eps设备
+- `dev.print`: 将当前设备上的图拷贝到另一个设备
+
+```{r,eval=FALSE}
+library(datasets)
+with(faithful, plot(eruptions, waiting))  ## 屏幕出图
+title(main = "Old Faithful Geyser data")  ## 加标题
+dev.copy(png, file = "geyserplot.png")    ## 拷贝到pdf设备
+dev.off()  ## 不要忘记关闭设备
+```
+
+# 绘图系统
+
+## R最主要的绘图系统
+
+绘图系统(plotting system)是用于驱动生成图形的绘图框架。R最重要的绘图系统有:
+
+- base系统: R自带的基础绘图系统，包含在graphics包中
+    - 从空白画布开始，用一连串命令顺次向画布上添加图形元素
+- grid: 高度灵活、更低水平的绘图系统，但没有完整的绘图函数，很少直接使用
+- Lattice系统: lattice包提供的绘图系统，基于Trellis系统，依赖grid包
+    - 用一条命令组织好所有图形元素，一次性出图
+- ggplot2系统: ggplot2包提供的绘图系统
+    - 遵循“作图语法”，初始化后渐进调整，每一步都可回溯
+
+## 基础绘图系统
+
+- 类似于MatLab、Python中的matplotlib，由一连串制图命令构成
+- 由一张空白画布开始，一笔一笔添加图形，贴合作图思路
+- 落笔之后不能回退
+- 没有“作图语法”，不能转换成其他类型
+- 核心命令`plot`
+
+## 示例
+
+```{r base plot, fig.height=4}
+plot(mtcars$mpg, mtcars$disp)
+title("Scatter plot of mpg vs disp")
+abline(lm(disp~mpg, data=mtcars), col='red')
+```
+
+## Lattice绘图系统
+
+- 类似于Stata，所有绘图和注释动作都要包含在一条命令中
+- 特别适合做分面图，即查看不同z水平上x和y的关系
+- 将多个图放在同一屏时，代码更简洁
+- 有时命令不易组织，添加注释不简便
+- 生成之后不能修改
+- 核心命令较多，如`xyplot`, `bwplot`
+
+## 示例
+
+```{r lattice plot, fig.height=4}
+library(lattice)
+state <- data.frame(state.x77, region = state.region)
+xyplot(Life.Exp ~ Income | region, data = state, layout = c(4, 1))
+```
+
+## ggplot2绘图系统
+
+- 下载量最大的附加包之一，奠定了R最主要的优势之一: 统计作图
+- 初始化以后，灵活添加各类图形元素和注释
+- 可回退，也可将每个步骤保存为快照对象
+- 遵循“制图语法”(grammar of graphics)，可转换成其他类型
+- 核心命令`ggplot`和`geom_<几何图形>`
+- 很多[衍生包](https://www.ggplot2-exts.org/)依赖于/拓展ggplot2的绘图能力
+    - ggforfity, ggiraph, ggthemes, ... 
+- 参考: [在线教程](http://docs.ggplot2.org/current/)
+
+## 示例
+
+```{r ggplot2 plot, fig.height=4}
+library(ggplot2)
+state <- data.frame(state.x77, region = state.region)
+ggplot(state, aes(Income, Life.Exp)) + geom_point() + facet_grid(.~region)
+```
+
+## {.grayblue}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+
+

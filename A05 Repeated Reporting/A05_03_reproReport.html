@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-03 可重复报告理念</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-03 可重复报告理念',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_03_reproReport_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_03_reproReport_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_03_reproReport_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-22 20:37:27</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>自动化+可重复</a></li>
+<li><a href='#7' title=''>文学化编程</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>自动化+可重复</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>痛点</h2></hgroup><article >
+
+<div class="columns-2">
+<h4>分析师</h4>
+
+<ol>
+<li>每次分析都要重复点一圈鼠标，执行数据整理</li>
+<li>图表都要一幅一幅手动制作，再把数字手动贴到Word/PPT里</li>
+<li>定期做例行报告，整理、分析、图表作业都要机械重复一遍</li>
+<li>出一处错误，后面就要全部手动重来</li>
+<li>手动，手动，手动！</li>
+</ol>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>读者</h4>
+
+<ol>
+<li>只能看到报告结果，无从考究具体处理过程</li>
+<li>即使拿到原始数据，依然难以重复数据处理过程</li>
+<li>即使拿到清理后的数据，验证分析过程也十分困难</li>
+<li>数据和代码分离。即使拿到代码，验证过程仍然费力</li>
+<li>一些随机过程不知种子数，无法复现</li>
+<li>&quot;Words are cheap, show me the code!&quot;</li>
+</ol></div>
+
+</article></slide><slide class=''><hgroup><h2>自动化</h2></hgroup><article >
+
+<ul>
+<li>常用的自动化分析策略，是部署商业智能(BI)工具，如Crystal Report、Tableau</li>
+<li>优点:
+
+<ul>
+<li>开发并部署后，通常便捷易用</li>
+</ul></li>
+<li>缺点:
+
+<ul>
+<li>开发部署过程耗时费力</li>
+<li>较不灵活。如需求微调，则需要再次开发部署</li>
+</ul></li>
+<li>建议:
+
+<ul>
+<li>分析师先在本地搭建自动化报告原型</li>
+<li>再由数据工程师开发为自动化报告产品</li>
+<li>不需要上线的产品，可直接在本地运行代码产生例行报告</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>可重复</h2></hgroup><article >
+
+<p>可重复性是科学研究的基本要求</p>
+
+<ul>
+<li>理想的可重复性(Replicability): 能够重复实施科研/商业项目、数据采集和分析过程</li>
+<li>较现实的可重复性(Reproducibility): 基于同样的原始数据，执行分析代码，可获得同样的结果和结论
+
+<ul>
+<li>分析的透明性</li>
+<li>数据的可及性
+
+<ul>
+<li>原始数据(及元数据)</li>
+</ul></li>
+<li>工具的可及性
+
+<ul>
+<li>处理/分析代码</li>
+</ul></li>
+<li>知识传递的效率
+
+<ul>
+<li>数据和代码说明文档</li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>文学化编程</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>Literate Programming</h2></hgroup><article  id="literate-programming">
+
+<p>\(\LaTeX\)之父Donald E. Knuth (1992)提出的编程范式，即按照写作逻辑思路和文学章-节结构组织文档文本和程序代码。自然语言和程序语言交织在同一篇文档中，通过特定的标志符号分割开:</p>
+
+<ul>
+<li><code>tangle</code>(绕)命令: 编译执行程序语言部分，供计算机释读</li>
+<li><code>weave</code>(织)命令：格式化编译自然语言部分，供人类阅读</li>
+</ul>
+
+<p>文学化编程范式与现代软件工程最优实践不甚相符(很多坑)</p>
+
+<ul>
+<li>在软件开发领域仍比较小众(集中于Emacs org-mode、\(\TeX\)等)</li>
+<li>但它却为可重复研究和技术文档撰写提供了得天独厚的武器
+
+<ul>
+<li>文档和代码按阅读逻辑组织在一起，不再分开</li>
+<li>程序代码编译后产生图表结果，与格式文本完美融合</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>R与文学化编程: Sweave</h2></hgroup><article  id="r-sweave">
+
+<ul>
+<li>R原生支持<code>Sweave</code>，基于\(\LaTeX\)语法</li>
+<li>开发/维护者Friedrich Leisch，是R核心开发组成员</li>
+<li>你需要
+
+<ul>
+<li>将文档组织成\(\LaTeX\)文本和代码块(Chunk)交织的流</li>
+<li><code>&lt;&lt;块名&gt;&gt;=</code>标示代码块的起始</li>
+<li><code>@</code>标示文本段落的起始</li>
+</ul></li>
+<li>但是!
+
+<ul>
+<li>\(\LaTeX\)是一种较难学的向上标记(mark-up)语言</li>
+<li>即便在文本中，也要写大量控制代码</li>
+<li>一些特性缺失: 缓存、一个代码块出多图、粘合多种程序语言、灵活控制图宽</li>
+<li>维护和更新慢</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<pre class = 'prettyprint lang-latex'>\documentclass{article}
+\begin{document}
+
+\title{Test Doc}
+\author{Me}
+\maketitle
+
+\section*{R Markdown}
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word 
+documents. For more details on using R Markdown see \href{http://rmarkdown.rstudio.com}.
+
+When you click the \textbf{Knit} button a document will be generated that includes both content as well as 
+the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+&lt;&lt;cars&gt;&gt;=
+summary(cars)
+@
+
+\section*{Including Plots}
+You can also embed plots, for example:
+
+&lt;&lt;pressure, echo=FALSE&gt;&gt;=
+plot(pressure)
+@
+
+Note that the \texttt{echo = FALSE} parameter was added to the code chunk to prevent printing of the R code
+that generated the plot.
+
+\end{document}</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_03_reproReport_files/figure-html/sweave.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>更易学的knitr</h2></hgroup><article  id="knitr">
+
+<ul>
+<li>Rstudio原生支持knitr，基于markdown语法</li>
+<li>开发者Yihui Xie</li>
+<li>继承Sweave的功能，并添加了大量特性</li>
+<li>支持R作为程序语言，也支持Python、C、SQL等其他语言</li>
+<li>格式文本采用markdown语法，简洁易学</li>
+<li>可一键发布到rpubs.com，便于分享</li>
+<li>可用来制作幻灯片、写作书籍(bookdown包)、撰写静态博客(blogdown包)</li>
+</ul>
+
+<p>我们将跳过Sweave大坑，直接基于knitr学习开发自动化报告</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="smaller">
+
+<pre >---
+title: &quot;Test Doc&quot;
+author: Me
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word 
+documents. For more details on using R Markdown see &lt;http://rmarkdown.rstudio.com&gt;.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the 
+output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that 
+generated the plot.</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_03_reproReport_files/figure-html/knitr.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>notebook</h2></hgroup><article  id="notebook">
+
+<ul>
+<li>Notebook概念源自IPython项目，最常用于Python</li>
+<li>R可通过R Notebook或Jupyter Notebook来实现</li>
+<li>Notebook的优点
+
+<ul>
+<li>继承了Sweave和knitr文学化编程的主要优点</li>
+<li>可逐块编辑，随写随编译，更便于探索性分析</li>
+<li>支持更多种程序语言(包括SAS、MATLAB&#8230;)</li>
+<li>便于以网页、幻灯、电子书等形式分享</li>
+<li>在数据科学家中越来越流行</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_03_reproReport_files/figure-html/notebook.png' title='fig:'/><p class='caption'><a href='http://nbviewer.jupyter.org/github/phelps-sg/python-bigdata/blob/master/src/main/ipynb/spark-mapreduce.ipynb' title=''>nbviewer example</a></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-2" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

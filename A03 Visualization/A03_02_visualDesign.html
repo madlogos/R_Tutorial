@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A03-02 统计图视觉设计</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A03-02 统计图视觉设计',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A03_02_visualDesign_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A03_02_visualDesign_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A03_02_visualDesign_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-20 16:29:04</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>可视化流程</a></li>
+<li><a href='#15' title=''>设计原则</a></li>
+<li><a href='#25' title=''>调色</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>可视化流程</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>什么? 为什么?</h2></hgroup><article  id="-">
+
+<p>数据可视化(Data Visualization): 将抽象的科学或者商业<strong>数据</strong>用<strong>图像</strong>表示出来，帮助理解<strong>数据的意义</strong>的过程。可视化并不独立于分析过程，两者往往相伴、迭代推进。</p>
+
+<p>为什么要做可视化? 图形传达信息的效率更高</p>
+
+<ul>
+<li>理解数据<strong>特性</strong></li>
+<li>找出数据中蕴含的<strong>模式</strong> (pattern)</li>
+<li>建议<strong>建模</strong>策略</li>
+<li>诊断分析中的<strong>问题</strong></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>一般流程</h2></hgroup><article >
+
+<img src='A03_02_visualDesign_files/figure-html/framework.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>作图前考虑</h2></hgroup><article >
+
+<ul>
+<li>选择绘图设备 (本教程只考虑屏幕设备)
+
+<ul>
+<li>是不是只要看看效果？只要显示到屏幕？</li>
+<li>要输出为文件？是否要高清晰度？用于浏览器/展示/打印？</li>
+</ul></li>
+<li>选择绘图系统
+
+<ul>
+<li>探索性画一下图？要做面板图？要出更灵活、更美观的图？</li>
+<li>一般各种绘图系统彼此独立，不能混用。</li>
+</ul></li>
+<li>选择统计图种类
+
+<ul>
+<li>可参考<a href='http://www.infographicsblog.com/wp-content/uploads/2011/11/chart-suggestion-infographic.jpg' title=''>Dr. Andrew Abela的小结</a></li>
+</ul></li>
+<li>图表设计
+
+<ul>
+<li>是否要分面？如何排版？边距？视觉通道（长短、大小、饱和度、色调、透明度）？</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A03_02_visualDesign_files/figure-html/chart-suggestion.jpg' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>变量映射</h2></hgroup><article >
+
+<p>变量映射(数据==&gt;可视化结果)的过程就是<strong>视觉编码</strong>(visual encoding)。</p>
+
+<p>作图前的数据准备: 各个变量分别映射到哪个视觉通道(visual channel)上？通常，</p>
+
+<ul>
+<li><code>x</code> 变量映射到x轴或角度</li>
+<li><code>y</code> 变量映射到y轴或半径</li>
+<li>若干<code>group</code>变量映射到分组
+
+<ul>
+<li>可以映射为气泡大小、线条粗细</li>
+<li>可以映射为色调 (hue)</li>
+<li>可以映射为饱和度 (saturation)</li>
+<li>可以映射为透明度 (transparency/alpha)</li>
+<li>&#8230;</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>何谓视觉通道?</h2></hgroup><article >
+
+<ul>
+<li>信息被编码在<strong>数据-符号的映射</strong>关系（视觉编码）中</li>
+<li>人类视觉系统通过<strong>解码视觉编码</strong>获得信息</li>
+</ul>
+
+<img src='A03_02_visualDesign_files/figure-html/semiology_of_graphics.png' title='fig:'/><p class='caption'>Jacques Bertin, <strong>Semiology of Graphics</strong>, 1967</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/vis%20channel%201-1.png" width="480" /></p>
+
+<ul>
+<li>通道1: 位置</li>
+<li>通道2: 颜色</li>
+<li>通道3: 气泡大小</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/vis%20channel%202-1.png" width="480" /></p>
+
+<ul>
+<li>通道1: 长度</li>
+<li>通道2: 颜色</li>
+<li>通道3: 透明度</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>人类视觉对不同视觉通道的敏感性</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">通道</th>
+<th align="center">分类数据 Categorical</th>
+<th align="center">有序数据 Ordinal</th>
+<th align="center">定量数据 Quantitative</th>
+</tr>
+<tr class="odd">
+<td align="left">位置 position</td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gre>好</gre></td>
+</tr>
+<tr class="even">
+<td align="left">长度 length</td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gre>好</gre></td>
+</tr>
+<tr class="odd">
+<td align="left">亮暗 luminance</td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gld>中</gld></td>
+</tr>
+<tr class="even">
+<td align="left">纹理 texture</td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gld>中</gld></td>
+<td align="center"><crb><b>差</b></crb></td>
+</tr>
+<tr class="odd">
+<td align="left">颜色 color</td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><gld>中</gld></td>
+<td align="center"><crb><b>差</b></crb></td>
+</tr>
+<tr class="even">
+<td align="left">角度 angle</td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><crb><b>差</b></crb></td>
+<td align="center"><crb><b>差</b></crb></td>
+</tr>
+<tr class="odd">
+<td align="left">形状 shape</td>
+<td align="center"><gre>好</gre></td>
+<td align="center"><crb><b>差</b></crb></td>
+<td align="center"><crb><b>差</b></crb></td>
+</tr>
+</table>
+
+<p>(Jacques Bertin, 1967)</p>
+
+</article></slide><slide class=''><hgroup><h2>视觉编码的选择优先级</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="right">序号</th>
+<th align="center">分类数据</th>
+<th align="center">有序数据</th>
+<th align="center">定量数据</th>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="center"><crb>位置</crb> position</td>
+<td align="center"><crb>位置</crb> position</td>
+<td align="center"><crb>位置</crb> position</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="center"><red>色调</red> hue</td>
+<td align="center"><gld>密度</gld> density</td>
+<td align="center"><dgr>长度</dgr> length</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="center"><dpk>纹理</dpk> texture</td>
+<td align="center"><lim>饱和度</lim> saturation</td>
+<td align="center"><tea>角度</tea> angle</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="center"><pnk>连接</pnk> connection</td>
+<td align="center"><red>色调</red> hue</td>
+<td align="center"><blu>斜率</blu> slope</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="center"><ora>包含</ora> containment</td>
+<td align="center"><dpk>纹理</dpk> texture</td>
+<td align="center"><prw>面积</prw> area</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="center"><gld>密度</gld> density</td>
+<td align="center"><pnk>连接</pnk> connection</td>
+<td align="center"><vio>体积</vio> volume</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="center"><lim>饱和度</lim> saturation</td>
+<td align="center"><ora>包含</ora> containment</td>
+<td align="center"><gld>密度</gld> density</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>视觉编码的选择优先级 (续)</h2></hgroup><article  id="-">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="right">序号</th>
+<th align="center">分类数据</th>
+<th align="center">有序数据</th>
+<th align="center">定量数据</th>
+</tr>
+<tr class="odd">
+<td align="right">8</td>
+<td align="center"><gre>形状</gre> shape</td>
+<td align="center"><dgr>长度</dgr> length</td>
+<td align="center"><lim>饱和度</lim> saturation</td>
+</tr>
+<tr class="even">
+<td align="right">9</td>
+<td align="center"><dgr>长度</dgr> length</td>
+<td align="center"><tea>角度</tea> angle</td>
+<td align="center"><red>色调</red> hue</td>
+</tr>
+<tr class="odd">
+<td align="right">10</td>
+<td align="center"><tea>角度</tea> angle</td>
+<td align="center"><blu>斜率</blu> slope</td>
+<td align="center"><dpk>纹理</dpk> texture</td>
+</tr>
+<tr class="even">
+<td align="right">11</td>
+<td align="center"><blu>斜率</blu> slope</td>
+<td align="center"><prw>面积</prw> area</td>
+<td align="center"><pnk>连接</pnk> connection</td>
+</tr>
+<tr class="odd">
+<td align="right">12</td>
+<td align="center"><prw>面积</prw> area</td>
+<td align="center"><vio>体积</vio> volume</td>
+<td align="center"><ora>包含</ora> containment</td>
+</tr>
+<tr class="even">
+<td align="right">13</td>
+<td align="center"><vio>体积</vio> volume</td>
+<td align="center"><gre>形状</gre> shape</td>
+<td align="center"><gre>形状</gre> shape</td>
+</tr>
+</table>
+
+<p>by Mackinlay, <strong>Automating the Design of Graphical Presentations of Relational Information</strong>, 1986</p>
+
+</article></slide><slide class=''><hgroup><h2>其他考虑</h2></hgroup><article >
+
+<ul>
+<li>视觉编码方案组合众多: k个视觉通道 * n个数据维度 -&gt; (n+1)^k 种编码方案</li>
+<li>除了视觉通道以外，还要考虑
+
+<ul>
+<li>色彩搭配</li>
+<li>人机交互</li>
+<li>美学规律</li>
+<li>信息密度</li>
+<li>象征、隐喻</li>
+<li>&#8230;</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>设计原则</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>基本原则</h2></hgroup><article >
+
+<ul>
+<li>一致性: 可视化结果与数据<strong>真实蕴含</strong>的信息一致 (诚实性)
+
+<ul>
+<li>文字标示清晰、完整</li>
+<li>视觉度量和数字本身<strong>成比例</strong></li>
+<li>体现数字的变异，而不是设计的变异</li>
+</ul></li>
+<li>表达性: 可视化结果<strong>充分且不多余</strong>地表达数据要传达的信息
+
+<ul>
+<li>用于表现数字变化的笔墨比重越高越好</li>
+<li><strong>内容为王</strong>，避免图标垃圾，增加信息/数字密度</li>
+<li>信息分层</li>
+<li><strong>对比</strong>、<strong>证据综合</strong></li>
+</ul></li>
+<li>有效性: 可视化之后<strong>表达效果更好</strong></li>
+<li>可理解性: 可视化结果<strong>便于理解</strong></li>
+</ul>
+
+<p style="text-align:center">
+
+by Mackinlay, Tversky, &amp; E. Tufte
+
+</p>
+
+</article></slide><slide class=''><hgroup><h2>一致性</h2></hgroup><article >
+
+<h4>文字标示清晰完整</h4>
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/consitency%201%20wrong-1.png" width="480" /></p>
+
+<ul>
+<li>变量名意义不明晰</li>
+<li>没有标题和背景提示</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/consitency%201%20right-1.png" width="480" /></p>
+
+<ul>
+<li>要提供标签、尺度、来源等信息</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>一致性</h2></hgroup><article  id="-1">
+
+<h4>视觉度量和数字成比例</h4>
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/consitency%202%20wrong-1.png" width="480" /></p>
+
+<ul>
+<li>视觉上7倍 (实际1.07倍)</li>
+<li><strong>谎言系数</strong>: 7/1.07=6.5，夸大5.5倍</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/consitency%202%20right-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>一致性</h2></hgroup><article  id="-2">
+
+<h4>重点表达数字本身的变异</h4>
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/consitency%203%20wrong-1.png" width="480" /></p>
+
+<ul>
+<li>彩虹色一般都要慎用</li>
+<li>要善用灰色、灰度</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/consitency%203%20right-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>表达性</h2></hgroup><article >
+
+<h4>提高数字笔墨比 (data-ink ratio)</h4>
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/expressive%201%20wrong-1.png" width="480" /></p>
+
+<ul>
+<li>3D图侧面/阴影元素费墨，且误导比例</li>
+<li>花哨的&quot;镀金&quot;元素，应一律去除</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/expressive%201%20right-1.png" width="480" /></p>
+
+<ul>
+<li>淡化边框、网格、轴线、背景</li>
+<li>去掉所有无关元素</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>表达性</h2></hgroup><article  id="-1">
+
+<h4>信息分层</h4>
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/expressive%202%20wrong-1.png" width="480" /></p>
+
+<ul>
+<li>分组和颜色太多，降低效果</li>
+<li>信息密度不要太低也不要太高</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/expressive%202%20right-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>表达性</h2></hgroup><article  id="-2">
+
+<h4>比较、证据综合</h4>
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/expressive%203%20wrong-1.png" width="480" /></p>
+
+<ul>
+<li>孤点，信息密度太低</li>
+<li>没有参比标杆，没有自身对比</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/expressive%203%20right-1.png" width="480" /></p>
+
+<ul>
+<li>展示多种变量，展示对比和变化</li>
+<li>努力表现因果、机制、解释、系统结构等</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>有效性</h2></hgroup><article >
+
+<h4>选择达意效果最优的图</h4>
+
+<div class="columns-2">
+<p><img src="A03_02_visualDesign_files/figure-html/effective%201%20wrong-1.png" width="480" /></p>
+
+<ul>
+<li>人类视觉对面积不如长度敏感</li>
+<li>饼图承载信息量太稀，建议尽量少用</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p><img src="A03_02_visualDesign_files/figure-html/effective%201%20right-1.png" width="480" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>调色</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>颜色编码</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<col width="10%" />
+<col width="22%" />
+<col width="13%" />
+<col width="19%" />
+<col width="19%" />
+<col width="14%" />
+<tr class="header">
+<th align="left">颜色系统</th>
+<th align="left"></th>
+<th align="left">黑</th>
+<th align="left">灰</th>
+<th align="left">天蓝</th>
+<th align="left">番茄</th>
+</tr>
+<tr class="odd">
+<td align="left">色名</td>
+<td align="left">文本, 颜色名字</td>
+<td align="left">&quot;black&quot;</td>
+<td align="left">&quot;gray&quot;</td>
+<td align="left">&quot;skyblue&quot;</td>
+<td align="left">&quot;tomato&quot;</td>
+</tr>
+<tr class="even">
+<td align="left">RGB空间</td>
+<td align="left">向量, <code>rgb(Red, Green, Blue, &lt;Alpha&gt;)</code></td>
+<td align="left">rgb(0, 0, 0)</td>
+<td align="left">rgb(190, 190, 190, max=255)</td>
+<td align="left">rgb(135, 206, 235, max=255)</td>
+<td align="left">rgb(255, 99, 71, max=255)</td>
+</tr>
+<tr class="odd">
+<td align="left">HCL空间</td>
+<td align="left">Hex文本, <code>&quot;#Hue Chroma Luminance &lt;Transparency&gt;&quot;</code></td>
+<td align="left">#000000FF</td>
+<td align="left">#BEBEBEFF</td>
+<td align="left">#86CEEBFF</td>
+<td align="left">#FF6347FF</td>
+</tr>
+<tr class="even">
+<td align="left">HSV空间</td>
+<td align="left">向量, <code>hsv(Hue, Saturation, Value, &lt;Tranparency&gt;)</code></td>
+<td align="left">hsv(0, 0, 0)</td>
+<td align="left">hsv(0, 0, 0.74510)</td>
+<td align="left">hsv(0.548, 0.426, 0.922)</td>
+<td align="left">hsv(0.025, 0.722, 1)</td>
+</tr>
+</table>
+
+<p><img src="A03_02_visualDesign_files/figure-html/color%20encoding-1.png" width="960" /></p>
+
+</article></slide><slide class=''><hgroup><h2>色彩空间相互转换</h2></hgroup><article >
+
+<div class="columns-2">
+<p><code>colorspace</code>包，或</p>
+
+<img src='A03_02_visualDesign_files/figure-html/convColorspace.png' title='fig:'/>
+
+<ul>
+<li>色名 &#8211;&gt; HCL</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; col2hcl(&quot;pink&quot;)
+[1] &quot;#FFC0CBFF&quot;</pre>
+
+<ul>
+<li>色名/HCL &#8211;&gt; RGB: <code>col2rgb</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; col2rgb(&quot;pink&quot;)
+      [,1]
+red    255
+green  192
+blue   203</pre>
+
+<ul>
+<li>RGB &#8211;&gt; HSV: <code>rgb2hsv</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; rgb2hsv(255, 190, 77, max=255)
+       [,1]
+h 0.1058052
+s 0.6980392
+v 1.0000000</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>标准色</h2></hgroup><article >
+
+<ul>
+<li>标准色内建于<code>grDevices</code>包中
+
+<ul>
+<li>R内建<strong>657</strong>种颜色名: <code>colors()</code></li>
+<li><code>demo(colors)</code>展示内建颜色各种效果</li>
+</ul>
+
+<img src='A03_02_visualDesign_files/figure-html/demo%20colors.png' title='fig:'/></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>自定义色</h2></hgroup><article >
+
+<ul>
+<li>函数
+
+<ul>
+<li><code>rgb</code>: R, G, B, A均可0-1或0-255</li>
+<li><code>hsv</code>: H, S, V, A均可0-1或0-255</li>
+</ul></li>
+<li>或直接书写<code>hcl</code>颜色编码</li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>library(scales)
+show_col(c(&quot;#7AC143&quot;, &quot;#7D3F98&quot;, &quot;#F47721&quot;, 
+    &quot;#D20962&quot;, &quot;#00A78E&quot;, &quot;#00BCE4&quot;))</pre>
+
+<p><img src="A03_02_visualDesign_files/figure-html/show_col-1.png" width="432" /></p>
+
+<pre class = 'prettyprint lang-r'>show_col(c(rgb(1, 1, 1), rgb(0.5, 0, 0), 
+    rgb(0, 0.5, 0), hsv(0, 0, 0.5), 
+    hsv(1, 0.5, 1), hsv(0.5, 1, 0.5)))</pre>
+
+<p><img src="A03_02_visualDesign_files/figure-html/show_col-2.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>调色板 Palette</h2></hgroup><article  id="-palette" class="smaller">
+
+<ul>
+<li>调色板: 多个颜色构成的向量</li>
+<li>离散色板: 显式定义固定长度调色板，及各组成元素</li>
+<li>连续色板: 在一根定限的色阶上连续变化的一组颜色
+
+<ul>
+<li><code>grDevices</code>包中的<code>gray()</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; gray(c(0.1, 0.5, 0.8))  # 取灰度0.1, 0.5, 0.8
+[1] &quot;#1A1A1A&quot; &quot;#808080&quot; &quot;#CCCCCC&quot;  # 返回hcl值</pre>
+
+<ul>
+<li><code>colorRamp()</code>和<code>colorRampPalette()</code>: 生成色阶定义函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; pal &lt;- colorRamp(c(&quot;red&quot;, &quot;green&quot;, &quot;violet&quot;))  # 定义色阶
+&gt; pal(c(0.4, 0.75))   # 在该色阶上取0.4, 0.75分位
+     [,1]  [,2] [,3]  # 三列分别代表红、绿、蓝
+[1,]   51 204.0    0  # 两行分别代表0.4和0.75分位
+[2,]  119 192.5  119
+
+&gt; pal &lt;- colorRampPalette(c(&quot;red&quot;, &quot;green&quot;, &quot;violet&quot;))  # 定义同样的色阶
+&gt; pal(5)  # 自动从色阶中等距取5种颜色，返回hcl值
+[1] &quot;#FF0000&quot; &quot;#7F7F00&quot; &quot;#00FF00&quot; &quot;#77C077&quot; &quot;#EE82EE&quot;</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>内置调色板 <code>RColorBrewer</code>包</h2></hgroup><article  id="-rcolorbrewer">
+
+<ul>
+<li><code>display.brewer.all()</code></li>
+</ul>
+
+<img src='A03_02_visualDesign_files/figure-html/RColorBrewer.png' title='fig:'/>
+
+<ul>
+<li><code>brewer.pal.info</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>RColorBrewer</h2></hgroup><article  id="rcolorbrewer">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>library(RColorBrewer)
+cols &lt;- brewer.pal(n=3, name=&quot;RdYlGn&quot;)
+cols</pre>
+
+<pre >## [1] &quot;#FC8D59&quot; &quot;#FFFFBF&quot; &quot;#91CF60&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>scales::show_col(cols)</pre>
+
+<p><img src="A03_02_visualDesign_files/figure-html/brewer.pal%201-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>pal &lt;- colorRampPalette(cols)
+image(volcano, col = pal(20))</pre>
+
+<p><img src="A03_02_visualDesign_files/figure-html/brewer.pal%202-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

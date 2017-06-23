@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A04-01 描述性分析</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A04-01 描述性分析',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A04_01_descriptive_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A04_01_descriptive_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A04_01_descriptive_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-18 21:02:59</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>描述性分析</a></li>
+<li><a href='#8' title=''>聚集和离散趋势</a></li>
+<li><a href='#11' title=''>分布情况</a></li>
+<li><a href='#14' title=''>频数分布</a></li>
+<li><a href='#20' title=''>交叉表</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>描述性分析</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>什么是描述性分析</h2></hgroup><article >
+
+<ul>
+<li>统计分析包括<strong>统计描述</strong>(descriptive statistics)和<strong>统计推断</strong>(inferential statistics)
+
+<ul>
+<li>描述性统计: 定量描述/汇总一批样本资料</li>
+<li>推断性统计: 利用样本信息推断总体特征</li>
+<li><strong>描述是推断的基础</strong></li>
+</ul></li>
+<li>描述性分析一般不涉及概率推断</li>
+<li><p>一个外行拿到资料后首先会问的问题:</p>
+
+<blockquote>
+<p>数据量多大? 平均多少？最大/最小是多少？ 每个月分别多少？ &#8230;</p>
+</blockquote></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>描述性分析的内容</h2></hgroup><article >
+
+<ul>
+<li>定量(quantitative)数据
+
+<ul>
+<li>聚集趋势: 均数、中位数、众数、&#8230;</li>
+<li>离散趋势: 标准差、方差、全距、&#8230;</li>
+</ul></li>
+<li>定性(qualitative)数据
+
+<ul>
+<li>频数分布</li>
+<li>频率分布</li>
+</ul></li>
+<li>分布情况: 偏度、峰度</li>
+<li>交叉表</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>聚集和离散趋势</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>聚集趋势</h2></hgroup><article >
+
+<ul>
+<li>均数 (mean)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; mean(cars$speed)
+[1] 15.4</pre>
+
+<ul>
+<li>中位数 (median)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; median(cars$speed)
+[1] 15</pre>
+
+<ul>
+<li>分位数 (percentile)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; quantile(cars$speed, c(0, 0.05, 0.5, 0.95, 1))
+  0%   5%  50%  95% 100% 
+   4    7   15   24   25 </pre>
+
+</article></slide><slide class=''><hgroup><h2>聚集趋势 (续)</h2></hgroup><article  id="-">
+
+<ul>
+<li>众数: R没有内建的众数函数，需要自定义</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'># 构建一个S3泛函数calcMode，调用通用方法&quot;calcMode&quot;
+&gt; calcMode &lt;- function(x) UseMethod(&quot;calcMode&quot;)
+&gt; calcMode.default &lt;- function(x) max(unique(table(x)))
+&gt; calcMode.list &lt;- function(x) sapply(x, function(v) max(unique(table(v))))
+&gt; calcMode.data.frame &lt;- calcMode.list</pre>
+
+<ul>
+<li>对于数据框和向量，调用不同的方法，输出不同的格式</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; calcMode(cars)
+speed  dist 
+    5     4 
+&gt; calcMode(cars$speed)
+[1] 5</pre>
+
+</article></slide><slide class=''><hgroup><h2>离散趋势</h2></hgroup><article >
+
+<ul>
+<li>标准差 (standard deviation)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; sd(cars$speed)
+[1] 5.287644</pre>
+
+<ul>
+<li>方差 (variance)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; var(cars$speed)
+[1] 27.95918</pre>
+
+<ul>
+<li>全距 (range)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; range(cars$speed)
+[1] 4 25</pre>
+
+</article></slide><slide class=''><hgroup><h2>汇总描述</h2></hgroup><article >
+
+<ul>
+<li><code>summary</code>函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; summary(cars$speed)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    4.0    12.0    15.0    15.4    19.0    25.0 </pre>
+
+<ul>
+<li><code>Hmisc</code>包的<code>describe</code>函数(更详尽)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; Hmisc::describe(cars$speed)
+cars$speed 
+       n  missing distinct  Info  Mean   Gmd  .05  .10   .25   .50  .75   .90  .95 
+      50        0       19 0.996  15.4 6.077  7.0  8.9  12.0  15.0 19.0  23.1 24.0 
+                                                                                                         
+Value         4    7    8    9   10   11   12   13   14   15   16   17   18   19   ...
+Frequency     2    2    1    1    3    2    4    4    4    3    2    3    4    3   ...
+Proportion 0.04 0.04 0.02 0.02 0.06 0.04 0.08 0.08 0.08 0.06 0.04 0.06 0.08 0.06   ...</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>分布情况</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>偏度和峰度</h2></hgroup><article >
+
+<div class="columns-2">
+<ul>
+<li>偏度: R并不自带偏度函数，可加载<code>e1071</code>包</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; e1071::skewness(cars$dist)
+[1] 0.7591268  # &gt;0，右偏</pre>
+
+<ul>
+<li>type = 3
+
+<ol>
+<li>\(g_1 = m_3 / m_2^ {3/2}\). 经典方法</li>
+<li>\(G_1 = G_1 = g_1 \sqrt{n(n-1)} / (n-2)\). SAS和SPSS</li>
+<li>\(b_1 = m_3 / s^3 = g_1 ((n-1)/n)^ {3/2}\). MINITAB和BMDP</li>
+</ol></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>峰度: R并不自带峰度函数，可加载<code>e1071</code>包</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; e1071::kurtosis(cars$speed)
+[1] -0.6730924  # &lt;0，峰不太陡峭(较正态分布更缓)</pre>
+
+<ul>
+<li>type = 3
+
+<ol>
+<li>\(g_2 = m_4 / m_2^2 - 3\). 经典方法</li>
+<li>\(G_2 = ((n+1) g_2 + 6)(n-1)\) \(/((n-2)(n-3))\). SAS和SPSS</li>
+<li>\(b_2 = m_4 / s^4 - 3\) \(= (g_2 + 3)(1 - 1/n)^2 - 3\). MINITAB和BMDP</li>
+</ol></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>直方图</h2></hgroup><article >
+
+<ul>
+<li>绘制直方图，快速判断分布特征</li>
+<li><code>hist()</code></li>
+</ul>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>hist(cars$dist)</pre>
+
+<p><img src="A04_01_descriptive_files/figure-html/skewness-1.png" width="480" /></p>
+
+<pre class = 'prettyprint lang-r'>hist(cars$speed)</pre>
+
+<p><img src="A04_01_descriptive_files/figure-html/kurtosis-1.png" width="480" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>频数分布</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>简单频数/率表: <code>table</code>和<code>prop.table</code>函数</h2></hgroup><article  id="-tableprop.table">
+
+<ul>
+<li>一维对象</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; table(mtcars$gear)
+ 3  4  5 
+15 12  5 
+&gt; prop.table(table(mtcars$gear))
+      3       4       5 
+0.46875 0.37500 0.15625 </pre>
+
+<ul>
+<li>多维对象</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; table(mtcars[,c(&quot;am&quot;, &quot;carb&quot;)])
+   carb
+am  1 2 3 4 6 8
+  0 3 6 3 7 0 0
+  1 4 4 0 3 1 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>交叉频数表: <code>ftable</code>函数</h2></hgroup><article  id="-ftable" class="smaller">
+
+<ul>
+<li>明细表: 频数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; ftable(mtcars[, c(&quot;gear&quot;, &quot;am&quot;, &quot;vs&quot;)], row.vars=&quot;gear&quot;, col.vars=c(&quot;am&quot;, &quot;vs&quot;))
+     am  0     1   
+     vs  0  1  0  1
+gear               
+3       12  3  0  0
+4        0  4  2  6
+5        0  0  4  1</pre>
+
+<ul>
+<li>汇总矩阵: 求和</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; ftable(Titanic, row.vars=1, col.vars=c(2,4))
+# 如果是ftable(as.data.frame(Titanic), row.vars=1, col.vars=c(2,4))呢?
+      Sex          Male     Female    
+      Survived   No Yes     No Yes
+Class                             
+1st             118  62      4 141
+2nd             154  25     13  93
+3rd             422  88    106  90
+Crew            670 192      3  20</pre>
+
+</article></slide><slide class=''><hgroup><h2>进阶交叉汇总: <code>xtabs</code>函数</h2></hgroup><article  id="-xtabs" class="smaller">
+
+<ul>
+<li><code>xtabs</code>交叉，<code>as.data.frame.table</code>还原</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; xtabs(Freq ~ Gender + Admit, as.data.frame(UCBAdmissions))
+         Admit
+Gender   Admitted Rejected
+  Male       1198     1493
+  Female      557     1278
+  
+&gt; xtabs(cbind(ncases, ncontrols) ~ agegp, data = esoph)
+agegp  ncases ncontrols
+25-34       1       116
+35-44       9       199
+45-54      46       213
+55-64      76       242
+65-74      55       161
+75+        13        44</pre>
+
+<pre class = 'prettyprint lang-r'>&gt; as.data.frame.table(xtabs(Freq ~ Gender + Admit, as.data.frame(UCBAdmissions)))
+  Gender    Admit Freq
+1   Male Admitted 1198
+2 Female Admitted  557
+3   Male Rejected 1493
+4 Female Rejected 1278</pre>
+
+</article></slide><slide class=''><hgroup><h2>一些实用统计函数</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>行计算: <code>rowSums</code>, <code>rowMeans</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; m &lt;- xtabs(Freq ~ Gender + Admit, as.data.frame(UCBAdmissions))
+&gt; rowSums(m)
+  Male Female 
+  2691   1835 
+&gt; rowMeans(m)
+  Male Female 
+1345.5  917.5 </pre>
+
+<ul>
+<li>列计算: <code>colSums</code>, <code>colMeans</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; colSums(m)
+Admitted Rejected 
+    1755     2771 
+&gt; colMeans(m)
+Admitted Rejected 
+   877.5   1385.5 </pre>
+
+<ul>
+<li>累加: <code>cumsum</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; cumsum(1:10)
+ [1]  1  3  6 10 15 21 28 36 45 55</pre>
+
+</article></slide><slide class=''><hgroup><h2>完整的频数统计表</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>由明细记录表开始</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t1 &lt;- ftable(mtcars[, c(&quot;gear&quot;, &quot;vs&quot;, &quot;am&quot;)], row.vars=1:2, col.vars=3)
+&gt; t1
+        am  0  1
+gear vs         
+3    0     12  0
+     1      3  0
+4    0      0  2
+     1      4  6
+5    0      0  4
+     1      0  1</pre>
+
+<ul>
+<li>频率统计</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t2 &lt;- prop.table(t1)
+&gt; t2
+        am       0       1
+gear vs                   
+3    0     0.37500 0.00000
+     1     0.09375 0.00000
+4    0     0.00000 0.06250
+     1     0.12500 0.18750
+5    0     0.00000 0.12500
+     1     0.00000 0.03125</pre>
+
+</article></slide><slide class=''><hgroup><h2>完整的频数统计表 (续)</h2></hgroup><article  id="-" class="smaller">
+
+<ul>
+<li>合并频率和频数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t3 &lt;- cbind(t1, t2)
+&gt; t3 &lt;- t3[, c(seq(1, 4, by=2), seq(2, 4, by=2))]</pre>
+
+<ul>
+<li>定义ftable属性</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t3 &lt;- structure(t3, class=&#39;ftable&#39;, row.vars=attr(t1, &quot;row.vars&quot;), 
++   col.vars=attr(t1, &quot;col.vars&quot;))
+&gt; attr(t3, &#39;col.vars&#39;)$stat &lt;- c(&quot;Freq&quot;, &quot;Pct&quot;)
+&gt; t3
+        am          0                 1         
+        stat     Freq      Pct     Freq      Pct
+gear vs                                         
+3    0       12.00000  0.37500  0.00000  0.00000
+     1        3.00000  0.09375  0.00000  0.00000
+4    0        0.00000  0.00000  2.00000  0.06250
+     1        4.00000  0.12500  6.00000  0.18750
+5    0        0.00000  0.00000  4.00000  0.12500
+     1        0.00000  0.00000  1.00000  0.03125</pre>
+
+</article></slide><slide class=''><hgroup><h2>完整的频数统计表 (续)</h2></hgroup><article  id="--1" class="smaller">
+
+<ul>
+<li>另一个办法是<code>dcast</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; t4 &lt;- data.table::dcast(mtcars, gear+vs ~ am, fun=length, value.var=&quot;am&quot;, 
++    margins=c(&quot;am&quot;, &quot;gear&quot;))  # 获得频数统计
+
+&gt; t4[, c(&quot;%_0&quot;, &quot;%_1&quot;)] &lt;- rbind(prop.table(t4[1:6, 3:4]), 
++    prop.table(t4[7, 3:4]))  # 获得频率统计
+
+&gt; t4[, &quot;%_all&quot;] &lt;- rowSums(t4[, 6:7])  # 计算合计
+
+&gt; t4[, 6:8] &lt;- sapply(t4[,6:8], function(v) {
++    sprintf(&quot;%3.2f%%&quot;, 100*v)})  # 格式转换(百分比)
+&gt; t4
+   gear    vs  0  1 (all)    %_0    %_1   %_all
+1     3     0 12  0    12 37.50%  0.00%  37.50%
+2     3     1  3  0     3  9.38%  0.00%   9.38%
+3     4     0  0  2     2  0.00%  6.25%   6.25%
+4     4     1  4  6    10 12.50% 18.75%  31.25%
+5     5     0  0  4     4  0.00% 12.50%  12.50%
+6     5     1  0  1     1  0.00%  3.12%   3.12%
+7 (all) (all) 19 13    32 59.38% 40.62% 100.00%</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>交叉表</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>交叉和堆积</h2></hgroup><article >
+
+<ul>
+<li>在数据变形部分，曾介绍过熔解<code>melt</code>和重铸<code>cast</code></li>
+<li>熔解(堆积)的目的是得到单向表 (长表 long table)
+
+<ul>
+<li>最简单的: 键值对</li>
+<li>常见的: 复合多属性列的数值列</li>
+</ul></li>
+<li>重铸(交叉)的目的是获得可建模的多维表，或汇总统计 (宽表 wide table)
+
+<ul>
+<li>日常接触的多数表格都是多维的</li>
+<li>Excel的数据透视表(pivot table)是典型的重铸汇总表</li>
+</ul></li>
+<li>实际使用中，单向表和多维表的概念是相对的</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>数据结构</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>单向表是分析的基石
+
+<ul>
+<li>单向明细表本身就是关系型数据库理想的表设计范式</li>
+<li>建议以单向明细表存储、交换数据</li>
+<li>在索取原始数据时，单向明细表是最优选择</li>
+<li>有了单向明细，再交叉计算结果</li>
+</ul></li>
+<li>不要急于交叉，交叉的过程往往损失信息</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; as.data.frame(t2)
+   gear vs am    Freq
+1     3  0  0 0.37500
+2     4  0  0 0.00000
+3     5  0  0 0.00000
+4     3  1  0 0.09375
+...
+9     5  0  1 0.12500
+10    3  1  1 0.00000
+11    4  1  1 0.18750
+12    5  1  1 0.03125</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

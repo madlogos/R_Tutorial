@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-06 R Notebook</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-06 R Notebook',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_06_notebook_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_06_notebook_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_06_notebook_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-22 20:39:31</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>R Notebook</a></li>
+<li><a href='#8' title=''>Jupyter Notebook</a></li>
+<li><a href='#17' title=''>Anaconda</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>R Notebook</h2></hgroup><article  id="r-notebook">
+
+</article></slide><slide class=''><hgroup><h2><a href='http://rmarkdown.rstudio.com/r_notebooks.html' title=''>简介</a></h2></hgroup><article >
+
+<ul>
+<li>要求RStudio 1.0以上版本</li>
+<li>R Notebook是一种特殊的rmarkdown文档类型
+
+<ul>
+<li>支持独立、交互运行单个代码块</li>
+<li>代码块运行结果即时显示在文档体内</li>
+</ul></li>
+<li>更灵活，更便于探索</li>
+<li>notebook运行模式也可以用在.R脚本或普通.rmd文档
+
+<ul>
+<li><strong>Ctrl + Alt + I</strong> (OS X: <em>Cmd + Option + I</em>)插入代码块</li>
+<li>[Run chunk]按钮，或<strong>Ctrl + Shift + Enter</strong> (OS X: <em>Cmd + Shift + Enter</em>)运行当前代码块</li>
+<li>鼠标选取代码片断，<strong>Ctrl + Shift + Enter</strong> (OS X: <em>Cmd + Shift + Enter</em>)运行选中代码</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>创建R Notebook</h2></hgroup><article  id="r-notebook">
+
+<p><strong>创建 &#8211;&gt; 编辑 &#8211;&gt; 设置</strong></p>
+
+<img src='A05_06_notebook_files/figure-html/create_nb.png' title='fig:'/>
+
+<img src='A05_06_notebook_files/figure-html/notebook-preview.png' title='fig:'/>
+
+<img src='A05_06_notebook_files/figure-html/nb_conf.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>交互运行</h2></hgroup><article >
+
+<div class="columns-2">
+<p>交互运行时，能看到进度条</p>
+
+<img src='A05_06_notebook_files/figure-html/progbar.png' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<p>交互运行完毕后，结果显示在代码块下方</p>
+
+<img src='A05_06_notebook_files/figure-html/inter_plot.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>快速分享</h2></hgroup><article >
+
+<ul>
+<li>R Notebook生成的HTML文件为.nb.html格式</li>
+<li>可以一键切换浏览模式(显示/隐藏源代码)</li>
+</ul>
+
+<img src='A05_06_notebook_files/figure-html/nb_html.png' title='fig:'/>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Jupyter Notebook</h2></hgroup><article  id="jupyter-notebook">
+
+</article></slide><slide class=''><hgroup><h2><a href='http://jupyter.org/' title=''>简介</a></h2></hgroup><article  id="-1">
+
+<ul>
+<li>开源网络应用，用户可以快速创建基于网络的notebook应用</li>
+<li>前身是IPython，仅支持Python</li>
+<li>如今已成为数据科学领域的流行工具，额外支持R, Julia, Scala等</li>
+<li>便于通过网络共享(GitHub, dropbox, <a href='https://nbviewer.jupyter.org/' title=''>nbviewer</a>, &#8230;)</li>
+<li>内建为网络服务，便于嵌入Web交互部件(视频、音频、JavaScript)</li>
+<li>整合大数据工具(Spark等)，用户可使用熟悉的工具(ggplot2, pandas等)直接处理大数据集</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>创建Notebook</h2></hgroup><article  id="notebook">
+
+<ul>
+<li>命令行(如Shell)输入<code>jupyter notebook</code></li>
+</ul>
+
+<img src='A05_06_notebook_files/figure-html/jupyter-nb.png' title='fig:'/>
+
+<ul>
+<li>启动Jupyter Notebook网络服务，浏览器打开 <localhost:8888/tree></li>
+</ul>
+
+<img src='A05_06_notebook_files/figure-html/web-jupyter.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>使用</h2></hgroup><article >
+
+<ul>
+<li>新建notebook，选择合适的内核(kernel)</li>
+<li>Jupyter Notebook操作单元是cell，类似于R Notebook中的chunk
+
+<ul>
+<li><strong>Alt + Enter</strong>添加新cell</li>
+<li>3种类型(cell type): Code, Markdown, Raw NBConvert</li>
+<li>写完代码后，<strong>Shift + Enter</strong>运行</li>
+<li><strong>相当于把Jupyter Notebook当成R IDE来用</strong></li>
+</ul></li>
+<li>File &#8211;&gt; Download as，保存为.ipynb，.html，或.pdf</li>
+<li>关闭标签页，并到Jupyter Notebook Home关闭该内核</li>
+<li>关闭Shell窗口，即关闭Jupyter Notebook服务</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_06_notebook_files/figure-html/nb_py.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_06_notebook_files/figure-html/nb_r.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>Python也是一个好工具</h2></hgroup><article  id="python">
+
+<ul>
+<li>Python是当今数据科学领域最热门的语言之一
+
+<ul>
+<li>较完备的机器学习、深度学习工具</li>
+<li>适合处理大数据</li>
+</ul></li>
+<li>与R相比，Python学习曲线较平缓
+
+<ul>
+<li>语法更符合计算机科学背景的技术人员的习惯</li>
+<li>方法明确，一种问题通常只对应一种解决方法</li>
+<li>文档更为完备，开发者社区更大</li>
+</ul></li>
+<li>Python是一种更通用的语言
+
+<ul>
+<li>适合搭建网络应用等工具</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="columns-2">
+<img src='A05_06_notebook_files/figure-html/tiobe-idx.png' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<img src='A05_06_notebook_files/figure-html/jobtrend.png' title='fig:'/>
+
+<img src='A05_06_notebook_files/figure-html/kdpoll.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>那么问题来了&#8230;</h2></hgroup><article  id="...">
+
+<h4>我怎么安装Python和Jupyter Notebook呢?</h4>
+
+<ul>
+<li><p>从<a href='https://www.python.org/' title=''>Python</a>装起，再通过<code>pip</code>工具逐个安装必要的<a href='https://pypi.python.org/' title=''>扩展库</a></p></li>
+<li><p>但在Windows上，扩展库往往有很深的库依赖链，安装过程很容易出错</p></li>
+<li><p>推荐用一个具备较成熟的包管理能力的Python发行版</p></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Anaconda</h2></hgroup><article  id="anaconda">
+
+</article></slide><slide class=''><hgroup><h2><a href='https://anaconda.org/' title=''>简介</a></h2></hgroup><article  id="-2">
+
+<div class="col-2L">
+<ul>
+<li>Anaconda是Continuum Analytics公司出品的套件
+
+<ul>
+<li>Python有很多发行版，如WinPython， Python(x,y)</li>
+<li>Anaconda是目前最适合数据科学家的一个发行版</li>
+</ul></li>
+<li>Anaconda极大地便利了数据科学家
+
+<ul>
+<li>一站式管理Python及其扩展库(<code>conda</code>或<code>miniconda</code>)</li>
+<li>整合Jupyter Notebook, Spyder, Orange乃至RStudio等工具</li>
+<li>通过其他内核(如IRkernel, sas_kernel等)扩展分析处理能力</li>
+</ul></li>
+</ul></div>
+
+<div class="col-2R">
+<img src='A05_06_notebook_files/figure-html/anaconda.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://docs.continuum.io/anaconda/install' title=''>安装配置Anaconda</a></h2></hgroup><article  id="anaconda" class="smaller">
+
+<h4>安装</h4>
+
+<p>到<a href='http://continuum.io/downloads.html' title=''>下载页</a>下载对应的Anaconda Installer</p>
+
+<ul>
+<li>Windows: 如无法取得管理员权限，应选&quot;just for me&quot;</li>
+<li>MacOS: 包括GUI安装和命令行安装</li>
+<li>Linux: <code>bash &lt;路径&gt;.sh</code>命令</li>
+</ul>
+
+<h4>配置</h4>
+
+<div class="columns-2">
+<p>通过.condarc配置conda(通道、代理等)</p>
+
+<ul>
+<li>Windows: <code>C:\Users\&lt;用户&gt;\.condarc</code></li>
+<li>MacOS: <code>~/.condarc</code></li>
+<li>Linux: <code>/opt/&lt;用户&gt;/anaconda/.condarc</code></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<p>.condarc一般包含内容:</p>
+
+<pre >channels:
+  - r
+  - defaults
+proxy_servers:
+  http: http://&lt;用户名&gt;:&lt;密码&gt;@&lt;代理服务器&gt;:&lt;端口号&gt;
+  https: https://&lt;用户名&gt;:&lt;密码&gt;@&lt;代理服务器&gt;:&lt;端口号&gt;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://docs.continuum.io/docs_oss/conda' title=''>conda命令</a></h2></hgroup><article  id="conda">
+
+<ul>
+<li>conda是与pip类似的包管理工具(Anaconda自带conda)
+
+<ul>
+<li>conda可以用来管理Anaconda本身</li>
+</ul></li>
+<li>查看conda信息: <code>conda info</code></li>
+<li>帮助: <code>conda help</code></li>
+<li>罗列包: <code>conda list</code></li>
+<li>寻找包: <code>conda search &lt;参数&gt; &lt;包名&gt;</code></li>
+<li>安装包: <code>conda install &lt;参数&gt; &lt;包名&gt;</code></li>
+<li>更新包: <code>conda update &lt;参数&gt; &lt;包名&gt;</code></li>
+<li>卸载包: <code>conda remove &lt;参数&gt; &lt;包名&gt;</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>管理扩展包</h2></hgroup><article >
+
+<ul>
+<li>Anaconda内置150个包，此外可自行安装300多个包
+
+<ul>
+<li>可直接通过Anaconda Navigator图形界面安装扩展包</li>
+<li>也可通过<code>conda install</code>命令自行安装</li>
+<li>非conda包可通过pip来安装</li>
+</ul></li>
+<li>部分参数 <code>conda install|update|remove &lt;参数&gt; &lt;包名&gt;</code>
+
+<ul>
+<li><code>-h</code> 打开帮助</li>
+<li><code>-f</code> 强制安装</li>
+<li><code>-c</code> &#39;default&#39;以外的下载通道，默认为&#39;anaconda.org&#39;</li>
+<li><code>-n</code> 指定所装入的环境</li>
+<li><code>-v</code> 明细安装信息</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>加装R内核</h2></hgroup><article  id="r">
+
+<ul>
+<li>通过<code>conda install -c r r-essential</code>命令在Anaconda安装独立的R环境
+
+<ul>
+<li>该环境包括R及百来个常用包、Rtools组件</li>
+<li>不依赖既有的R环境及附加包，但要占用额外的空间</li>
+</ul></li>
+<li><a href='https://irkernel.github.io/installation/' title=''>利用已有的R环境</a>
+
+<ul>
+<li>在R中执行两步:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>install.packages(c(&#39;repr&#39;, &#39;IRdisplay&#39;, &#39;evaluate&#39;, &#39;crayon&#39;, &#39;pbdZMQ&#39;, &#39;devtools&#39;, 
+    &#39;uuid&#39;, &#39;digest&#39;))
+devtools::install_github(&#39;IRkernel/IRkernel&#39;)</pre>
+
+<ul>
+<li>将IRkernel配置写入Jupyter</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>IRkernel::installspec()</pre></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

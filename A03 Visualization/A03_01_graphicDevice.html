@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A03-01 R的绘图设备和绘图系统</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A03-01 R的绘图设备和绘图系统',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A03_01_graphicDevice_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A03_01_graphicDevice_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A03_01_graphicDevice_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-01-26 17:23:55</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>绘图设备</a></li>
+<li><a href='#10' title=''>绘图系统</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴Johns Hopkins University Data Science Series Courses @ Coursera.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>绘图设备</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>什么是绘图设备(Graphics Device)</h2></hgroup><article  id="graphics-device">
+
+<p>图形的呈现媒介，基础的绘图设备驱动包含在grDevices包中</p>
+
+<ul>
+<li><strong>屏幕</strong> (screen device)
+
+<ul>
+<li>Windows: <code>windows()</code></li>
+<li>MacOS: <code>quartz()</code></li>
+<li>Linux/Unix: <code>x11()</code></li>
+</ul></li>
+<li>文件设备 (file device: pdf, jpg, svg, &#8230;)
+
+<ul>
+<li>自带: <code>pdf()</code>, <code>jpg()</code>, &#8230;</li>
+<li>附加包提供的: svglite包的<code>svglite()</code>, Cairo包的<code>CairoPDF()</code></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>文件设备</h2></hgroup><article >
+
+<ul>
+<li>矢量图格式: 不随拉伸缩放而损失清晰度
+
+<ul>
+<li><code>pdf</code>: 便携性、缩放性较好，适用于线条图。图形元素一般不宜过多</li>
+<li><code>svg</code>: 基于XML的可缩放矢量图形(scalable vector graphics)，对于动画和交互图(如d3)支持良好，适用于浏览器</li>
+<li><code>win.metafile</code>: Windows metafile 格式 (仅限Windows)</li>
+<li><code>postscript</code>: 较旧的矢量图格式，用于打印机</li>
+</ul></li>
+<li>位图格式: 会随拉伸缩放而损失清晰度
+
+<ul>
+<li><code>png</code>: 使用无损压缩的位图，多数浏览器支持良好，可以绘制大量散点、线条和色块。缩放性一般</li>
+<li><code>jpeg</code>: 使用有损压缩的位图，多数操作系统支持良好，适合用于照片，绘制线条效果一般。缩放性一般。</li>
+<li><code>tiff</code>: tiff格式位图，支持无损压缩</li>
+<li><code>bmp</code>: Windows内建的位图格式</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>出图到屏幕设备</h2></hgroup><article >
+
+<ul>
+<li>制图函数: <code>plot</code> / <code>lattice::xyplot</code> / <code>ggplot2::ggplot</code></li>
+<li>默认出图到屏幕设备</li>
+<li>注释/加工</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(datasets)
+with(faithful, plot(eruptions, waiting))  ## 出图到屏幕
+title(main = &quot;Old Faithful Eruptions&quot;)    ## 加工</pre>
+
+</article></slide><slide class=''><hgroup><h2>出图到文件设备</h2></hgroup><article >
+
+<ul>
+<li>初始化一个新设备: 如<code>pdf()</code> / <code>png()</code></li>
+<li>制图函数: <code>plot</code> / <code>lattice::xyplot</code> / <code>ggplot2::ggplot</code>，这时屏幕上不再出图</li>
+<li>注释/加工</li>
+<li><strong>[必须]</strong>关闭设备(<code>dev.off()</code>)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>pdf(file =  &quot;old_faithful.pdf&quot;)           ## 打开一个pdf设备，在工作目录下创建&#39;old_faithful.pdf&#39;
+with(faithful, plot(eruptions, waiting))  ## 出图到pdf设备
+title(main = &quot;Old Faithful Eruptions&quot;)    ## 加工标题
+dev.off()                                 ## 关闭该pdf设备</pre>
+
+</article></slide><slide class=''><hgroup><h2>多个绘图设备</h2></hgroup><article >
+
+<ul>
+<li>可以打开多个设备</li>
+<li>系统会给每个设备分配一个整数序号</li>
+<li>列出所有设备: <code>dev.list()</code></li>
+<li>查找当前设备: <code>dev.cur()</code></li>
+<li>前一个/后一个设备: <code>dev.next()</code>, <code>dev.prev()</code></li>
+<li>强制切换当前设备: <code>dev.set(&lt;序号&gt;)</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>设备间拷贝</h2></hgroup><article >
+
+<blockquote>
+<p>写了很多代码作出一张满意的图，但出在了屏幕上，想把它出到pdf。不想重新敲一遍代码，有什么快捷的办法？</p>
+</blockquote>
+
+<ul>
+<li><code>dev.copy</code>: 将图形元素从一个设备拷贝到另一个
+
+<ul>
+<li><code>dev.copy2pdf</code>: 拷贝到pdf设备</li>
+<li><code>dev.copy2eps</code>: 拷贝到eps设备</li>
+</ul></li>
+<li><code>dev.print</code>: 将当前设备上的图拷贝到另一个设备</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(datasets)
+with(faithful, plot(eruptions, waiting))  ## 屏幕出图
+title(main = &quot;Old Faithful Geyser data&quot;)  ## 加标题
+dev.copy(png, file = &quot;geyserplot.png&quot;)    ## 拷贝到pdf设备
+dev.off()  ## 不要忘记关闭设备</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>绘图系统</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>R最主要的绘图系统</h2></hgroup><article  id="r">
+
+<p>绘图系统(plotting system)是用于驱动生成图形的绘图框架。R最重要的绘图系统有:</p>
+
+<ul>
+<li>base系统: R自带的基础绘图系统，包含在graphics包中
+
+<ul>
+<li>从空白画布开始，用一连串命令顺次向画布上添加图形元素</li>
+</ul></li>
+<li>grid: 高度灵活、更低水平的绘图系统，但没有完整的绘图函数，很少直接使用</li>
+<li>Lattice系统: lattice包提供的绘图系统，基于Trellis系统，依赖grid包
+
+<ul>
+<li>用一条命令组织好所有图形元素，一次性出图</li>
+</ul></li>
+<li>ggplot2系统: ggplot2包提供的绘图系统
+
+<ul>
+<li>遵循“作图语法”，初始化后渐进调整，每一步都可回溯</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>基础绘图系统</h2></hgroup><article >
+
+<ul>
+<li>类似于MatLab、Python中的matplotlib，由一连串制图命令构成</li>
+<li>由一张空白画布开始，一笔一笔添加图形，贴合作图思路</li>
+<li>落笔之后不能回退</li>
+<li>没有“作图语法”，不能转换成其他类型</li>
+<li>核心命令<code>plot</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>示例</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>plot(mtcars$mpg, mtcars$disp)
+title(&quot;Scatter plot of mpg vs disp&quot;)
+abline(lm(disp~mpg, data=mtcars), col=&#39;red&#39;)</pre>
+
+<p><img src="A03_01_graphicDevice_files/figure-html/base%20plot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>Lattice绘图系统</h2></hgroup><article  id="lattice">
+
+<ul>
+<li>类似于Stata，所有绘图和注释动作都要包含在一条命令中</li>
+<li>特别适合做分面图，即查看不同z水平上x和y的关系</li>
+<li>将多个图放在同一屏时，代码更简洁</li>
+<li>有时命令不易组织，添加注释不简便</li>
+<li>生成之后不能修改</li>
+<li>核心命令较多，如<code>xyplot</code>, <code>bwplot</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>示例</h2></hgroup><article  id="-1">
+
+<pre class = 'prettyprint lang-r'>library(lattice)
+state &lt;- data.frame(state.x77, region = state.region)
+xyplot(Life.Exp ~ Income | region, data = state, layout = c(4, 1))</pre>
+
+<p><img src="A03_01_graphicDevice_files/figure-html/lattice%20plot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>ggplot2绘图系统</h2></hgroup><article  id="ggplot2">
+
+<ul>
+<li>下载量最大的附加包之一，奠定了R最主要的优势之一: 统计作图</li>
+<li>初始化以后，灵活添加各类图形元素和注释</li>
+<li>可回退，也可将每个步骤保存为快照对象</li>
+<li>遵循“制图语法”(grammar of graphics)，可转换成其他类型</li>
+<li>核心命令<code>ggplot</code>和<code>geom_&lt;几何图形&gt;</code></li>
+<li>很多<a href='https://www.ggplot2-exts.org/' title=''>衍生包</a>依赖于/拓展ggplot2的绘图能力
+
+<ul>
+<li>ggforfity, ggiraph, ggthemes, &#8230;</li>
+</ul></li>
+<li>参考: <a href='http://docs.ggplot2.org/current/' title=''>在线教程</a></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>示例</h2></hgroup><article  id="-2">
+
+<pre class = 'prettyprint lang-r'>library(ggplot2)
+state &lt;- data.frame(state.x77, region = state.region)
+ggplot(state, aes(Income, Life.Exp)) + geom_point() + facet_grid(.~region)</pre>
+
+<p><img src="A03_01_graphicDevice_files/figure-html/ggplot2%20plot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

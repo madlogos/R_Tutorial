@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-02 Git版本管理</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-02 Git版本管理',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_02_git_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_02_git_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_02_git_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-23 20:06:13</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>版本控制系统</a></li>
+<li><a href='#8' title=''>Git</a></li>
+<li><a href='#14' title=''>例子</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>版本控制系统</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>版本的故事</h2></hgroup><article >
+
+<img src='A05_02_git_files/figure-html/version.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>版本控制</h2></hgroup><article >
+
+<blockquote>
+<p>版本控制是一种记录一个或若干文件内容变化，以便将来查阅特定版本修订情况的系统。 - Git官方</p>
+</blockquote>
+
+<p>版本控制的价值</p>
+
+<ul>
+<li>统一管理文件的<strong>所有</strong>修订版本</li>
+<li>回溯特定版本：单个文件甚或整个项目</li>
+<li>比对所有修订细节</li>
+<li>备份和灾难恢复</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://git-scm.com/book/zh/v2/起步-关于版本控制' title=''>版本控制系统的演化</a></h2></hgroup><article >
+
+<div class="col-3L">
+<h4>本地版本控制系统</h4>
+
+<p>如RCS</p>
+
+<img src='A05_02_git_files/figure-html/local-vcs.png' title='fig:'/></div>
+
+<div class="col-3C">
+<h4>集中式版本控制系统</h4>
+
+<p>如SVN、ClearCase、VSS、CVS</p>
+
+<img src='A05_02_git_files/figure-html/centralized-vcs.png' title='fig:'/></div>
+
+<div class="col-3R">
+<h4>分布式版本控制系统</h4>
+
+<p>如Git、BitKeeper、Mercurial</p>
+
+<img src='A05_02_git_files/figure-html/distributed-vcs.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>各版本管理系统比较</h2></hgroup><article >
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">方面</th>
+<th align="left">本地式</th>
+<th align="left">集中式</th>
+<th align="left">分布式</th>
+</tr>
+<tr class="odd">
+<td align="left">速度</td>
+<td align="left">快</td>
+<td align="left">慢</td>
+<td align="left">快</td>
+</tr>
+<tr class="even">
+<td align="left">网络要求</td>
+<td align="left">不需网络，离线</td>
+<td align="left">提交需联网</td>
+<td align="left">支持离线</td>
+</tr>
+<tr class="odd">
+<td align="left">灵活性</td>
+<td align="left">无法无天</td>
+<td align="left">集中式工作流</td>
+<td align="left">支持多工作流:parnter或集中式</td>
+</tr>
+<tr class="even">
+<td align="left">数据完整性</td>
+<td align="left">易缺损</td>
+<td align="left">元数据可能缺失</td>
+<td align="left">按元数据方式存储，最完整</td>
+</tr>
+<tr class="odd">
+<td align="left">并行协作</td>
+<td align="left">难</td>
+<td align="left">一般</td>
+<td align="left">易</td>
+</tr>
+<tr class="even">
+<td align="left">学习曲线</td>
+<td align="left">上手快</td>
+<td align="left">上手快</td>
+<td align="left">有一定学习曲线</td>
+</tr>
+<tr class="odd">
+<td align="left">应用场景</td>
+<td align="left">个人项目</td>
+<td align="left">企业项目</td>
+<td align="left">开源项目</td>
+</tr>
+</table>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Git</h2></hgroup><article  id="git">
+
+</article></slide><slide class=''><hgroup><h2><a href='https://git-scm.com/' title=''>Git</a></h2></hgroup><article  id="git-1">
+
+<ul>
+<li>Linux之父Linus Torvalds缔造</li>
+<li>最流行的分布式版本控制系统</li>
+<li>Git的源代码托管在全球最大代码托管平台GitHub上，GitHub则基于Git技术</li>
+</ul>
+
+<div class="columns-2">
+<img src='A05_02_git_files/figure-html/git.png' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<img src='A05_02_git_files/figure-html/github.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>安装及配置</h2></hgroup><article >
+
+<h3>安装</h3>
+
+<p>到<a href='https://git-scm.com/downloads' title=''>Git官网</a>，找到操作系统对应的安装文件/指导，执行安装</p>
+
+<h3>配置</h3>
+
+<p>全局(<code>--global</code>)设置用户名和email</p>
+
+<pre class = 'prettyprint lang-git'>$ git config --global user.name &quot;John Doe&quot;
+$ git config --global user.email johndoe@example.com</pre>
+
+</article></slide><slide class=''><hgroup><h2>界面</h2></hgroup><article >
+
+<div class="columns-2">
+<h4>GUI</h4>
+
+<img src='A05_02_git_files/figure-html/git-gui.png' title='fig:'/>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>Bash</h4>
+
+<img src='A05_02_git_files/figure-html/git-bash.png' title='fig:'/></div>
+
+</div>
+
+</article></slide><slide class=''><hgroup><h2><a href='https://www.rstudio.org/links/using_version_control?version=1.0.143&amp;mode=desktop' title=''>RStudio中启用Git</a></h2></hgroup><article  id="rstudiogit" class="smaller">
+
+<div class="col-2L">
+<h4>Git Executable</h4>
+
+<p>Tools -&gt; Global options -&gt; Git Executable</p>
+
+<img src='A05_02_git_files/figure-html/rstudio-git-loc.png' title='fig:'/></div>
+
+<div class="col-2R">
+<h4>启用git</h4>
+
+<p>Tools -&gt; Project options -&gt; 启用git</p>
+
+<img src='A05_02_git_files/figure-html/rstudio-git-proj.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>典型用法</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<ol>
+<li>代码库托管在Git服务器</li>
+<li>开发者从服务器fork，在本地分支上开发</li>
+<li>提交(commit)本地分支到服务器</li>
+</ol>
+
+<img src='A05_02_git_files/figure-html/github-model.png' title='fig:'/></div>
+
+<div class="col-2R">
+<ol>
+<li>创建本地分支: <code>git clone</code></li>
+<li>当前更改
+
+<ul>
+<li>添加文件: <code>git add</code></li>
+<li>移动/重命名: <code>git mv</code></li>
+<li>删除: <code>git rm</code></li>
+</ul></li>
+<li>分支
+
+<ul>
+<li>操作分支: <code>git branch</code></li>
+<li>切换分支: <code>git checkout</code></li>
+<li>提交: <code>git commit</code></li>
+</ul></li>
+<li>协作
+
+<ul>
+<li>从其他分支拉取: <code>git fetch / git pull</code></li>
+<li>推送到其他分支: <code>git push</code></li>
+</ul></li>
+</ol></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>例子</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>共享并行模式</h2></hgroup><article >
+
+<img src='A05_02_git_files/figure-html/share-model.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2><a href='A05_02_git_files/files/TestRepo' title=''>共享目录</a>中创建裸仓库</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>注意:
+
+<ul>
+<li>通过map network drive将共享目录所在位置创建为盘符，如Z: (否则RStudio可能无法正常工作)</li>
+<li>共享目录对所有用户开放full control权限</li>
+<li>裸仓库不保留工作文件，仅保存修改痕迹</li>
+</ul></li>
+<li>方法
+
+<ul>
+<li>打开Git Bash，进入目标路径</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>cd &lt;共享路径&gt;/TestRepo  # 伪代码
+git init --bare</pre></li>
+</ul></div>
+
+<div class="col-2R">
+<img src='A05_02_git_files/figure-html/git-init.png' title='fig:'/></div>
+
+</div>
+
+</article></slide><slide class=''><hgroup><h2>将共享仓库克隆到本地</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>注意:
+
+<ul>
+<li>本地仓库如为远程磁盘，也应映射一个盘符，如H:</li>
+</ul></li>
+<li>方法1
+
+<ul>
+<li>在Git Bash中运行</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>git clone &lt;共享路径&gt;/TestRepo</pre></li>
+<li>方法2
+
+<ul>
+<li>Rstudio中创建新项目</li>
+<li>Version Control -&gt; git</li>
+<li>填入url、repo名称和本地路径</li>
+</ul></li>
+</ul></div>
+
+<div class="col-2R">
+<img src='A05_02_git_files/figure-html/new-proj.png' title='fig:'/></div>
+
+</div>
+
+</article></slide><slide class=''><hgroup><h2>本地工作分支</h2></hgroup><article >
+
+<div class="col-2L">
+<h3>创建分支</h3>
+
+<pre class = 'prettyprint lang-git'>git checkout -b work</pre>
+
+<img src='A05_02_git_files/figure-html/git-branch.png' title='fig:'/></div>
+
+<div class="col-2R">
+</div>
+
+<div class="col-2R">
+<h3>切换分支</h3>
+
+<pre class = 'prettyprint lang-git'>git checkout master</pre>
+
+<h3>删除分支</h3>
+
+<pre class = 'prettyprint lang-git'>git branch -d work</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>查看更改</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>默认分支为master，建议先做一次初始化提交</li>
+<li>切到work分支，新增note.txt，并修改REAME</li>
+</ul>
+
+<div class="columns-2">
+<p>Bash</p>
+
+<pre class = 'prettyprint lang-git'>$ git status
+
+On branch work
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+
+        modified:   README
+
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+
+        note.txt</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p>GUI</p>
+
+<img src='A05_02_git_files/figure-html/git-review-status.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>状态更改</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<ul>
+<li>git系统下，文件状态包括
+
+<ul>
+<li>untracked: 未跟踪，新增加的文件。<code>git add</code>则添加跟踪。</li>
+<li>tracked: 已跟踪，包括三种
+
+<ul>
+<li>unmodified: 未更改</li>
+<li>modified: 已更改</li>
+<li>staged: 已暂存</li>
+</ul></li>
+</ul></li>
+<li>将暂存(staged)的文件提交(commit)到本地仓库，形成一个快照</li>
+<li><code>git log</code>查看提交历史</li>
+<li>每次提交，都会检查sha1校验和，确保文件完整性</li>
+<li>该sha1 Hash值就是本次commit的ID</li>
+</ul></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-git'>$ git add *
+$ git commit -m &quot;add note.txt&quot;
+[Work a50dba4] add note.txt
+ 2 files changed, 1 insertions(+)
+ create mode 100644 note.txt
+$ git log
+commit 42e62ea88fddc...57bc9a (HEAD -&gt; work)
+Author: John Doe &lt;john.doe@example.com&gt;
+Date:   Fri Jun 23 15:03:52 2017 +0800
+
+    add note.txt
+
+commit add2d1ec93d...3637c2 (origin/master, master)
+Author: John Doe &lt;john.doe@example.com&gt;
+Date:   Fri Jun 23 15:02:17 2017 +0800
+
+    init</pre></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_02_git_files/figure-html/git-log.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>版本管理 (1): git tag</h2></hgroup><article  id="-1-git-tag" class="smaller">
+
+<div class="col-2L">
+<ul>
+<li>继续修改note.txt</li>
+<li>某个关键版本设置版本号v1.0</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>echo $&#39;hotfix 1:\r\n&#39; &gt; note.txt
+echo $&#39;\t1. Foo.\r\n\t2. Bar.&#39; &gt;&gt; note.txt
+git add .
+git commit -m &quot;hotfix 1&quot;
+git tag -a &quot;v1.0&quot; -m &quot;Ver 1.0&quot;
+echo $&#39;\r\nhotfix 2:\r\n&#39; &gt;&gt; note.txt
+echo $&#39;\t1. Ti.\r\n\t2. Da.&#39; &gt;&gt; note.txt
+git add .
+git commit -m &quot;hotfix 2&quot;
+echo $&#39;\r\nhotfix 3:\r\n&#39; &gt;&gt; note.txt
+echo $&#39;\t1. Ha.\r\n\t2. HaHa.&#39; &gt;&gt; note.txt
+git add .
+git commit -m &quot;hotfix 3&quot;
+git log --all</pre>
+
+<ul>
+<li>能够看到work分支下的新提交</li>
+</ul></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-git'>$ git log
+commit 8aea41c3...0b4bc3 (HEAD -&gt; work)
+Author: John Doe &lt;john.doe@example.com&gt;
+Date:   Fri Jun 23 15:09:23 2017 +0800
+
+    hotfix 3
+
+commit 79784f72...203665e
+Author: John Doe &lt;john.doe@example.com&gt;
+Date:   Fri Jun 23 15:09:18 2017 +0800
+
+    hotfix 2
+
+commit 4fd9edc7e...58d2f1 (tag: v1.0)
+Author: John Doe &lt;john.doe@example.com&gt;
+Date:   Fri Jun 23 15:08:59 2017 +0800
+
+    hotfix 1
+
+commit 42e62ea88fddc9...5c57bc9a
+Author: John Doe &lt;john.doe@example.com&gt;
+Date:   Fri Jun 23 15:03:52 2017 +0800
+
+    add note.txt</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>版本管理 (2): 查看快照</h2></hgroup><article  id="-2-">
+
+<div class="column-2">
+<ul>
+<li>通过commit sha1的前7位或tag指定快照</li>
+<li>我想要采用v1.0时的note.txt</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>$ git checkout v1.0
+
+HEAD is now at 4fd9edc... hotfix 1</pre>
+
+<ul>
+<li>此时，指针位于历史提交位置，即头-指针分离(detached HEAD)状态</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>$ vi note.txt</pre>
+
+<pre class = 'prettyprint lang-txt'>hotfix 1:
+
+    1. Foo.
+    2. Bar.</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>版本简化/回退: git reset</h2></hgroup><article  id="-git-reset">
+
+<div class="col-2L">
+<ul>
+<li>我们希望把hotfix 1-3的更改都整合为v1.0，简化提交链</li>
+<li>使用git reset &#8211;mixed，将指针退回v1.0的前次提交
+
+<ul>
+<li>如参数设为&#8211;hard，则直接丢弃v1.0后的所有更改，即硬回退</li>
+<li>其他可选参数包括&#8211;soft、&#8211;merge等</li>
+</ul></li>
+<li>重新git commit，将hotfix 1以后的变化整合在一次提交里</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>$ git reset --mixed 42e62ea
+Unstaged changes after reset:
+M       note.txt</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>查看提交历史，只剩下hotfix 1之前的一次提交</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>$ git log
+commit 42e62ea88f...bc9a (HEAD -&gt; work)
+Author: John Doe &lt;john.doe@example.com&gt;
+Date:   Fri Jun 23 15:03:52 2017 +0800
+
+    add note.txt</pre>
+
+<ul>
+<li>重新整合提交，生成新的v1.0</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>git add.
+git commit -m &quot;hotfix 1-3&quot;
+git tag -f &quot;v1.0&quot; -m &quot;Ver 1.0&quot;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>将本地分支推送到共享仓库</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-git'>git checkout work
+git push -u</pre>
+
+<p>相当于</p>
+
+<pre class = 'prettyprint lang-git'>git push origin work</pre>
+
+<p>如共享仓库并没有work分支，需要设定远程上游</p>
+
+<pre class = 'prettyprint lang-git'>git push --set-upstream origin work</pre>
+
+</article></slide><slide class=''><hgroup><h2>从共享拉取远程提交</h2></hgroup><article >
+
+<ul>
+<li>只拉取
+
+<ul>
+<li>拉取后要手动合并(<code>git merge</code>)</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>git checkout work
+git fetch</pre>
+
+<ul>
+<li>拉取并合并</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>git pull</pre>
+
+</article></slide><slide class=''><hgroup><h2>合并分支</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<ul>
+<li><code>git diff</code> 查看不同分支的差异</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>$ git diff master work
+
+diff --git a/README b/README
+index e69de29..4baf047 100644
+--- a/README
++++ b/README
+@@ -0,0 +1 @@
++Hello world.
+\ No newline at end of file
+diff --git a/note.txt b/note.txt
+new file mode 100644
+index 0000000..0de80fa
+--- /dev/null
++++ b/note.txt
+@@ -0,0 +1,14 @@
++hotfix 1:
++
++       1. Foo.
++       2. Bar.
+:</pre></div>
+
+<div class="col-2R">
+<ul>
+<li><code>git merge</code>合并分支</li>
+<li>如出现冲突，必须处理掉冲突才能合并</li>
+</ul>
+
+<pre class = 'prettyprint lang-git'>$ git merge master work
+Updating add2d1e..6060ff4
+Fast-forward
+ README   |  1 +
+ note.txt | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
+ create mode 100644 note.txt</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>学习资源</h2></hgroup><article >
+
+<ul>
+<li>官网: <a href='https://git-scm.com/book/zh/v2/' title=''>https://git-scm.com/book/zh/v2/</a></li>
+<li>动手练习: <a href='https://try.github.io/levels/1/challenges/1' title=''>Try Git</a></li>
+<li>技术博客: <a href='http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000' title=''>廖雪峰的Git教程</a></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

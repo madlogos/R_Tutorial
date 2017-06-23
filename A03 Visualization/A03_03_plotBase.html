@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A03-03 基础绘图系统</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A03-03 基础绘图系统',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A03_03_plotBase_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A03_03_plotBase_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A03_03_plotBase_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-27 19:16:25</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>作图流程</a></li>
+<li><a href='#5' title=''>版面版式和全局配置</a></li>
+<li><a href='#11' title=''>基础底图</a></li>
+<li><a href='#18' title=''>进阶底图</a></li>
+<li><a href='#29' title=''>添加图形元素</a></li>
+<li><a href='#36' title=''>标注</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴Johns Hopkins University Data Science Series Courses @ Coursera.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>作图流程</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>顺序</h2></hgroup><article >
+
+<ol>
+<li>配置函数<code>par</code>: 指定版式和全局参数</li>
+<li>底图函数: 初始化底图，将覆盖前一张底图
+
+<ul>
+<li><code>plot</code>, <code>plot.new</code></li>
+<li><code>smoothScatter</code>, <code>barplot</code>, <code>boxplot</code>, <code>bxp</code>, <code>dotchart</code>, <code>hist</code>, <code>pie</code>, <code>stars</code></li>
+<li><code>pairs</code>, <code>spineplot</code>, <code>matplot</code>, <code>assocplot</code>, <code>coplot</code>, <code>cdplot</code>, <code>stripchart</code>, <code>sunflowerplot</code>, <code>mosaicplot</code>, <code>fourfoldplot</code>, <code>symbols</code></li>
+</ul></li>
+<li>注释函数: 底图上覆盖其他元素
+
+<ul>
+<li>图: <code>lines</code>, <code>abline</code>, <code>segments</code>, <code>points</code>, <code>pch</code>, <code>box</code>, <code>rect</code>, <code>curve</code>, <code>arrows</code>, <code>polygon</code>, <code>polypath</code>, <code>matlines</code>, <code>matpoints</code></li>
+<li>文: <code>title</code>, <code>legend</code>, <code>text</code>, <code>mtext</code></li>
+<li>其他: <code>axis</code>, <code>grid</code>, <code>rug</code></li>
+</ul></li>
+</ol>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>版面版式和全局配置</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2><code>par</code></h2></hgroup><article  id="par">
+
+<ul>
+<li><code>par()</code>打印所有制图版式参数的当前取值</li>
+<li><code>par(&quot;&lt;参数&gt;&quot;)</code>打印某个特定参数的当前取值</li>
+<li><code>par(&lt;参数&gt;=...)</code>修改特定参数的取值</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; par(&quot;mar&quot;)
+[1] 5.1 4.1 4.1 2.1
+
+&gt; par(mar=c(5, 4, 4, 2))
+&gt; par(&quot;mar&quot;)
+[1] 5 4 4 2</pre>
+
+</article></slide><slide class=''><hgroup><h2>分面(facet)版式</h2></hgroup><article  id="facet" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li><code>mfrow</code>: 向量<code>c(&lt;行个数&gt;, &lt;列个数&gt;)</code>，按行序出图</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>par(mfrow=c(2, 2), mai=c(0.8, 0.8, 0, 0.2))
+for (i in 0:1) for (j in 1:0) 
+    with(subset(mtcars, am==i &amp; vs==j), 
+         plot(wt, mpg))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/mfrow-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li><code>mfcol</code>: 向量<code>c(&lt;行个数&gt;, &lt;列个数&gt;)</code>，按列序出图</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>par(mfcol=c(2, 2), mai=c(0.8, 0.8, 0, 0.2))
+for (i in 0:1) for (j in 1:0) 
+    with(subset(mtcars, am==i &amp; vs==j), 
+         plot(wt, mpg))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/mfcol-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>外边距</h2></hgroup><article >
+
+<ul>
+<li><code>mar</code>: 向量<code>c(下, 左, 上, 右)</code>，单位是“行”
+
+<ul>
+<li>默认值: c(5, 4, 4, 2) + 0.1</li>
+</ul></li>
+<li><code>mai</code>: 向量<code>c(下, 左, 上, 右)</code>，单位是“英寸”
+
+<ul>
+<li>默认值: c(1.02, 0.82, 0.82, 0.42)</li>
+</ul></li>
+</ul>
+
+<img src='A03_03_plotBase_files/figure-html/mar.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>内边距</h2></hgroup><article >
+
+<ul>
+<li><code>oma</code>: 向量<code>c(下, 左, 上, 右)</code>，单位是“行”，默认值: c(0, 0, 0, 0)</li>
+<li><code>omi</code>: 向量<code>c(下, 左, 上, 右)</code>，单位是“英寸”，默认值: c(0, 0, 0, 0)</li>
+<li><code>omd</code>: c(x1, x2, y1, y2)，单位是相对于设备尺寸的&quot;%&quot;，默认值: c(0, 1, 0, 1)</li>
+</ul>
+
+<img src='A03_03_plotBase_files/figure-html/oma.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>美学参数</h2></hgroup><article >
+
+<p>还有一些美学/视觉效果类参数。具体请查阅<code>?par</code></p>
+
+<ul>
+<li><code>bg</code>: 背景色</li>
+<li><code>cex</code>: 注释图文的大小</li>
+<li><code>family</code>: 字体</li>
+<li><code>fg</code>: 前景色</li>
+<li><code>font</code>: 字体效果</li>
+<li><code>lty</code>: 线条的种类</li>
+<li><code>lwd</code>: 线宽</li>
+<li><code>pch</code>: 点的种类</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>基础底图</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>散点图 points</h2></hgroup><article  id="-points">
+
+<div class="columns-2">
+<p>散点图: 两变量相关性。数据很多时，用<code>smoothScatter</code></p>
+
+<pre class = 'prettyprint lang-r'>with(mtcars, plot(wt, mpg, type=&#39;p&#39;))  </pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/scatter-1.png" width="432" /></p>
+
+<pre class = 'prettyprint lang-r'># 默认type=&#39;p&#39;</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p>文本型变量作散点图</p>
+
+<pre class = 'prettyprint lang-r'>stripchart(decrease ~ treatment,
+    vertical=TRUE, data=OrchardSprays)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/points-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>直方图 histogram</h2></hgroup><article  id="-histogram">
+
+<div class="columns-2">
+<p>直方图: 单变量密度分布</p>
+
+<pre class = 'prettyprint lang-r'>with(mtcars, hist(mpg))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/hist-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>或用线段图</p>
+
+<pre class = 'prettyprint lang-r'>with(mtcars, plot(mpg, type=&#39;h&#39;))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/hist%20line-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>箱式图 boxplot</h2></hgroup><article  id="-boxplot">
+
+<div class="columns-2">
+<p>连续性变量的分布</p>
+
+<pre class = 'prettyprint lang-r'>boxplot(ToothGrowth$len)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/boxplot-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>多个箱式图</p>
+
+<pre class = 'prettyprint lang-r'>boxplot(len ~ dose, data = ToothGrowth)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/multi%20boxplot-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>柱/条形图 barplot</h2></hgroup><article  id="-barplot">
+
+<div class="columns-2">
+<p>分类变量的比较</p>
+
+<pre class = 'prettyprint lang-r'>hp &lt;- mtcars$hp
+names(hp) &lt;- row.names(mtcars)
+barplot(hp)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/col-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>自变量较多时用横向条图</p>
+
+<pre class = 'prettyprint lang-r'>hp &lt;- mtcars$hp
+names(hp) &lt;- row.names(mtcars)
+barplot(hp, horiz=TRUE)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/bar-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>折线图 lines</h2></hgroup><article  id="-lines">
+
+<div class="columns-2">
+<p>表示趋势</p>
+
+<pre class = 'prettyprint lang-r'>plot(AirPassengers) # 时间序列数据默认type=&#39;l&#39;</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/line-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>阶梯折线</p>
+
+<pre class = 'prettyprint lang-r'>plot(AirPassengers, type=&#39;s&#39;)  # 阶梯图</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/stair-1.png" width="432" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>进阶底图</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>散点图矩阵 pairs</h2></hgroup><article  id="-pairs">
+
+<pre class = 'prettyprint lang-r'>pairs(iris[1:4], main = &quot;Anderson&#39;s Iris Data -- 3 species&quot;,
+      pch = 21, bg = c(&quot;red&quot;, &quot;green3&quot;, &quot;blue&quot;)[unclass(iris$Species)])</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/pairs-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>跨矩阵的列比较图 matplot</h2></hgroup><article  id="-matplot">
+
+<pre class = 'prettyprint lang-r'>iris.S=array(NA, dim=c(50, 4, 3),
+             dimnames=list(NULL, colnames(iris)[-5], levels(iris$Species)))
+for(i in 1:3) iris.S[,,i] &lt;- data.matrix(iris[1:50+50*(i-1), -5])
+matplot(iris.S[,&quot;Petal.Length&quot;,], iris.S[,&#39;Petal.Width&#39;,], pch=&quot;scv&quot;)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/matplot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>关联散点图 assocplot</h2></hgroup><article  id="-assocplot">
+
+<pre class = 'prettyprint lang-r'>x &lt;- margin.table(Titanic, c(1,4))
+assocplot(x)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/assocplot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>条件散点图 coplot</h2></hgroup><article  id="-coplot">
+
+<pre class = 'prettyprint lang-r'>coplot(lat ~ long | depth, data = quakes)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/coplot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>一维散点图 stripchart</h2></hgroup><article  id="-stripchart">
+
+<pre class = 'prettyprint lang-r'>with(iris, stripchart(Sepal.Width ~ Species))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/stripchart-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>向日葵图 sunflowerplot</h2></hgroup><article  id="-sunflowerplot">
+
+<pre class = 'prettyprint lang-r'>sunflowerplot(iris[, 3:4])</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/sunflower-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>马赛克图 mosaicplot</h2></hgroup><article  id="-mosaicplot">
+
+<pre class = 'prettyprint lang-r'>mosaicplot(~ Sex + Age + Survived, data = Titanic, color = TRUE)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/mosaicplot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>棘状图 spineplot</h2></hgroup><article  id="-spineplot">
+
+<pre class = 'prettyprint lang-r'>with(iris, spineplot(Species ~ Sepal.Width))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/spineplot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>条件密度图 cdplot</h2></hgroup><article  id="-cdplot">
+
+<pre class = 'prettyprint lang-r'>with(iris, cdplot(Species ~ Sepal.Width))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/cdplot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>四折图 fourfoldplot</h2></hgroup><article  id="-fourfoldplot">
+
+<pre class = 'prettyprint lang-r'>x &lt;- aperm(UCBAdmissions, c(2, 1, 3))
+fourfoldplot(x, mfcol=c(2, 3))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/fourfoldplot-1.png" width="768" /></p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>添加图形元素</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>添加点 points</h2></hgroup><article  id="-points">
+
+<pre class = 'prettyprint lang-r'>par(mfrow=c(1,3))
+plot(cars)
+plot(cars);points(cars[cars$dist &gt; 2.6 * cars$speed,], col=&#39;red&#39;)
+plot(cars);points(cars[cars$dist &gt; 2.6 * cars$speed,], pch=19)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/add%20point-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>点型<code>pch</code></h2></hgroup><article  id="pch">
+
+<img src='A03_03_plotBase_files/figure-html/pch.png' title=''/>
+
+<div class="columns-2">
+<p><code>pch</code>代表点的种类，可以是整数</p>
+
+<ul>
+<li>NA: 无符号</li>
+<li>0:18: S兼容的矢量符号</li>
+<li>19:25: R独特的矢量符号</li>
+<li>32:127: ASCII字符，如33为感叹号</li>
+<li>128:255: 本地符号</li>
+<li>-32: &#8230; Unicode编码的点</li>
+</ul>
+
+<p>你甚至可以用其他文本符号</p>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>plot(cars, pch=&quot;\u8F66&quot;, cex=0.75)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/pch-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>添加线条 lines</h2></hgroup><article  id="-lines">
+
+<pre class = 'prettyprint lang-r'>par(mfrow=c(1,3))
+plot(cars)
+plot(cars);lines(stats::lowess(cars))
+plot(cars);abline(h=40,v=15,col=&quot;red&quot;)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/add%20line-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>线型<code>lty</code></h2></hgroup><article  id="lty">
+
+<div class="columns-2">
+<p><code>lty</code>是线条形状，可以是整数，或一个不超过8位的数值文本(连-断-连-断&#8230;的形式)</p>
+
+<ul>
+<li>0 = 空白 blank</li>
+<li>1 = 实线 solid(默认)</li>
+<li>2 = 短划虚线 dashed，等价于&quot;44&quot;</li>
+<li>3 = 点虚线 dotted，等价于&quot;13&quot;</li>
+<li>4 = 点划虚线 dotdash，等价于&quot;1343&quot;</li>
+<li>5 = 长划虚线 longdash，等价于&quot;73&quot;</li>
+<li>6 = 双划虚线 twodash，等价于&quot;2262&quot;</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>plot(cars, type=&#39;n&#39;)
+for (i in 1:6) abline(h=20*i, lty=i)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/lty-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>添加线段segments / 箭头arrows</h2></hgroup><article  id="segments-arrows" class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>x &lt;- stats::runif(12); y &lt;- stats::rnorm(12)
+plot(x, y)
+s &lt;- seq(length(x)-1); s &lt;- s[-length(s)]
+segments(x[s], y[s], x[s+2], y[s+2], col= &#39;pink&#39;)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/segments-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- stats::runif(12); y &lt;- stats::rnorm(12)
+plot(x, y)
+s &lt;- seq(length(x)-1)  # one shorter than data
+arrows(x[s], y[s], x[s+1], y[s+1], col= 1:3)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/arrow-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>添加方块rect / 多边形 polygon</h2></hgroup><article  id="rect--polygon">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>plot(cars)
+rect(10, 20, 20, 80, border=&quot;red&quot;)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/rect-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>plot(cars)
+polygon(c(10, 20, 20, 10), c(
+    20, 30, 100, 60), border=&quot;gray&quot;)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/polygon-1.png" width="432" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>标注</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>标题 title、坐标轴 axis、边框 box</h2></hgroup><article  id="-title-axis-box" class="smaller">
+
+<pre class = 'prettyprint lang-r'>par(mfrow=c(1, 4))
+plot(cars)
+plot(cars); title(&quot;Scatter Dist vs Speed&quot;, sub=&quot;1920s&quot;)
+plot(cars, xlab=&quot;Speed (mph)&quot;, ylab=&quot;Stopping distance (ft)&quot;)
+plot(cars); box(col=&quot;blue&quot;)</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/title-1.png" width="864" /></p>
+
+</article></slide><slide class=''><hgroup><h2>文字标注 text / 图例 legend</h2></hgroup><article  id="-text--legend" class="smaller">
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>par(mar=c(4, 4, 1, 1))
+with(mtcars, plot(wt, mpg, type=&quot;n&quot;))  # 不出图
+with(subset(mtcars, am==0), 
+     text(wt, mpg, labels=row.names(mtcars),
+     cex=0.6, col=1))
+with(subset(mtcars, am==1), 
+     text(wt, mpg, labels=row.names(mtcars),
+     cex=0.6, col=2))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/text-1.png" width="480" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>par(mar=c(4, 4, 1, 1))
+with(mtcars, plot(wt, mpg), type=&#39;n&#39;)  # 不出图
+with(subset(mtcars, am==0), 
+     points(wt, mpg, pch=20, col=1))
+with(subset(mtcars, am==1), 
+     points(wt, mpg, pch=20, col=2))
+legend(&quot;topright&quot;, pch=20, col=c(1, 2), 
+       legend=c(&quot;Auto&quot;, &quot;Manual&quot;))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/legend-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>自定义字体: <code>extrafont</code>包</h2></hgroup><article  id="-extrafont">
+
+<div class="columns-2">
+<ul>
+<li><code>family</code>参数可指定字体，但默认只支持&quot;serif&quot;、&quot;sans&quot;、&quot;mono&quot;等值</li>
+<li>利用<code>extrafont</code>可将操作系统字体映射到R作图系统</li>
+<li>使用方法
+
+<ul>
+<li><code>install.packages(&quot;extrafont&quot;)</code></li>
+<li><code>extrafont::font_import()</code></li>
+<li><code>fonttable</code>查看映射字体名称</li>
+<li>使用<code>fonttable()$FullName</code>列表中的注册字体名称</li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>library(extrafont)
+with(mtcars, plot(wt, mpg, main=&#39;汽车&#39;, 
+        family=&quot;Microsoft YaHei&quot;))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/extrafont-1.png" width="480" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>数学符号 (<code>?plotmath</code>)</h2></hgroup><article  id="-plotmath" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li><code>expression()</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>plot(0, 0, main = expression(theta == 0),
+     ylab = expression(hat(gamma) == 0),
+     xlab = expression(sum(x[i] * y[i], i==1, n)))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/plotmath%201-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<ul>
+<li>几部分文本拼接: *符号</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>x &lt;- rnorm(100)
+hist(x, xlab=expression(
+  &quot;The mean (&quot; * bar(x) * &quot;) is &quot; * sum(x[i]/n,i==1,n)))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/plotmath%202-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2><code>substitute</code>函数</h2></hgroup><article  id="substitute" class="smaller">
+
+<p>如果表达式中包含实时运算，要用<code>substitute</code>函数转义</p>
+
+<pre class = 'prettyprint lang-r'>par(mar=c(4, 4, 1, 1))
+x &lt;- rnorm(100)
+y &lt;- x + rnorm(100, sd = 0.5)
+plot(x, y, xlab=substitute(bar(x) == k, list(k=mean(x))),
+     ylab=substitute(bar(y) == k, list(k=mean(y))))</pre>
+
+<p><img src="A03_03_plotBase_files/figure-html/plotmath%203-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

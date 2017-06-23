@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-01 组织你的分析工程</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-01 组织你的分析工程',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_01_organization_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_01_organization_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_01_organization_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-22 20:35:35</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>分析流程</a></li>
+<li><a href='#6' title=''>分析工程</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>分析流程</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>流程图示</h2></hgroup><article >
+
+<img src='A05_01_organization_files/figure-html/flow.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>注意事项</h2></hgroup><article >
+
+<ol>
+<li>数据分析中最重要的，是<strong>定义你的问题</strong>
+
+<ul>
+<li>正确定义问题，需要提前熟悉业务的要求/逻辑</li>
+</ul></li>
+<li>收集数据
+
+<ul>
+<li>尽可能收集原始数据，而非处理过的汇总</li>
+<li>注意开源数据的使用条款</li>
+<li>引述数据源，记录采集地址和时间</li>
+</ul></li>
+<li><strong>记录数据清洗的所有步骤</strong></li>
+<li>记录建模步骤、调参依据，及不确定性度量方法</li>
+<li>结果解释要紧扣问题，努力探索因果</li>
+<li>反复自我诘问，优化模型</li>
+</ol>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>分析工程</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>如何建立分析工程?</h2></hgroup><article >
+
+<img src='A05_01_organization_files/figure-html/createProj.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>建立分析工程有什么好处?</h2></hgroup><article >
+
+<ol>
+<li>每个工程有独立的工作目录、历史记录、开发环境，互不干扰
+
+<ul>
+<li>独立的.Rprofile、.RData、.Rhistory</li>
+<li>可通过prackat镜像一套隔离开发环境(特定的程序包版本,等)</li>
+<li>每次进入工程，自动载入前次退出时的环境、文件</li>
+</ul></li>
+<li>便于利用Git/SVN对工程进行版本控制</li>
+<li>RStudio还为分析工程绑定了很多实用功能
+
+<ul>
+<li>BuildTool选择package，可开发R程序包</li>
+<li>BuildTool选择website，可编译静态网站</li>
+<li>BuildTool也选makefile和自定义，支持其他工程开发类型</li>
+</ul></li>
+</ol>
+
+<blockquote>
+<p>双击.Rproj文件即可启动已创建的分析工程</p>
+</blockquote>
+
+</article></slide><slide class=''><hgroup><h2>建议的工程结构</h2></hgroup><article  class="smaller">
+
+<div class="columns-2">
+<p>分开存放不同类型、不同阶段的资料</p>
+
+<ul>
+<li>数据 Data
+
+<ul>
+<li>原始数据 Raw</li>
+<li>处理后的数据 Processed</li>
+</ul></li>
+<li>图表 Figure
+
+<ul>
+<li>探索性图表 Exploratory</li>
+<li>终稿图表 Final</li>
+</ul></li>
+<li>代码 Code
+
+<ul>
+<li>粗代码 Raw Code: 探索性代码</li>
+<li>终稿代码 Final Code: 注释、格式化</li>
+<li>Rmarkdown / LaTeX文档</li>
+</ul></li>
+<li>文本 Text
+
+<ul>
+<li>README: (可选)项目说明、处理过程</li>
+<li>分析报告/应用 Report/Application</li>
+</ul></li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<h4>示例工程结构</h4>
+
+<p>文件夹名称均小写，不含空格</p>
+
+<pre >[project_work_directory]/
+   |-- README
+   |-- data
+   |   |-- raw
+   |   |-- processed
+   |-- code
+   |   |-- raw
+   |   |-- final
+   |   |-- scripts
+   |-- doc
+   |   |-- documents
+   |   |-- references
+   |-- assets
+   |   |-- libs
+   |   |-- figure
+   |   |-- css
+   |-- tmp
+   |   |-- doc
+   |   |-- figure
+   |-- misc</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>注意事项</h2></hgroup><article  id="-1">
+
+<ol>
+<li>任何时候，<strong>不要修改原始数据</strong>
+
+<ul>
+<li>可将多阶段处理的中间数据集都保存在工程目录内</li>
+</ul></li>
+<li>(条件允许的话)建议使用Git进行版本管理，并注意备份</li>
+<li><strong>记录所有步骤</strong></li>
+<li>Raw和Final:
+
+<ul>
+<li>Raw强调快速便捷，可以极少注释，保留无效处理和分析</li>
+<li>Final强调整洁、注释，只保留成稿所需的部分
+
+<ul>
+<li>小段注释，简单解释what, when, why, &#8230;</li>
+<li>大段注释放在段落前，详细解释目的、方法、判断等</li>
+</ul></li>
+</ul></li>
+<li>建议使用隔离的开发环境，锁定开发工具和依赖包版本
+
+<ul>
+<li>部署工程成果时，将该开发环境整体照搬为一个实例（instance）</li>
+</ul></li>
+</ol>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

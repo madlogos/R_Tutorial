@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A05-08 实战案例</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A05-08 实战案例',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A05_08_caseStudy_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A05_08_caseStudy_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A05_08_caseStudy_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-22 20:40:53</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>项目背景</a></li>
+<li><a href='#7' title=''>工程设计</a></li>
+<li><a href='#10' title=''>Show Me the Code</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>项目背景</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>需求</h2></hgroup><article >
+
+<ul>
+<li>假设现在是2013-02-01，你是纽约空管部门的分析师</li>
+<li>每天系统自动导出当日离开纽约的所有航班，存为.csv，文件名格式为yyyy-mm-dd
+
+<ul>
+<li>压缩为flights.zip</li>
+<li>位置: <a href='A05_08_caseStudy_files/files/nycflights/data/raw' title=''>./A05_08_caseStudy_files/files</a></li>
+</ul></li>
+<li>你需要开发一个自动化脚本，每天例行生成分析报告
+
+<ul>
+<li>描述数据大致分布，如分时段流量描述等</li>
+<li>准点率统计分析，包括按机场、航空公司分层</li>
+<li>准点与否的相关性分析/预测</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>变量说明</h2></hgroup><article  class="smaller">
+
+<p>参考<code>nycflights13::flights</code></p>
+
+<div class="col-2L">
+<table class = 'rmdtable'>
+<col width="8%" />
+<col width="11%" />
+<tr class="header">
+<th align="left">变量</th>
+<th align="left">说明</th>
+</tr>
+<tr class="odd">
+<td align="left"><code>year</code>, <code>month</code>, <code>day</code></td>
+<td align="left">Date of departure</td>
+</tr>
+<tr class="even">
+<td align="left"><code>dep_time</code>, <code>arr_time</code></td>
+<td align="left">Actual departure and arrival times, local tz.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>sched_dep_time</code>, <code>sched_arr_time</code></td>
+<td align="left">Scheduled departure and arrival times, local tz.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>dep_delay</code>, <code>arr_delay</code></td>
+<td align="left">Departure and arrival delays, in minutes. Negative times represent early departures/arrivals.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>hour</code>, <code>minute</code></td>
+<td align="left">Time of scheduled departure broken into hour and minutes.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>carrier</code></td>
+<td align="left">Two letter carrier abbreviation. See airlines to get name</td>
+</tr>
+</table></div>
+
+<div class="col-2R">
+<table class = 'rmdtable'>
+<col width="8%" />
+<col width="11%" />
+<tr class="header">
+<th align="left">变量</th>
+<th align="left">说明</th>
+</tr>
+<tr class="odd">
+<td align="left"><code>tailnum</code></td>
+<td align="left">Plane tail number</td>
+</tr>
+<tr class="even">
+<td align="left"><code>flight</code></td>
+<td align="left">Flight number</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>origin</code>, <code>dest</code></td>
+<td align="left">Origin and destination. See airports for additional metadata.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>air_time</code></td>
+<td align="left">Amount of time spent in the air, in minutes</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>distance</code></td>
+<td align="left">Distance between airports, in miles</td>
+</tr>
+<tr class="even">
+<td align="left"><code>time_hour</code></td>
+<td align="left">Scheduled date and hour of the flight as a POSIXct date. Along with origin, can be used to join flights data to weather data.</td>
+</tr>
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>&#39;data.frame&#39;:   842 obs. of  19 variables:
+ $ year          : int  2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...
+ $ month         : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day           : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ dep_time      : int  517 533 542 544 554 554 555 557 557 558 ...
+ $ sched_dep_time: int  515 529 540 545 600 558 600 600 600 600 ...
+ $ dep_delay     : num  2 4 2 -1 -6 -4 -5 -3 -3 -2 ...
+ $ arr_time      : int  830 850 923 1004 812 740 913 709 838 753 ...
+ $ sched_arr_time: int  819 830 850 1022 837 728 854 723 846 745 ...
+ $ arr_delay     : num  11 20 33 -18 -25 12 19 -14 -8 8 ...
+ $ carrier       : chr  &quot;UA&quot; &quot;UA&quot; &quot;AA&quot; &quot;B6&quot; ...
+ $ flight        : int  1545 1714 1141 725 461 1696 507 5708 79 301 ...
+ $ tailnum       : chr  &quot;N14228&quot; &quot;N24211&quot; &quot;N619AA&quot; &quot;N804JB&quot; ...
+ $ origin        : chr  &quot;EWR&quot; &quot;LGA&quot; &quot;JFK&quot; &quot;JFK&quot; ...
+ $ dest          : chr  &quot;IAH&quot; &quot;IAH&quot; &quot;MIA&quot; &quot;BQN&quot; ...
+ $ air_time      : num  227 227 160 183 116 150 158 53 140 138 ...
+ $ distance      : num  1400 1416 1089 1576 762 ...
+ $ hour          : num  5 5 5 5 6 5 6 6 6 6 ...
+ $ minute        : num  15 29 40 45 0 58 0 0 0 0 ...
+ $ time_hour     : POSIXct, format: &quot;2013-01-01 05:00:00&quot; &quot;2013-01-01 05:00:00&quot;</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>工程设计</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>文件结构</h2></hgroup><article  class="smaller">
+
+<p>参考<a href='A05_01_organization.html#9' title=''>A05_01</a>的建议<a href='A05_08_caseStudy_files/files/nycflights' title=''>结构</a></p>
+
+<pre >        - nycflights/
+           |-- README
+           |-- data
+           |   |-- raw
+           |   |-- processed
+           |-- code
+           |   |-- raw
+           |   |-- final
+           |   |-- scripts
+           |-- doc
+           |   |-- documents
+           |   |-- references
+           |-- assets
+           |   |-- libs
+           |   |-- figure
+           |   |-- css
+           |-- tmp
+           |   |-- doc
+           |   |-- figure
+           |-- misc</pre>
+
+</article></slide><slide class=''><hgroup><h2>工程思路</h2></hgroup><article  class="smaller">
+
+<ol>
+<li>从flights.zip提取当日.csv，读入</li>
+<li>建立.nb.rmd文档，逐步探索
+
+<ol>
+<li>清理
+
+<ol>
+<li>根据<code>dep_delay</code>、<code>arr_delay</code>定义误点与否(0, 1)</li>
+<li>只保留complete.cases</li>
+</ol></li>
+<li>描述
+
+<ol>
+<li>各机场当日不同时间段的流量</li>
+<li>不同目的地的流量</li>
+<li>各机场当天及前溯20天的准点率</li>
+</ol></li>
+<li>准点率分层分析 (机场、时段、里程)</li>
+<li>预测</li>
+</ol></li>
+<li>在doc文件夹下生成.html文档</li>
+<li>利用.bat批处理脚本将分析管道自动化</li>
+</ol>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Show Me The Code</h2></hgroup><article  id="show-me-the-code">
+
+</article></slide><slide class=''><hgroup><h2>YAML头</h2></hgroup><article  id="yaml">
+
+<ul>
+<li><code>params</code>定义当前日期</li>
+<li><code>output</code>定义主题等参数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>params:
+  day: &#39;01&#39;
+  month: &#39;02&#39;
+  year: &#39;2013&#39;
+output:
+  html_document:
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+  html_notebook:
+    fig_caption: yes
+    number_sections: yes
+    theme: cosmo
+    toc: yes</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='A05_08_caseStudy_files/figure-html/report.png' title='fig:'/><p class='caption'><a href='A05_08_caseStudy_files/files/nycflights/doc/doc/analysis.html' title=''>报告样例</a></p>
+
+</article></slide><slide class=''><hgroup><h2>命令行生成报告</h2></hgroup><article >
+
+<ul>
+<li>将当前日期改为2013-1-31，通过params参数传入<code>render</code>函数</li>
+<li>由此即可轻松实现例行报告一键生成</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>scr &lt;- &quot;A05_08_caseStudy_files/files/nycflights/code/scripts/analysis.Rmd&quot;
+library(rmarkdown)
+render(scr, &quot;html_document&quot;, &quot;report.html&quot;, 
+    params=list(day=&#39;31&#39;, month=&#39;01&#39;, year=&#39;2013&#39;),
+    encoding=&quot;UTF-8&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

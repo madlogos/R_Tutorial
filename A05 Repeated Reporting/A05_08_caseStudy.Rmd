@@ -1,0 +1,190 @@
+---
+title: A05-08 实战案例
+subtitle: R Analyst Track
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: ../pres.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    self_contained: no
+    widescreen: yes
+    logo: ../logo.png
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A05_08_caseStudy_files/figure-html/")
+```
+
+## 目录
+
+- [项目背景](#3)
+- [工程设计](#7)
+- [Show Me the Code](#10)
+
+# 项目背景
+
+## 需求
+
+- 假设现在是2013-02-01，你是纽约空管部门的分析师
+- 每天系统自动导出当日离开纽约的所有航班，存为.csv，文件名格式为yyyy-mm-dd
+    - 压缩为flights.zip
+    - 位置: [./A05_08_caseStudy_files/files](A05_08_caseStudy_files/files/nycflights/data/raw)
+- 你需要开发一个自动化脚本，每天例行生成分析报告
+    - 描述数据大致分布，如分时段流量描述等
+    - 准点率统计分析，包括按机场、航空公司分层
+    - 准点与否的相关性分析/预测
+
+## 变量说明 {.smaller}
+
+参考`nycflights13::flights`
+
+<div class="col-2L">
+
+变量 | 说明
+-----|-------
+`year`, `month`, `day` |  Date of departure
+`dep_time`, `arr_time` | Actual departure and arrival times, local tz.
+`sched_dep_time`, `sched_arr_time` | Scheduled departure and arrival times, local tz.
+`dep_delay`, `arr_delay` | Departure and arrival delays, in minutes. Negative times represent early departures/arrivals.
+`hour`, `minute`       | Time of scheduled departure broken into hour and minutes.
+`carrier`              | Two letter carrier abbreviation. See airlines to get name
+
+</div><div class="col-2R">
+
+变量 | 说明
+-----|-------
+`tailnum`   | Plane tail number
+`flight`    | Flight number
+`origin`, `dest` | Origin and destination. See airports for additional metadata.
+`air_time`  | Amount of time spent in the air, in minutes
+`distance`  | Distance between airports, in miles
+`time_hour` | Scheduled date and hour of the flight as a POSIXct date. Along with origin, can be used to join flights data to weather data.
+
+</div>
+
+---
+
+```r
+'data.frame':	842 obs. of  19 variables:
+ $ year          : int  2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...
+ $ month         : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ day           : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ dep_time      : int  517 533 542 544 554 554 555 557 557 558 ...
+ $ sched_dep_time: int  515 529 540 545 600 558 600 600 600 600 ...
+ $ dep_delay     : num  2 4 2 -1 -6 -4 -5 -3 -3 -2 ...
+ $ arr_time      : int  830 850 923 1004 812 740 913 709 838 753 ...
+ $ sched_arr_time: int  819 830 850 1022 837 728 854 723 846 745 ...
+ $ arr_delay     : num  11 20 33 -18 -25 12 19 -14 -8 8 ...
+ $ carrier       : chr  "UA" "UA" "AA" "B6" ...
+ $ flight        : int  1545 1714 1141 725 461 1696 507 5708 79 301 ...
+ $ tailnum       : chr  "N14228" "N24211" "N619AA" "N804JB" ...
+ $ origin        : chr  "EWR" "LGA" "JFK" "JFK" ...
+ $ dest          : chr  "IAH" "IAH" "MIA" "BQN" ...
+ $ air_time      : num  227 227 160 183 116 150 158 53 140 138 ...
+ $ distance      : num  1400 1416 1089 1576 762 ...
+ $ hour          : num  5 5 5 5 6 5 6 6 6 6 ...
+ $ minute        : num  15 29 40 45 0 58 0 0 0 0 ...
+ $ time_hour     : POSIXct, format: "2013-01-01 05:00:00" "2013-01-01 05:00:00"
+```
+
+# 工程设计
+
+## 文件结构 {.smaller}
+
+参考[A05_01](A05_01_organization.html#9)的建议[结构](A05_08_caseStudy_files/files/nycflights)
+
+```
+        - nycflights/
+           |-- README
+           |-- data
+           |   |-- raw
+           |   |-- processed
+           |-- code
+           |   |-- raw
+           |   |-- final
+           |   |-- scripts
+           |-- doc
+           |   |-- documents
+           |   |-- references
+           |-- assets
+           |   |-- libs
+           |   |-- figure
+           |   |-- css
+           |-- tmp
+           |   |-- doc
+           |   |-- figure
+           |-- misc
+```
+
+## 工程思路 {.smaller}
+
+1. 从flights.zip提取当日.csv，读入
+1. 建立.nb.rmd文档，逐步探索
+    1. 清理
+        1. 根据`dep_delay`、`arr_delay`定义误点与否(0, 1)
+        1. 只保留complete.cases
+    1. 描述
+        1. 各机场当日不同时间段的流量
+        1. 不同目的地的流量
+        1. 各机场当天及前溯20天的准点率
+    1. 准点率分层分析 (机场、时段、里程)
+    1. 预测
+1. 在doc文件夹下生成.html文档
+1. 利用.bat批处理脚本将分析管道自动化
+
+
+# Show Me The Code
+
+## YAML头
+
+- `params`定义当前日期
+- `output`定义主题等参数
+
+```r
+params:
+  day: '01'
+  month: '02'
+  year: '2013'
+output:
+  html_document:
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+  html_notebook:
+    fig_caption: yes
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+```
+
+---
+
+![[报告样例](A05_08_caseStudy_files/files/nycflights/doc/doc/analysis.html)](A05_08_caseStudy_files/figure-html/report.png)
+
+## 命令行生成报告
+
+- 将当前日期改为2013-1-31，通过params参数传入`render`函数
+- 由此即可轻松实现例行报告一键生成
+
+```r
+scr <- "A05_08_caseStudy_files/files/nycflights/code/scripts/analysis.Rmd"
+library(rmarkdown)
+render(scr, "html_document", "report.html", 
+    params=list(day='31', month='01', year='2013'),
+    encoding="UTF-8")
+```
+
+## {.grayblue}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+
+<br/>[回到主目录](http://madlogos.github.io/R_Tutorial)

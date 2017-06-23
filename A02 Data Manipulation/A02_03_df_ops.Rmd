@@ -1,22 +1,20 @@
 ---
 title: A02-03 数据框的分合排转
 subtitle: R Analyst Track
-author: 
-  name: "HMS"
-  company: "[Aetna International](https://www.aetnainternational.com)"
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
 date: "`r Sys.time()`"
 output: 
   ioslides_presentation: 
-    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    css: ../pres.css
     df_print: paged
     fig_caption: yes
     fig_height: 5.5
     fig_width: 8
     highlight: pygments
     lib_dir: libs
-    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
     self_contained: no
     widescreen: yes
+    logo: ../logo.png
 ---
 
 ```{r setup, include=FALSE}
@@ -31,8 +29,6 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 - [分割和合并](#9)
 - [排序](#17)
 - [转换](#21)
-
-<p class="footer">Copyright © 2016 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span></p>
 
 
 # 索引和定位
@@ -528,6 +524,6 @@ setorderv(x, cols, order=1L, na.last=FALSE)
 
 
 
-## {.teal}
+## {.grayblue}
 
 <p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>

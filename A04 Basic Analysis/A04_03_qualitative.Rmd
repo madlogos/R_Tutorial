@@ -1,0 +1,522 @@
+---
+title: A04-03 定性数据统计推断
+subtitle: R Analyst Track
+author: "[Yiying Wang](http://blog.sina.com.cn/madlogos)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: ../pres.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    self_contained: no
+    widescreen: yes
+    logo: ../logo.png
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "A04_03_qualitative_files/figure-html/")
+```
+
+## 目录
+
+- [卡方检验](#3)
+- [列联表](#8)
+- [高维(多向)列联表](#15)
+
+# 卡方检验
+
+## 实际频数和理论频数 {.smaller}
+
+<div class="columns-2">
+
+实际观测到的属性交叉频数
+
+| 实际 | C~1~ | C~2~ | ... | C~n~ | 合计 |
+|:-----|:----:|:----:|:---:|:----:|:----:|
+| R~1~ | n~11~ | n~12~ | ... | n~1n~ | $S_{R_1} = \\ \sum_{j=1}^{n}n_{1j}$ |
+| R~2~ | n~21~ | n~22~ | ... | n~2n~ | $S_{R_2} = \\ \sum_{j=1}^{n}n_{2j}$ |
+| ...  | ...  | ...  | ... | ...  | ... |
+| R~m~ | n~m1~ | n~m2~ | ... | n~mn~ | $S_{R_m} = \\ \sum_{j=1}^{n}n_{mj}$ |
+| 合计 | $S_{C_1} = \\ \sum_{i=1}^{m}n_{i1}$ | $S_{C_2} = \\ \sum_{i=1}^{m}n_{i2}$ | ... | $S_{C_n} = \\ \sum_{i=1}^{m}n_{in}$ | $S = \\ \sum_{i=1}^{m}\sum_{j=1}^{n}n_{ij}$ |
+
+<p class="forceBreak"></p>
+
+行列之和相乘，除以总数，为该交叉点的期望频数
+
+| 理论 | C~1~ | C~2~ | ... | C~n~ | 合计 |
+|:-----|:----:|:----:|:---:|:----:|:----:|
+| R~1~ | $\frac{S_{R_1}S_{C_1}}{S}$ | $\frac{S_{R_1}S_{C_2}}{S}$ | ... | $\frac{S_{R_1}S_{C_n}}{S}$ | $\frac{S_{R_1}\sum_{j=1}^{n}S_{Cj}}{S} \\= S_{R_1}$ |
+| R~2~ | $\frac{S_{R_2}S_{C_1}}{S}$ | $\frac{S_{R_2}S_{C_2}}{S}$ | ... | $\frac{S_{R_2}S_{C_n}}{S}$ | $\frac{S_{R_2}\sum_{j=1}^{n}S_{Cj}}{S} \\= S_{R_2}$  |
+| ...  | ...  | ...  | ... | ...  | ... |
+| R~m~ | $\frac{S_{R_m}S_{C_1}}{S}$ | $\frac{S_{R_m}S_{C_2}}{S}$ | ... | $\frac{S_{R_m}S_{C_n}}{S}$ | $\frac{S_{R_m}\sum_{j=1}^{n}S_{Cj}}{S} \\= S_{R_m}$ |
+| 合计 | $\frac{S_{C_1}\sum_{i=1}^{m}S_{Ri}}{S} \\= S_{C_1}$ | $\frac{S_{C_2}\sum_{i=1}^{m}S_{Ri}}{S} \\= S_{C_2}$ | ... | $\frac{S_{C_n}\sum_{i=1}^{m}S_{Rn}}{S} \\= S_{C_n}$ | S |
+
+</div>
+
+## Pearson's $\chi^{2}$ 检验
+
+> MASS::eagles数据集，不同体型的秃鹰偷食的成功率有无不同?
+
+- H0: 大型(L)和小型(S)秃鹰偷食成功率相同
+- H1: 大型(L)和小型(S)秃鹰偷食成功率不同
+
+<div class="columns-2">
+
+- L vs S: 83% vs 28%
+
+实际频数 | yes | no | total
+---|-----|----|-----
+L | 83 | 17 | 100
+S | 17 | 43 | 60
+total | 100 | 60 | 160
+
+<p class="forceBreak"></p>
+
+- 统计量: $\chi^2=\sum ((A-T)^2 / T)$
+
+理论频数 | yes | no | total
+---|-----|----|-----
+L | 62.5 | 37.5 | 100
+S | 37.5 | 22.5 | 60
+total | 100 | 60 | 160
+
+</div>
+
+## 名义(Norminal)数据
+
+- `chisq.test`
+    - 列联表行、列均无序，或
+    - 列联表行、列单向有序
+
+```r
+> library(MASS); library(data.table)
+> d <- dcast(data.table(eagles), P~., sum, value.var=c("y","n"))
+> d$n <- d$n - d$y; d
+
+  P  y  n
+1 L 83 17
+2 S 17 43
+
+> chisq.test(d[,.(y, n)])
+
+	Pearson's Chi-squared test with Yates' continuity correction
+data:  d[, .(y, n)]
+X-squared = 45.511, df = 1, p-value = 1.518e-11
+```
+
+
+## 有序(Ordinal)数据
+
+- `prop.trend.test` / `coin::lbl_test`
+    - 行列双向有序: cochran-Armitage Test
+
+<div class="columns-2">
+
+```r
+> library(MASS); library(data.table)
+> Insurance <- dcast(Insurance, Group~Age, 
++ sum, value.var="Holders")
+> Insurance
+
+   Group <25 25-29 30-35  >35
+1    <1l 337   509   526 3575
+2 1-1.5l 517  1085  1477 8384
+3 1.5-2l 241   578   765 3786
+4    >2l  43   164   239 1133
+```
+
+<p class="forceBreak"></p>
+
+```r
+> library(coin)
+> lbl_test(xtabs(value~Group+variable, 
++ melt(Insurance, id="Group")))
+
+  Asymptotic Linear-by-Linear Association Test
+data:  variable (ordered) by Group 
+(<1l < 1-1.5l < 1.5-2l < >2l)
+Z = 2.0104, p-value = 0.04438
+alternative hypothesis: two.sided
+```
+
+</div>
+
+
+# 列联表
+
+## 列联表的数据结构
+
+- 定性数据的列联表一般整理为频数/频率表(contingency table)
+- 一般是带dimnames属性的两维或多维矩阵
+- 通常由`table`、`ftable`、`xtabs`命令生成
+
+<div class="columns-2">
+
+#### 正确: 3*2频数表(本质是matrix)
+
+```r
+> library(vcd)
+> str(with(Arthritis, 
++   table(Improved, Treatment)))
+ 'table' int [1:3, 1:2] 29 7 7 13 7 21
+ - attr(*, "dimnames")=List of 2    
+  ..$ Improved : chr [1:3] 
+                "None" "Some" "Marked"
+  ..$ Treatment: chr [1:2] 
+                "Placebo" "Treated"
+```
+
+<p class="forceBreak"></p>
+
+#### 错误: 3*2数据框(本质是list)
+
+```r
+> library(reshape2)
+> str(dcast(Arthritis, Improved~Treatment))
+'data.frame':	3 obs. of  3 variables:
+ $ Improved: Ord.factor w/ 3 levels 
+                "None"<"Some"<..: 1 2 3
+ $ Placebo : int  29 7 7
+ $ Treated : int  13 7 21
+```
+
+</div>
+
+## 分析方法的选择 {.smaller}
+
+#### Pearson's $\chi^2$ vs Fisher精确概率法
+
+- 期望频数<5的格子数不超过总格子数/5，所有期望频数>=1 ==> Pearson's $\chi^2$
+- 否则 ==> Fisher精确概率法
+
+#### 独立数据R*C表
+
+- 2*2表(通常要连续性Yates校正)
+    - 流行病学资料(病例-对照/队列): OR值、RR值
+    - 筛查四格表(诊断实验): 灵敏度、特异度、阳性预测值、阴性预测值
+    - 其他: Pearson's $\chi^2$ / Fisher 精确概率法
+- 多行列R*C表
+    - 双向有序资料: 卡方趋势检验(Cochran-Armitage)
+    - 单向有序/无序资料: Pearson's $\chi^2$ / Fisher 精确概率法
+
+#### 非独立数据R*C表: McNemar $\chi^2$检验
+    
+## 流行病学四格表 {.smaller}
+
+- 由阳性结果/阴性结果、有暴露/无暴露交叉而来
+- 通常用OR、RR来衡量暴露于结果之间的关联
+
+<div class="columns-2">
+
+```r
+> library(vcd)
+> dat <- apply(PreSex, 2:1, sum)
+> dat
+               MaritalStatus
+ExtramaritalSex Divorced Married
+            Yes   98 (a)  23 (b)
+            No   396 (c) 519 (d)
+```
+
+离婚组和未离婚组的婚外性行为暴露率分别为:
+
+```r
+> dat[1,]/rowSums(dat)
+  Divorced    Married 
+0.19838057 0.04243542 
+```
+
+OR(Odds ratio)值= $\frac{ad}{bc}$ = (98\*519)/(396\*23) = 5.584
+
+<p class="forceBreak"></p>
+
+```r
+> library(epiR)
+> epi.2by2(dat, method="case.control")
+         Outcome+ Outcome- Total Prevalence*    Odds
+Exposed+       98       23   121       81.0    4.261
+Exposed-      396      519   915       43.3    0.763
+Total         494      542  1036       47.7    0.911
+
+Point estimates and 95 % CIs:
+------------------------------------------------------
+Odds ratio (W)                    5.58 (3.48, 8.96)
+Attrib prevalence *               37.71 (30.02, 45.41)
+Attrib prevalence in population * 4.40 (-0.02, 8.83)
+Attrib fraction (est) in exposed  (%)
+                                  82.06 (70.91, 89.34)
+Attrib fraction (est) in population (%)
+                                  16.29 (12.23, 20.15)
+------------------------------------------------------
+ X2 test statistic: 60.929 p-value: < 0.001
+ Wald confidence limits
+ * Outcomes per 100 population units 
+```
+
+</div>
+
+## 筛查四格表(诊断试验/混淆矩阵)
+
+- 由试验阳性/试验阴性、实际阳性/实际阴性交叉而来
+- 通常用灵敏度、特异度、阳性预测值、阴性预测预测值来衡量试验精度
+
+<div class="columns-2">
+
+```r
+> dat <- as.table(matrix(c(670,202,74,640), 
++   nrow = 2, byrow = TRUE))
+> colnames(dat) <- c("Dis+","Dis-")
+> rownames(dat) <- c("Test+","Test-")
+> addmargins(dat)
+
+      Dis+ Dis-  Sum
+Test+  670  202  872
+Test-   74  640  714
+Sum    744  842 1586
+
+> epi.tests(dat, conf.level = 0.95)
+```
+
+<p class="forceBreak"></p>
+
+```r
+          Outcome +    Outcome -      Total
+Test +          670          202        872
+Test -           74          640        714
+Total           744          842       1586
+
+Point estimates and 95 % CIs:
+---------------------------------------------
+Apparent prevalence         0.55 (0.52, 0.57)
+True prevalence             0.47 (0.44, 0.49)
+Sensitivity                 0.90 (0.88, 0.92)
+Specificity                 0.76 (0.73, 0.79)
+Positive predictive value   0.77 (0.74, 0.80)
+Negative predictive value   0.90 (0.87, 0.92)
+Positive likelihood ratio   3.75 (3.32, 4.24)
+Negative likelihood ratio   0.13 (0.11, 0.16)
+---------------------------------------------
+```
+
+</div>
+
+## 精确概率法 {.smaller}
+
+<div class="columns-2">
+
+```r
+> Job <- matrix(c(1,2,1,0, 3,3,6,1, 10,10,14,9, 
++ 6,7,12,11), 4, 4, dimnames = list(
++   income = c("< 15k", "15-25k", "25-40k", "> 40k"),
++   satisfaction = c("VeryD", "LittleD", "ModerateS", "VeryS")))
+> Job
+        satisfaction
+income   VeryD LittleD ModerateS VeryS
+  < 15k      1       3        10     6
+  15-25k     2       3        10     7
+  25-40k     1       6        14    12
+  > 40k      0       1         9    11
+
+> chisq.test(Job)$expected
+        satisfaction
+income       VeryD  LittleD ModerateS  VeryS
+  < 15k  0.8333333 2.708333  8.958333  7.500
+  15-25k 0.9166667 2.979167  9.854167  8.250
+  25-40k 1.3750000 4.468750 14.781250 12.375
+  > 40k  0.8750000 2.843750  9.406250  7.875
+```
+
+<p class="forceBreak"></p>
+
+- Pearson's $\chi^2$
+
+```r
+> chisq.test(Job)
+
+	Pearson's Chi-squared test
+data:  Job
+X-squared = 5.9655, df = 9, p-value = 0.7434
+```
+
+- Fisher Exact Test
+
+```r
+> fisher.test(Job)
+
+	Fisher's Exact Test for Count Data
+data:  Job
+p-value = 0.7827
+alternative hypothesis: two.sided
+```
+
+</div>
+
+## 非独立数据列联表 {.smaller}
+
+> Alan Agresti (1990) 总统表现调查: 时隔一个月后，公民对总统的表现是否认可?
+
+```r
+> Performance <- matrix(
++   c(794, 86, 150, 570),
++   nrow = 2, dimnames = list(
++       "1st Survey" = c("Approve", "Disapprove"),
++       "2nd Survey" = c("Approve", "Disapprove")))
+> addmargins(Performance)
+            2nd Survey
+1st Survey   Approve Disapprove  Sum
+  Approve        794        150  944
+  Disapprove      86        570  656
+  Sum            880        720 1600
+```
+
+同一批人两次采样，显然不是独立样本。匹配样本定性数据应用McNemar检验。
+
+```r
+> mcnemar.test(Performance)
+	McNemar's Chi-squared test with continuity correction
+
+data:  Performance
+McNemar's chi-squared = 16.818, df = 1, p-value = 4.115e-05
+```
+
+# 高维(多向)列联表
+
+## 二维列联表 到 多维列联表 {.smaller}
+
+<div class="columns-2">
+
+- 压缩后的高维列联表
+
+```r
+> dat0 <- apply(UCBAdmissions, 1:2, sum)
+> addmargins(dat0)
+          Gender
+Admit      Male Female  Sum
+  Admitted 1198    557 1755
+  Rejected 1493   1278 2771
+  Sum      2691   1835 4526
+```
+
+- 实际多维列联表
+
+```r
+> UCBAdmissions
+, , Dept = A  Gender
+Admit      Male Female
+  Admitted  512     89
+  Rejected  313     19
+
+, , Dept = B  Gender
+Admit      Male Female
+  Admitted  353     17
+  Rejected  207      8
+```
+
+```r
+, , Dept = C  Gender
+Admit      Male Female
+  Admitted  120    202
+  Rejected  205    391
+
+, , Dept = D  Gender
+Admit      Male Female
+  Admitted  138    131
+  Rejected  279    244
+
+, , Dept = E  Gender
+Admit      Male Female
+  Admitted   53     94
+  Rejected  138    299
+
+, , Dept = F  Gender
+Admit      Male Female
+  Admitted   22     24
+  Rejected  351    317
+```
+
+</div>
+
+## 分层分析
+
+- 合起来看，UCB男女录取率有差异
+
+```r
+> chisq.test(dat0)
+	Pearson's Chi-squared test with Yates' continuity correction
+data:  dat0
+X-squared = 91.61, df = 1, p-value < 2.2e-16
+```
+
+- 分院系看，各院系男女录取率却几乎都没有差异
+
+```r
+> o <- sapply(1:6, function(i) {
++      unlist(chisq.test(UCBAdmissions[,,i])[c("statistic", "p.value")])})
+> colnames(o) <- dimnames(UCBAdmissions)$Dept
+> format(o, scientific = FALSE, digits=2)
+                     A         B         C         D         E         F          
+statistic.X-squared 16.371774  0.085098  0.633224  0.221594  0.808048  0.218243
+p.value              0.000052  0.770504  0.426175  0.637828  0.368698  0.640382
+```
+
+## Cochran-Mantel-Haenszel检验
+
+- 各层卡方平均下来是多少? 用`stat::mantelhaen.test`
+
+```r
+> mantelhaen.test(UCBAdmissions)
+
+	Mantel-Haenszel chi-squared test with continuity correction
+
+data:  UCBAdmissions
+Mantel-Haenszel X-squared = 1.4269, df = 1, p-value = 0.2323
+alternative hypothesis: true common odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.7719074 1.0603298
+sample estimates:
+common odds ratio 
+        0.9046968 
+```
+
+## Cochran-Mantel-Haenszel检验(续) {.smaller}
+
+- 用`epiR::epi.mh`综合计算OR值
+
+```r
+> dat <- reshape2::melt(addmargins(UCBAdmissions))
+> dat <- reshape2::dcast(dat[dat$Dept != "Sum" & dat$Gender != "Sum",], Dept~Admit+Gender); dat
+  Dept Admitted_Male Admitted_Female Rejected_Male Rejected_Female Sum_Male Sum_Female
+1    A           512              89           313              19      825        108
+2    B           353              17           207               8      560         25
+3    C           120             202           205             391      325        593
+4    D           138             131           279             244      417        375
+5    E            53              94           138             299      191        393
+6    F            22              24           351             317      373        341
+
+> with(dat, epiR::epi.mh(ev.trt=Admitted_Male, n.trt=Sum_Male, ev.ctrl=Admitted_Female, 
++ n.ctrl=Sum_Female, names=Dept))
+$OR
+        est     lower     upper
+1 0.3492120 0.2086756 0.5843954
+2 0.8025007 0.3403815 1.8920166
+3 1.1330596 0.8545328 1.5023696
+4 0.9212838 0.6863345 1.2366620
+5 1.2216312 0.8250748 1.8087848
+6 0.8278727 0.4552059 1.5056335
+
+$OR.summary
+        est     lower    upper
+1 0.9046968 0.6447247 1.086692
+```
+
+## {.grayblue}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+
+

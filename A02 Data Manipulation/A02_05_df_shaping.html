@@ -32,8 +32,8 @@
       // Author information
       presenters: [
             {
-        name:  'HMS' ,
-        company: '<a href="https://www.aetnainternational.com">Aetna International</a>',
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
         gplus: '',
         twitter: '',
         www: '',
@@ -42,6 +42,19 @@
             ]
     };
   </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
 
   <style type="text/css">
 
@@ -86,20 +99,7 @@
     }
   </style>
 
-  <link rel="stylesheet" href="\\ship-oa-001\China_Health_Advisory\ANALYT~1\GUIDEA~1\css\RDECK_~1.CSS" type="text/css" />
-
-  <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-  <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
-  <link href="libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
-  <link href="libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
-  <link href="libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
-  <script src="libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
-  <script src="libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
-  <script src="libs/ioslides-13.5.1/js/hammer.js"></script>
-  <script src="libs/ioslides-13.5.1/js/slide-controller.js"></script>
-  <script src="libs/ioslides-13.5.1/js/slide-deck.js"></script>
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
 
 </head>
 
@@ -114,7 +114,7 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2016-12-21 13:45:56</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-04-22 20:38:45</p>
           </hgroup>
   </slide>
 
@@ -125,13 +125,6 @@
 <li><a href='#6' title=''>dplyr+tidyr包</a></li>
 <li><a href='#21' title=''>data.table包</a></li>
 </ul>
-
-<p class="footer">
-
-Copyright © 2016 Aetna Inc. <span class="cranberry">
-内部使用，请勿外传。</span>
-
-</p>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>数据整形</h2></hgroup><article >
 
@@ -471,7 +464,7 @@ Groups: Species [3]
 </article></slide><slide class=''><hgroup><h2>前向管道算符<code>%&gt;%</code></h2></hgroup><article >
 
 <ul>
-<li><code>magrittr::</code>%&gt;%``</li>
+<li><code>magrittr::</code>%&gt;%`</li>
 <li>把函数的第一个参数抽出前置，用%&gt;%连接，可构成一个连续的前向命令管道
 
 <ul>
@@ -614,6 +607,7 @@ Groups: Species [3]
 <li>数据集DT的通用格式<code>DT[i, j, by]</code>: 对于数据集DT，选取子集i行，通过by对j列分组计算</li>
 <li>处理框架的一致性不如dplyr，但同样可完成全流程数据整理</li>
 <li>一般用data.table完成较大数据集的分合排转，然后管道化操作实现汇总、制图等</li>
+<li>Hadley Wickham开发了dtplyr包，以data.table为后台，使用dplyr的框架和命令</li>
 </ul>
 
 </article></slide><slide class=''><hgroup><h2>data.table函数</h2></hgroup><article  id="data.table" class="smaller">
@@ -647,19 +641,76 @@ Groups: Species [3]
 149:          6.2         3.4          5.4         2.3 virginica
 150:          5.9         3.0          5.1         1.8 virginica</pre>
 
-</article></slide><slide class=''><hgroup><h2>定位/筛取行列</h2></hgroup><article >
+</article></slide><slide class=''><hgroup><h2>读入数据</h2></hgroup><article  class="smaller">
 
 <ul>
-<li>和data.frame的定位方式一致</li>
+<li><code>fread</code>快速读入数据文件</li>
 </ul>
 
-<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[1:2, 1:2]
-   Sepal.Length Sepal.Width
-1:          5.1         3.5
-2:          4.9         3.0</pre>
+<pre class = 'prettyprint lang-r'>flights &lt;- fread(&quot;flights14.csv&quot;)
+flights
+#         year month day dep_delay arr_delay carrier origin dest air_time distance hour
+#      1: 2014     1   1        14        13      AA    JFK  LAX      359     2475    9
+#      2: 2014     1   1        -3        13      AA    JFK  LAX      363     2475   11
+#      3: 2014     1   1         2         9      AA    JFK  LAX      351     2475   19
+#      4: 2014     1   1        -8       -26      AA    LGA  PBI      157     1035    7
+#      5: 2014     1   1         2         1      AA    JFK  LAX      350     2475   13
+#     ---                                                                              
+# 253312: 2014    10  31         1       -30      UA    LGA  IAH      201     1416   14
+# 253313: 2014    10  31        -5       -14      UA    EWR  IAH      189     1400    8
+# 253314: 2014    10  31        -8        16      MQ    LGA  RDU       83      431   11
+# 253315: 2014    10  31        -4        15      MQ    LGA  DTW       75      502   11
+# 253316: 2014    10  31        -5         1      MQ    LGA  SDF      110      659    8
+
+dim(flights)
+# [1] 253316     11</pre>
+
+</article></slide><slide class=''><hgroup><h2>基本理念</h2></hgroup><article  class="smaller">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">R:</th>
+<th align="left">i</th>
+<th align="left">j</th>
+<th align="left">by</th>
+</tr>
+<tr class="odd">
+<td align="left">SQL:</td>
+<td align="left">where</td>
+<td align="left">select | update</td>
+<td align="left">group by</td>
+</tr>
+</table>
+
+<p><br /></p>
 
 <ul>
-<li>利用<code>on</code>: 筛选Sepal.Width == 3.1, Species == &#39;setosa&#39;的记录</li>
+<li><p>data.table的基本形式为</p>
+
+<pre class = 'prettyprint lang-r'>DT[i, j, by]</pre></li>
+<li><p>相当于SQL</p>
+
+<pre class = 'prettyprint lang-sql'>select `j` from `DT` where `i` group by `by`</pre></li>
+<li><p>可以理解为</p>
+
+<blockquote>
+<p>读取<code>DT</code>, 以<code>i</code>筛选行, 然后计算<code>j</code>, 按<code>by</code>分组.</p>
+</blockquote></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>定位/筛取行</h2></hgroup><article >
+
+<ul>
+<li>单纯筛选行，只需要<code>i</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[1:2]
+    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+ 1:          5.1         3.5          1.4         0.2  setosa
+ 2:          4.9         3.0          1.4         0.2  setosa</pre>
+
+<ul>
+<li>利用<code>on</code>: 复合筛选Sepal.Width == 3.1, Species == &#39;setosa&#39;的记录</li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>&gt; data.table(iris)[.(3.1, &#39;setosa&#39;), on=.(Sepal.Width, Species)]
@@ -668,6 +719,37 @@ Groups: Species [3]
 2:          4.9         3.1          1.5         0.1  setosa
 3:          4.8         3.1          1.6         0.2  setosa
 4:          4.9         3.1          1.5         0.2  setosa</pre>
+
+</article></slide><slide class=''><hgroup><h2>定位/筛取列</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>降维取列</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[[1]]  # 或 data.table(iris)[, Sepal.Length]
+  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 ...</pre>
+
+<ul>
+<li>与data.frame一致，或<code>j</code>取<code>list()</code> 或 <code>.()</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[,1:2]  
+&gt; data.table(iris)[, list(Sepal.Length, Sepal.Width)]，
+&gt; data.table(iris)[, .(Sepal.Length, Sepal.Width)]
+     Sepal.Length Sepal.Width
+  1:          5.1         3.5
+ --- 
+150:          5.9         3.0</pre>
+
+<ul>
+<li>如列索引是函数, 需要<code>,with=FALSE</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[, seq(1, 5, 2), with=FALSE]
+     Sepal.Length Petal.Length   Species
+  1:          5.1          1.4    setosa
+ ---
+150:          5.9          5.1 virginica</pre>
 
 </article></slide><slide class=''><hgroup><h2>选列</h2></hgroup><article  class="smaller">
 
@@ -821,24 +903,29 @@ Groups: Species [3]
 </article></slide><slide class=''><hgroup><h2>次生变量</h2></hgroup><article  class="smaller">
 
 <ul>
-<li>data.frame操作或用<code>:=</code></li>
+<li>data.frame操作或 用<code>:=</code> (仅限单个)</li>
 </ul>
 
-<pre class = 'prettyprint lang-r'>&gt; d &lt;- data.table(iris)
-&gt; d[, Sepal.LWR := Sepal.Length/Sepal.Width]
-&gt; d
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[, Sepal.LWR := Sepal.Length/Sepal.Width]
      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species Sepal.LWR
   1:          4.3         3.0          1.1         0.1    setosa  1.433333
   2:          4.4         3.2          1.3         0.2    setosa  1.375000
-  3:          4.4         3.0          1.3         0.2    setosa  1.466667
-  4:          4.4         2.9          1.4         0.2    setosa  1.517241
-  5:          4.5         2.3          1.3         0.3    setosa  1.956522
  ---                                                                      
-146:          7.7         3.8          6.7         2.2 virginica  2.026316
-147:          7.7         3.0          6.1         2.3 virginica  2.566667
-148:          7.7         2.8          6.7         2.0 virginica  2.750000
 149:          7.7         2.6          6.9         2.3 virginica  2.961538
 150:          7.9         3.8          6.4         2.0 virginica  2.078947</pre>
+
+<ul>
+<li>生成多个次生变量: 串链</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[, Sepal.LWR := Sepal.Length/Sepal.Width][ 
++     , Petal.LWR := Petal.Length/Petal.Width)]
+     Sepal.Length Sepal.Width Petal.Length Petal.Width   Species Sepal.LWR Petal.LWR
+  1:          5.1         3.5          1.4         0.2    setosa  1.457143  7.000000
+  2:          4.9         3.0          1.4         0.2    setosa  1.633333  7.000000
+ ---                                                                                
+149:          6.2         3.4          5.4         2.3 virginica  1.823529  2.347826
+150:          5.9         3.0          5.1         1.8 virginica  1.966667  2.833333</pre>
 
 </article></slide><slide class=''><hgroup><h2>熔解和重铸</h2></hgroup><article  class="smaller">
 
@@ -862,6 +949,28 @@ Groups: Species [3]
 2: versicolor        5.936       2.770        4.260       1.326
 3:  virginica        6.588       2.974        5.552       2.026</pre>
 
+</article></slide><slide class=''><hgroup><h2>按<code>j</code>整合计算</h2></hgroup><article  id="j">
+
+<ul>
+<li>计数: <code>.N</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[, .N, by=Species]
+      Species  N
+1:     setosa 50
+2: versicolor 50
+3:  virginica 50</pre>
+
+<ul>
+<li><code>.SD</code>: 代表按<code>by</code>分拆的data.table们(<code>.SDcols</code>指定分组变量)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>&gt; data.table(iris)[, lapply(.SD, mean), by=Species, .SDcols=c(&quot;Sepal.Width&quot;, &quot;Petal.Width&quot;)]
+      Species Sepal.Width Petal.Width
+1:     setosa       3.428       0.246
+2: versicolor       2.770       1.326
+3:  virginica       2.974       2.026</pre>
+
 </article></slide><slide class=''><hgroup><h2>相同的一体化案例</h2></hgroup><article  class="smaller">
 
 <blockquote>
@@ -869,21 +978,20 @@ Groups: Species [3]
 </blockquote>
 
 <ul>
-<li>不如dplyr那样管道化，可能需要创建中间体</li>
+<li>可以用纵向方括号组链，像dplyr那样管道化</li>
 <li>向量化计算的精神贯彻得相当彻底</li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>&gt; d &lt;- data.table(iris)
-&gt; d.sel &lt;- d[Sepal.Length &gt; 6, SPWR := Sepal.Width / Petal.Width]
-&gt; d.agg &lt;- d.sel[, list(m = mean(SPWR, na.rm=TRUE), 
-+                       sd = sd(SPWR, na.rm=TRUE)), by=Species]
-&gt; d.agg
+&gt; d[Sepal.Length &gt; 6, SPWR := Sepal.Width / Petal.Width
++   ][, list(m = mean(SPWR, na.rm=TRUE), 
++            sd = sd(SPWR, na.rm=TRUE)), by=Species]
       Species        m        sd
 1:     setosa      NaN        NA
-2:  virginica 1.494320 0.1874827
-3: versicolor 2.044987 0.2271170</pre>
+2: versicolor 2.044987 0.2271170
+3:  virginica 1.494320 0.1874827</pre>
 
-</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="teal">
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
 
 <p style="font-size:100px;font-family:'Arial Black'">
 

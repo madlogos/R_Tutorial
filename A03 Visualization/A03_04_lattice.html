@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A03-04 Lattice绘图系统</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'A03-04 Lattice绘图系统',
+                        subtitle: 'R Analyst Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'A03_04_lattice_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(A03_04_lattice_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="A03_04_lattice_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-05-20 16:29:52</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>作图基础</a></li>
+<li><a href='#6' title=''>基础图</a></li>
+<li><a href='#13' title=''>进阶图</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>作图基础</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>基本的高级函数</h2></hgroup><article >
+
+<p>类似于S-Plus中的Trellis，调用grid作图系统产生Trellis对象</p>
+
+<ul>
+<li><code>xyplot</code>: 散点图、折线图</li>
+<li><code>barchart</code>: 柱图</li>
+<li><code>bwplot</code>: box-and-whiskers plots (箱式图)</li>
+<li><code>histogram</code>: 直方图</li>
+<li><code>densityplot</code>: 密度曲线图</li>
+<li><code>stripplot</code>: 散点密度图</li>
+<li><code>dotplot</code>: 琴弦散点密度图</li>
+<li><code>splom</code>: 类似于<code>pairs</code>，散点图矩阵</li>
+<li><code>levelplot</code>, <code>contourplot</code>: 像素图</li>
+<li>&#8230;</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>基本语法</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>&lt;作图函数名&gt;(x, data, ...)</pre>
+
+<ul>
+<li>data: 作图数据源，一般是data.frame</li>
+<li>x: 公式(formula)，一般格式:
+
+<ul>
+<li><code>y ~ x | g1 * g2 * ...</code> 或 <code>y ~ x | g1 + g2 + ...</code></li>
+<li>公式结构:
+
+<ul>
+<li>y: 因变量，映射到y轴</li>
+<li>x: 自变量， 映射到x轴</li>
+<li>g1, g2, &#8230;: 条件变量，交叉堆积后生成分面(facet)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>基础图</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>散点图</h2></hgroup><article >
+
+<div class="columns-2">
+<p>连续型变量的关联</p>
+
+<pre class = 'prettyprint lang-r'>library(lattice)
+xyplot(mpg~wt, data=mtcars)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/scatter-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>文本型变量也可以用于绘制散点图</p>
+
+<pre class = 'prettyprint lang-r'>xyplot(decrease~treatment, data=OrchardSprays)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/points-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>直方图</h2></hgroup><article >
+
+<div class="columns-2">
+<p>单变量密度分布</p>
+
+<pre class = 'prettyprint lang-r'>histogram(~mpg, data=mtcars)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/hist-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>或用密度曲线图</p>
+
+<pre class = 'prettyprint lang-r'>densityplot(~mpg, data=mtcars)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/hist%20line-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>箱式图 boxplot</h2></hgroup><article  id="-boxplot">
+
+<div class="columns-2">
+<p>连续性变量的分布</p>
+
+<pre class = 'prettyprint lang-r'>bwplot(~len, ToothGrowth)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/boxplot-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>多个箱式图</p>
+
+<pre class = 'prettyprint lang-r'>bwplot(len~dose, data = ToothGrowth, 
+       horizontal=FALSE)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/multi%20boxplot-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>stripplot和dotplot</h2></hgroup><article  id="stripplotdotplot">
+
+<div class="columns-2">
+<p>stripplot和bwplot功能相近</p>
+
+<pre class = 'prettyprint lang-r'>stripplot(len~dose, data = ToothGrowth, 
+          horizontal=FALSE)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/stripplot-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>dotplot把点画在琴弦上</p>
+
+<pre class = 'prettyprint lang-r'>dotplot(len~dose, data = ToothGrowth, 
+        horizontal=FALSE)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/dotplot-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>柱/条形图 barplot</h2></hgroup><article  id="-barplot">
+
+<div class="columns-2">
+<p>文本型变量为y，条图</p>
+
+<pre class = 'prettyprint lang-r'>hp &lt;- data.frame(hp=mtcars$hp, 
+                 car=row.names(mtcars))
+barchart(car~hp, data=hp)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/col-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<p>颠倒x和y，柱形图</p>
+
+<pre class = 'prettyprint lang-r'>hp &lt;- data.frame(hp=mtcars$hp, 
+                 car=row.names(mtcars))
+barchart(hp~car, data=hp)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/bar-1.png" width="432" /></p></div>
+
+</article></slide><slide class=''><hgroup><h2>折线图 lines</h2></hgroup><article  id="-lines">
+
+<div class="columns-2">
+<p>表示趋势</p>
+
+<pre class = 'prettyprint lang-r'>xyplot(AirPassengers, type=&quot;l&quot;)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/line-1.png" width="432" /></p>
+
+<pre class = 'prettyprint lang-r'># type类似于base系统</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<p>阶梯折线</p>
+
+<pre class = 'prettyprint lang-r'>xyplot(AirPassengers, type=&#39;s&#39;)  # 阶梯图</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/stair-1.png" width="432" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>进阶图</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>散点图矩阵 splom</h2></hgroup><article  id="-splom">
+
+<pre class = 'prettyprint lang-r'>splom(~iris[1:4], groups=Species, data=iris, 
+      main = &quot;Anderson&#39;s Iris Data -- 3 species&quot;)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/pairs-1.png" width="864" /></p>
+
+</article></slide><slide class=''><hgroup><h2>平形图矩阵</h2></hgroup><article >
+
+<p>Parallel特别适合展示高维数据</p>
+
+<pre class = 'prettyprint lang-r'>parallelplot(~iris[1:4] | Species, data=iris)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/parallel-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>多重面板图</h2></hgroup><article >
+
+<p>多重面板图是lattice最大的利器</p>
+
+<div class="columns-2">
+
+
+
+<pre class = 'prettyprint lang-r'>xyplot(Sepal.Width ~ Petal.Width | Species, 
+       data=iris)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/panel%201%20-1.png" width="432" /></p>
+
+<p class="forceBreak">
+
+</p>
+
+<pre class = 'prettyprint lang-r'>xyplot(mpg ~ wt | am * vs, data=mtcars)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/panel%202%20-1.png" width="432" /></p>
+
+<pre class = 'prettyprint lang-r'>## 交叉am和vs</pre>
+
+</article></slide><slide class=''><hgroup><h2>levelplot</h2></hgroup><article  id="levelplot">
+
+<p>下图显示，气温越高、风速越小，则臭氧浓度越高(映射到色阶通道)。</p>
+
+<pre class = 'prettyprint lang-r'>levelplot(Ozone ~ Wind * Temp, data=airquality)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/levelplot-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>3-D散点图</h2></hgroup><article  id="d">
+
+<pre class = 'prettyprint lang-r'>cloud(Ozone ~ Wind * Temp, data=airquality)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/cloud%20scatter-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>3-D柱形图</h2></hgroup><article  id="d">
+
+<pre class = 'prettyprint lang-r'>library(latticeExtra)
+cloud(Ozone ~ Wind * Temp, data=airquality, panel.3d.cloud=panel.3dbars)</pre>
+
+<p><img src="A03_04_lattice_files/figure-html/cloud%20bar-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
