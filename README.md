@@ -1,4 +1,4 @@
->>>[中文版](README_cn.md)
+\>\>\> [中文版](README_cn.md)
 
 # [Applied R Tutorial](https://madlogos.github.io/R_Tutorial)
 
@@ -68,7 +68,7 @@ Directly visit the [Github project intro site](https://madlogos.github.io/R_Tuto
 
 ### Engineer Track
 
-- **[B01 Functional Programming And Object-oriented Programming]**
+- **B01 Functional Programming And Object-oriented Programming**
     - [01 OOP And S3](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_01_OOP_S3.html)
     - [02 S4 And RefClass](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_02_S4_RC.html)
     - [03 Advanced Function](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_03_advFunc.html)

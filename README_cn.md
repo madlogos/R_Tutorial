@@ -67,7 +67,7 @@
 
 ### 工程师系列
 
-- **[B01 函数式编程和面向对象编程]**
+- **B01 函数式编程和面向对象编程**
     - [01 面向对象编程和S3系统](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_01_OOP_S3.html)
     - [02 S4和RefClass系统](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_02_S4_RC.html)
     - [03 函数进阶](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_03_advFunc.html)
@@ -81,6 +81,6 @@
 Fork本项目或将其zip下载到本地。
 
 
-# 证书
+# 许可证书
 
-本教程采用GNU GPL-3证书。拷贝、编辑或重新分发本教程的任何材料之前，请参阅项目根目录的LICENSE文件。
+本教程遵循GNU GPL-3协议。拷贝、编辑或重新分发本教程的任何材料之前，请参阅项目根目录的LICENSE文件。
