@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>B01-03 函数进阶</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'B01-03 函数进阶',
+                        subtitle: 'R Engineer Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'B01_03_advFunc_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(B01_03_advFunc_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="B01_03_advFunc_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-08-02 20:39:39</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>知识扩展</a></li>
+<li><a href='#9' title=''>操作皆函数</a></li>
+<li><a href='#15' title=''>函数参数</a></li>
+<li><a href='#22' title=''>特殊调用</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴<strong>Hadley Wickham</strong> <a href='http://adv-r.had.co.nz' title=''>Advanced R</a>.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>知识扩展</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>函数的结构</h2></hgroup><article >
+
+<p>R有两类函数: 闭包(closure)和内置(primitive)函数</p>
+
+<div class="col-2L">
+<h4>闭包</h4>
+
+<ul>
+<li>由R代码写成</li>
+<li>包括3部分: 形参(formals, 即arglist)、函数体(body)和环境</li>
+<li>和普通R对象一样，也有attributes、class等属性</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>function (arglist) expr 
+return(value)</pre></div>
+
+<div class="col-2R">
+<h4>内置函数</h4>
+
+<ul>
+<li>由C语言写成，通常内置于base包内</li>
+<li>没有形参(arglist)、函数体(body)和环境</li>
+<li>没有attributes、class等属性</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>function (arglist) .Primitive(method)</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>例子</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<ul>
+<li>构造一个自定义函数addN</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>addN &lt;- function(x, n=1) return(x+n)
+formals(addN)</pre>
+
+<pre >## $x
+## 
+## 
+## $n
+## [1] 1</pre>
+
+<pre class = 'prettyprint lang-r'>body(addN)</pre>
+
+<pre >## return(x + n)</pre>
+
+<pre class = 'prettyprint lang-r'>environment(addN)</pre>
+
+<pre >## &lt;environment: R_GlobalEnv&gt;</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>查看内置函数sum</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>sum</pre>
+
+<pre >## function (..., na.rm = FALSE)  .Primitive(&quot;sum&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>formals(sum)</pre>
+
+<pre >## NULL</pre>
+
+<pre class = 'prettyprint lang-r'>body(sum)</pre>
+
+<pre >## NULL</pre>
+
+<pre class = 'prettyprint lang-r'>environment(sum)</pre>
+
+<pre >## NULL</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>函数、对象、环境</h2></hgroup><article >
+
+<img src='B01_03_advFunc_files/figure-html/func_obj_env.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x, y) {
+    print(list(&quot;本闭包环境&quot;=ls()))
+    print(list(&quot;上一层环境&quot;=ls(envir=parent.frame())))
+    return(x+y)}
+a &lt;- 1; b &lt;- 2</pre>
+
+<div class="col-2L">
+<p>当前环境有些什么对象?</p>
+
+<pre class = 'prettyprint lang-r'>list(&quot;当前环境&quot;=ls())</pre>
+
+<pre >## $当前环境
+## [1] &quot;a&quot; &quot;b&quot; &quot;f&quot;</pre></div>
+
+<div class="col-2R">
+<p>运行f()函数，该闭包环境里有些什么对象?</p>
+
+<pre class = 'prettyprint lang-r'>f(a, b)</pre>
+
+<pre >## $本闭包环境
+## [1] &quot;x&quot; &quot;y&quot;
+## 
+## $上一层环境
+## [1] &quot;a&quot; &quot;b&quot; &quot;f&quot;</pre>
+
+<pre >## [1] 3</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>作用域</h2></hgroup><article >
+
+<ul>
+<li>作用域(scoping)的概念会在<a href='B01_04_env.html' title=''>B01_04</a>讲</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x) x + y
+y &lt;- 10</pre>
+
+<div class="col-2L">
+<p>函数定义中找不到y，则到上一级环境中找</p>
+
+<pre class = 'prettyprint lang-r'>f(1)</pre>
+
+<pre >## [1] 11</pre></div>
+
+<div class="col-2R">
+<p>如果找到R_GlobalEnv仍找不到，则返回错误</p>
+
+<pre class = 'prettyprint lang-r'>rm(y)
+f(1)</pre>
+
+<pre >Error in f(1) : object &#39;y&#39; not found</pre></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>操作皆函数</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<blockquote>
+<p>“To understand computations in R, two slogans are helpful:</p>
+
+<ul>
+<li>Everything that exists is an object.<br/></li>
+<li>Everything that happens is a function call.&quot;<br/>— John Chambers</li>
+</ul>
+</blockquote>
+
+</article></slide><slide class=''><hgroup><h2>代数算符</h2></hgroup><article >
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>x &lt;- 5
+y &lt;- 3
+c(x + y, `+`(x, y))</pre>
+
+<pre >## [1] 8 8</pre>
+
+<pre class = 'prettyprint lang-r'>all.equal(x + y, `+`(x, y))</pre>
+
+<pre >## [1] TRUE</pre></div>
+
+<div class="col-2R">
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">算符函数</th>
+<th align="left">等价于</th>
+</tr>
+<tr class="odd">
+<td align="left">`-`(5, 2)</td>
+<td align="left">5 - 2</td>
+</tr>
+<tr class="even">
+<td align="left">`*`(5, 2)</td>
+<td align="left">5 * 2</td>
+</tr>
+<tr class="odd">
+<td align="left">`/`(5, 2)</td>
+<td align="left">5 / 2</td>
+</tr>
+<tr class="even">
+<td align="left">`%%`(5, 2)</td>
+<td align="left">5 %% 2</td>
+</tr>
+<tr class="odd">
+<td align="left">`==`(5, 2)</td>
+<td align="left">5 == 2</td>
+</tr>
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>这些也是函数</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>for (i=1:2) print(i)</pre>
+
+<pre class = 'prettyprint lang-r'>`for`(i, 1:2, print(i))</pre>
+
+<pre >## [1] 1
+## [1] 2</pre>
+
+<pre class = 'prettyprint lang-r'>if (3&gt;2) print(&quot;y&quot;) else print(&quot;n&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>`if`(3&gt;2, print(&quot;y&quot;), print(&quot;n&quot;))</pre>
+
+<pre >## [1] &quot;y&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>连这些也是函数</h2></hgroup><article >
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>`[`(1:5, 3)</pre>
+
+<pre >## [1] 3</pre>
+
+<pre class = 'prettyprint lang-r'>`[`(iris, 4, 5)</pre>
+
+<pre >## [1] setosa
+## Levels: setosa versicolor virginica</pre>
+
+<pre class = 'prettyprint lang-r'>`[[`(as.list(1:4), 2)</pre>
+
+<pre >## [1] 2</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>`{`(print(&quot;a&quot;), print(3))</pre>
+
+<pre >## [1] &quot;a&quot;
+## [1] 3</pre>
+
+<pre class = 'prettyprint lang-r'>`&lt;-`(x, 4); x</pre>
+
+<pre >## [1] 4</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>用函数自定义操作符</h2></hgroup><article >
+
+<p>排列组合</p>
+
+<pre class = 'prettyprint lang-r'>`%A%` &lt;- function(n, m) choose(n, m) * factorial(m)
+`%C%` &lt;- function(n, m) choose(n, m)</pre>
+
+<pre class = 'prettyprint lang-r'>5 %A% 3</pre>
+
+<pre >## [1] 60</pre>
+
+<pre class = 'prettyprint lang-r'>5 %C% 3</pre>
+
+<pre >## [1] 10</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>函数参数</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>参数匹配原则</h2></hgroup><article >
+
+<ul>
+<li>完整参数名精确匹配</li>
+<li>参数名前缀模糊匹配</li>
+<li>参数顺序匹配</li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>f &lt;- function(first, second, third=5) 
+    c(first=first, second=second, 
+      third=third)</pre>
+
+<pre class = 'prettyprint lang-r'>f(&quot;a&quot;, TRUE)</pre>
+
+<pre >##  first second  third 
+##    &quot;a&quot; &quot;TRUE&quot;    &quot;5&quot;</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>f(second=&quot;a&quot;, TRUE)</pre>
+
+<pre >##  first second  third 
+## &quot;TRUE&quot;    &quot;a&quot;    &quot;5&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>f(t=&quot;a&quot;, TRUE, f=5)</pre>
+
+<pre >##  first second  third 
+##    &quot;5&quot; &quot;TRUE&quot;    &quot;a&quot;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>参数列表实践建议</h2></hgroup><article >
+
+<ul>
+<li><p>函数作者</p>
+
+<ul>
+<li>参数名称要意义明确，<strong>避免过长或过度缩写</strong></li>
+<li>无默认值的参数在前，有默认值的参数在后</li>
+<li>最重要的无默认值参数放在最前面</li>
+<li>CRAN的附加包规范禁止使用参数模糊匹配，故尽量用参数全名</li>
+<li>在&#8230;后面的参数，必须用完整参数名精确匹配</li>
+</ul></li>
+<li><p>函数使用者</p>
+
+<ul>
+<li>第一、二个参数不妨用顺序匹配，其余的尽量用精确匹配</li>
+<li>尽量避免模糊匹配</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>参数缺失和默认值</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x, y) {
+    if (missing(x)) x &lt;- 0
+    if (missing(y)) y &lt;- 0
+    return(c(x, y))
+}
+f()</pre>
+
+<pre >## [1] 0 0</pre>
+
+<p>等价于</p>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x=0, y=0) c(x, y)</pre>
+
+</article></slide><slide class=''><hgroup><h2>限定参数取值范围</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>数值</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x=1:4) {
+    stopifnot(x %in% 1:4)
+    paste(&quot;out:&quot;, x[[1]])
+}
+f()</pre>
+
+<pre >## [1] &quot;out: 1&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>f(6)</pre>
+
+<pre >Error: x %in% 1:4 is not TRUE </pre></div>
+
+<div class="col-2R">
+<ul>
+<li>非数值</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x=c(&quot;a&quot;, &quot;b&quot;)) {
+    x &lt;- match.arg(x)
+    paste(&quot;out:&quot;, x)
+}
+f()</pre>
+
+<pre >## [1] &quot;out: a&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>f(&#39;c&#39;)</pre>
+
+<pre >Error in match.arg(x) : 
+    &#39;arg&#39; should be one of “a”, “b” </pre></div>
+
+</article></slide><slide class=''><hgroup><h2>dot dot dot (&#8230;)</h2></hgroup><article  id="dot-dot-dot-...">
+
+<ul>
+<li><code>...</code>匹配所有的“其他”参数，可轻松地传递给其他函数
+
+<ul>
+<li>用<code>list(...)</code>捕获所有未匹配参数</li>
+</ul></li>
+<li><code>...</code>过于灵活，可导致参数跳过校验而不报错</li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>f &lt;- function(..., na.rm=TRUE) {
+    # 解析...参数
+    args &lt;- unlist(list(...))
+    # 校验: 如不是全为数值，则报错
+    stopifnot(all(is.numeric(args)))
+    # 计算均值
+    mean(unlist(args), na.rm=na.rm)
+}
+f(1, 4, 6, 9, NA)</pre>
+
+<pre >## [1] 5</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>f(1, 4, 6, 9, &quot;m&quot;)</pre>
+
+<pre >Error: all(is.numeric(args)) is not TRUE </pre></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>f &lt;- function(...){
+    args &lt;- list(...)
+    if (&quot;x&quot; %in% names(args)) 
+        print(mean(args$x))
+    if (&quot;y&quot; %in% names(args)) 
+        print(sd(args$y))
+    plot(...)
+}</pre>
+
+<pre class = 'prettyprint lang-r'>f(x=1:5, y=log(1:5), 
+  col=&quot;blue&quot;, type=&quot;b&quot;)</pre></div>
+
+<div class="col-2R">
+<pre >## [1] 3
+## [1] 0.6355094</pre>
+
+<p><img src="B01_03_advFunc_files/figure-html/dot%20dot%20dot-1.png" width="480" /></p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>特殊调用</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>替换函数</h2></hgroup><article >
+
+<ul>
+<li>形如<code>fun&lt;-</code>，具体用法为<code>fun() &lt;-</code></li>
+<li>事实上R生成了一个修改后的副本，然后才删除原本</li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>library(pryr)
+x &lt;- 1:10
+address(x)</pre>
+
+<pre >## [1] &quot;0x3831270&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>`revise&lt;-` &lt;- function(x, n, value) {
+    x[[n]] &lt;- value
+    x
+}</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>revise(x, 5) &lt;- 7
+x</pre>
+
+<pre >##  [1]  1  2  3  4  7  6  7  8  9 10</pre>
+
+<pre class = 'prettyprint lang-r'>address(x)</pre>
+
+<pre >## [1] &quot;0x36a4490&quot;</pre>
+
+<ul>
+<li>等价于<code>x[5] &lt;- 7</code> (内置函数<code>[&lt;-</code>)</li>
+<li>内部方法(primitive)可实现原位替换</li>
+<li>拷贝修改机制有时可能导致内存溢出</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>返回值</h2></hgroup><article >
+
+<ul>
+<li>函数返回<code>return()</code>函数显式定义的值，<strong>并跳出调用栈</strong></li>
+<li>如没有<code>return</code>，则返回函数最后一个求解出的值</li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>f &lt;- function(x, y){
+    if (x &lt; y) {
+        &quot;lower&quot;
+    }else{
+        &quot;higher or equal&quot;
+    }
+}
+f(4, 3)</pre>
+
+<pre >## [1] &quot;higher or equal&quot;</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>f &lt;- function(x, y){
+    if (!all(is.numeric(x), 
+             is.numeric(y))) 
+        return(
+            &quot;Must be both numeric!&quot;)
+    if (x &lt; y) {
+        &quot;lower&quot;
+    }else{
+        &quot;higher or equal&quot;
+    }
+}
+f(&quot;a&quot;, 3)</pre>
+
+<pre >## [1] &quot;Must be both numeric!&quot;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>on.exit()</h2></hgroup><article  id="on.exit">
+
+<ul>
+<li>函数退出调用栈时，通过<code>on.exit()</code>函数可触发钩子</li>
+<li>通常用于重置状态，恢复运行前的设置</li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>f &lt;- function(x){
+    setwd(&quot;C:&quot;)
+    x
+}
+f(1)</pre>
+
+<pre >[1] 1</pre>
+
+<pre class = 'prettyprint lang-r'>getwd()</pre>
+
+<pre >[1] &quot;C:/&quot;</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>f &lt;- function(x){
+    old.wd &lt;- getwd()
+    on.exit(setwd(old.wd))
+    x
+}
+f(1)</pre>
+
+<pre >[1] 1</pre>
+
+<pre class = 'prettyprint lang-r'>getwd()</pre>
+
+<pre >[1] &quot;/R_Tutorial/B01 FP And OOP&quot;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

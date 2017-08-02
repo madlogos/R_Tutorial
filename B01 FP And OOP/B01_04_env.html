@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>B01-04 环境和作用域</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'B01-04 环境和作用域',
+                        subtitle: 'R Engineer Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'B01_04_env_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(B01_04_env_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="B01_04_env_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-08-02 20:40:03</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>作用域(Scope)</a></li>
+<li><a href='#10' title=''>环境</a></li>
+<li><a href='#17' title=''>函数环境</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴<strong>Hadley Wickham</strong> <a href='http://adv-r.had.co.nz' title=''>Advanced R</a>.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>作用域(Scope)</h2></hgroup><article  id="scope">
+
+</article></slide><slide class=''><hgroup><h2>作用域: 静态和动态</h2></hgroup><article  id="-">
+
+<blockquote>
+<p><strong>作用域:</strong> 一组程序规则，定义识别符号(identifier)和实体(entity)之间的绑定(binding，即名-实映射)。作用域决定了R如何查找一个符号的值。</p>
+</blockquote>
+
+<div class="col-2L">
+<h4>词法作用域(lexical scoping)</h4>
+
+<ul>
+<li>(也叫静态作用域) 对象在编译时有一个静态确定的作用域，该对象仅在此作用域内可见，该作用域以外不可访问</li>
+<li>R广泛采用此法作用域，常见的作用域有函数闭包、附加包命名空间、R工作空间等</li>
+<li>R会根据这些作用域<strong>创建时</strong>（而非调用时）的层级关系查找对象求值</li>
+</ul></div>
+
+<div class="col-2R">
+<h4>动态作用域(dynamic scoping)</h4>
+
+<ul>
+<li>编译时只有一个环境，每次求值时，都从这个唯一的环境中查询和更改</li>
+<li>R根据这些作用域在何处调用，查找对象求值</li>
+<li>在非标准求值中，可能会遇到动态作用域</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>词法作用域的基本概念</h2></hgroup><article >
+
+<ul>
+<li><p><strong>名称覆盖</strong> (name masking)</p>
+
+<p>首先查找函数体内的对象是否有符合对应名称的变量，如果没有的话，就再上升一层继续查找</p></li>
+<li><p><strong>函数和变量</strong> (functions v.s. variables)</p>
+
+<p>如果函数和变量的名称一样的话，会根据当时的语法去判断是函数还是变量</p></li>
+<li><p><strong>全新起始</strong> (a fresh start)</p>
+
+<p>函数每次运行，其中的变量都是重新建立的，和上次运行没有关系</p></li>
+<li><p><strong>动态查找</strong> (dynamic lookup)</p>
+
+<p>R 语言中，对变量的查找是在函数运行的时候进行的，而不是在建立的时候</p></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>名称覆盖</h2></hgroup><article >
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>x &lt;- 1
+f1 &lt;- function(){
+    y &lt;- 2
+    f2 &lt;- function(){
+        z &lt;- 3
+        c(x, y, z)
+    }
+    f2()
+}
+f1()</pre>
+
+<pre >## [1] 1 2 3</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>x &lt;- 1; y &lt;- 4; z &lt;- 5
+f1 &lt;- function(){
+    y &lt;- 2; z &lt;- 6
+    f2 &lt;- function(){
+        z &lt;- 3
+        c(x, y, z)
+    }
+    f2()
+}
+f1()</pre>
+
+<pre >## [1] 1 2 3</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>函数和变量</h2></hgroup><article >
+
+<p>函数和变量一视同仁</p>
+
+<pre class = 'prettyprint lang-r'>f1 &lt;- function(x) x+1
+f2 &lt;- function(){
+    f1 &lt;- 10
+    f1(f1)
+}
+f2()</pre>
+
+<pre >## [1] 11</pre>
+
+<pre class = 'prettyprint lang-r'>c(c=c)</pre>
+
+<pre >## $c
+## function (...)  .Primitive(&quot;c&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>全新起始</h2></hgroup><article >
+
+<p>每次运行<code>f()</code>，会生成一个新的环境</p>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(){
+    if (exists(&quot;x&quot;)) x &lt;- x + 1 else  x &lt;- 1
+    x
+}
+f()</pre>
+
+<pre >## [1] 2</pre>
+
+<pre class = 'prettyprint lang-r'>f()</pre>
+
+<pre >## [1] 2</pre>
+
+</article></slide><slide class=''><hgroup><h2>动态查找</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>一个函数闭包应尽量不依赖外层环境的对象，以免意外修改导致错误</li>
+<li>可用<code>codetools::findGlobals()</code>查看非自包含函数的外部依赖</li>
+</ul>
+
+<div class="col-2L">
+<p>f()的运算过程依赖外部对象x</p>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function() x
+x &lt;- 1; f()</pre>
+
+<pre >## [1] 1</pre>
+
+<pre class = 'prettyprint lang-r'>x &lt;- 2; f()</pre>
+
+<pre >## [1] 2</pre>
+
+<pre class = 'prettyprint lang-r'>codetools::findGlobals(f)</pre>
+
+<pre >## [1] &quot;x&quot;</pre></div>
+
+<div class="col-2R">
+<p>甚至可以覆写函数/算符</p>
+
+<pre class = 'prettyprint lang-r'>&quot;+&quot; &lt;- `c`
+1+1</pre>
+
+<pre >## [1] 1 1</pre>
+
+<pre class = 'prettyprint lang-r'>1:2 + c(&quot;a&quot;, &quot;b&quot;)</pre>
+
+<pre >## [1] &quot;1&quot; &quot;2&quot; &quot;a&quot; &quot;b&quot;</pre></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>环境(env)</h2></hgroup><article  id="env">
+
+</article></slide><slide class=''><hgroup><h2>什么是环境？</h2></hgroup><article >
+
+<p>环境就是一组名-实绑定。</p>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>e &lt;- new.env(); e</pre>
+
+<pre >&lt;environment: 0x0000000026a45c78&gt;</pre>
+
+<pre class = 'prettyprint lang-r'>e$a &lt;- FALSE
+e$b &lt;- 1:2
+e$c &lt;- e$b
+ls.str(e)</pre>
+
+<pre >a :  logi FALSE
+b :  int [1:2] 1 2
+c :  int [1:2] 1 2</pre></div>
+
+<div class="col-2R">
+<img src='B01_04_env_files/figure-html/env1.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>环境和列表的区别</h2></hgroup><article  class="smaller">
+
+<h4>环境和列表相似</h4>
+
+<ul>
+<li>可以用<code>$</code>或<code>[[</code>访问对象</li>
+<li>可以通过<code>as.list</code>和<code>as.environment</code>相互转换</li>
+</ul>
+
+<h4>但也有例外</h4>
+
+<ul>
+<li>一个环境中的所有对象名称都是唯一的
+
+<ul>
+<li>但同一个名字可以用在不同环境中</li>
+</ul></li>
+<li>环境中的对象名称是无序的
+
+<ul>
+<li>不存在“第几个对象”</li>
+</ul></li>
+<li>环境有上级(父parent)环境
+
+<ul>
+<li>唯一例外是空环境</li>
+</ul></li>
+<li>环境有引用语义(reference semantics)
+
+<ul>
+<li>修改副本环境，原环境也会被改变</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>环境层级</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li><p>特殊环境</p>
+
+<ul>
+<li><code>globalenv()</code>:<br/>全局环境，即交互工作空间</li>
+<li><code>baseenv()</code>:<br/>基础环境，base包引入的环境</li>
+<li><code>emptyenv()</code>: 空环境</li>
+<li><code>environment()</code>: 当前环境</li>
+</ul></li>
+<li><code>search()</code><br/>可查看globalenv()的所有父环境</li>
+<li><code>searchpaths()</code>可查看搜索路径</li>
+<li><p><code>parent.env()</code>查看父环境</p></li>
+</ul></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>searchpaths()</pre>
+
+<pre >## [1] &quot;.GlobalEnv&quot;                   &quot;/usr/lib/R/library/stats&quot;    
+## [3] &quot;/usr/lib/R/library/graphics&quot;  &quot;/usr/lib/R/library/grDevices&quot;
+## [5] &quot;/usr/lib/R/library/utils&quot;     &quot;/usr/lib/R/library/datasets&quot; 
+## [7] &quot;/usr/lib/R/library/methods&quot;   &quot;Autoloads&quot;                   
+## [9] &quot;/usr/lib/R/library/base&quot;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>搜索路径</h2></hgroup><article >
+
+<img src='B01_04_env_files/figure-html/searchpath.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>环境操作</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<ul>
+<li><p>创建环境e</p>
+
+<pre class = 'prettyprint lang-r'>e &lt;- new.env()</pre></li>
+<li><p>环境内创建对象</p>
+
+<pre class = 'prettyprint lang-r'>e$a &lt;- FALSE
+e[[&#39;b&#39;]] &lt;- 1:2
+assign(&quot;.c&quot;, e$b, envir=e)</pre></li>
+<li><p>查看环境(默认不显示e$.c)</p>
+
+<pre class = 'prettyprint lang-r'>ls.str(e, all.names=TRUE)</pre>
+
+<pre >.c :  int [1:2] 1 2
+a :  logi FALSE
+b :  int [1:2] 1 2</pre></li>
+</ul></div>
+
+<div class="col-2R">
+<ul>
+<li><p>判断某对象是否存在</p>
+
+<pre class = 'prettyprint lang-r'>exists(&quot;.c&quot;, envir=e)</pre></li>
+<li><p>两个环境是否相同</p>
+
+<pre class = 'prettyprint lang-r'>identical(environment(), globalenv())</pre></li>
+<li><p>找父环境</p>
+
+<pre class = 'prettyprint lang-r'>parent.env(e)</pre>
+
+<pre >&lt;environment: R_GlobalEnv&gt;</pre></li>
+<li><p>删除</p>
+
+<pre class = 'prettyprint lang-r'>rm(&quot;a&quot;, envir=e)</pre></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>跨环境递归查找</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>e1 &lt;- new.env(parent=globalenv())
+e2 &lt;- new.env(parent=e1)
+e3 &lt;- new.env(parent=e2)
+e1$x &lt;- 1
+e2$y &lt;- 2
+e3$x &lt;- 3
+e1; e2; e3</pre>
+
+<p>&lt;environment: 0x3e00da0&gt; &lt;environment: 0x3d9c6b8&gt; &lt;environment: 0x3d45810&gt;</p>
+
+<p>用一个递归算法，层层向上查找</p>
+
+<pre class = 'prettyprint lang-r'>find_up &lt;- function(name, env){
+    if (exists(name, envir=env, inherits=FALSE))
+        env
+    else find_up(name, parent.env(env))
+}</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>find_up(&quot;x&quot;, e3)</pre>
+
+<pre >## &lt;environment: 0x3d45810&gt;</pre>
+
+<pre class = 'prettyprint lang-r'>find_up(&quot;y&quot;, e3)</pre>
+
+<pre >## &lt;environment: 0x3d9c6b8&gt;</pre>
+
+<pre class = 'prettyprint lang-r'>find_up(&quot;plot&quot;, e3)</pre>
+
+<pre >## &lt;environment: package:graphics&gt;
+## attr(,&quot;name&quot;)
+## [1] &quot;package:graphics&quot;
+## attr(,&quot;path&quot;)
+## [1] &quot;/usr/lib/R/library/graphics&quot;</pre></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>函数环境</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>函数环境的类型</h2></hgroup><article >
+
+<ul>
+<li><p><strong>闭包环境</strong>(enclosing environment)</p>
+
+<ul>
+<li>当函数被创建出来，有且只有一个闭包环境</li>
+<li>闭包环境是不变的，决定了函数如何查找值</li>
+</ul></li>
+<li><p><strong>绑定环境</strong> (binding environment)</p>
+
+<ul>
+<li>通过<code>&lt;-</code>将函数定义绑定给一个名称，定义出一个绑定环境</li>
+<li>绑定环境决定我们如何通过名称查到函数</li>
+</ul></li>
+<li><p><strong>执行环境</strong> (execution environment)</p>
+
+<ul>
+<li>调用函数，产生一个临时的执行环境，存储执行过程中产生的变量</li>
+</ul></li>
+<li><p><strong>调用环境</strong> (calling environment)</p>
+
+<ul>
+<li>每个执行环境关联一个调用环境</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>闭包环境和绑定环境</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li><code>environment()</code>获得函数的闭包环境</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x) x+y
+environment(f)</pre>
+
+<pre >## &lt;environment: R_GlobalEnv&gt;</pre>
+
+<pre class = 'prettyprint lang-r'># f的闭包环境是globalevn()</pre>
+
+<img src='B01_04_env_files/figure-html/env2.png' title='fig:'/></div>
+
+<div class="col-2R">
+<ul>
+<li>绑定环境取决于函数符号的位置
+
+<ul>
+<li>附加包较特殊，拥有package和namespace两套环境。引入后，产生imports和namespace环境</li>
+<li>globalenv()中改写附加包函数，不改变其原始绑定环境</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>e &lt;- new.env(parent=globalenv())
+e$f &lt;- function() 0
+# e$f的绑定环境为e，但闭包环境是globalenv()</pre>
+
+<img src='B01_04_env_files/figure-html/env3.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>执行环境</h2></hgroup><article >
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>f &lt;- function(x){
+    cat(&quot;执行环境:\n&quot;)
+    print(environment())
+    print(list(&quot;0&gt; init&quot;=
+        ls.str(environment())))
+    a &lt;- 10
+    print(list(&quot;1&gt; a &lt;- 10&quot;=
+        ls.str(environment())))
+    o &lt;- x + a
+    print(list(&quot;2&gt; o &lt;- x + a&quot;=
+        ls.str(environment())))
+    return(o)
+}
+f(5)</pre></div>
+
+<div class="col-2R">
+<pre >## 执行环境:
+## &lt;environment: 0x3e8bfa8&gt;
+## $`0&gt; init`
+## x :  num 5
+## 
+## $`1&gt; a &lt;- 10`
+## a :  num 10
+## x :  num 5
+## 
+## $`2&gt; o &lt;- x + a`
+## a :  num 10
+## o :  num [1:2] 5 10
+## x :  num 5</pre>
+
+<pre >## [1]  5 10</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>调用环境</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>a &lt;- 1
+f &lt;- function(){
+    a &lt;- 2
+    cat(&quot;f()\n&quot;)
+    print(environment())
+    cat(&quot;执行:&quot;, get(&quot;a&quot;, environment()), &quot;\n&quot;)
+    print(parent.frame())
+    cat(&quot;调用:&quot;, get(&quot;a&quot;, parent.frame()), &quot;\n&quot;)
+    g &lt;- function() {
+        a &lt;- 3
+        cat(&quot;\ng()\n&quot;)
+        print(environment())
+        cat(&quot;执行:&quot;, get(&quot;a&quot;, environment()), &quot;\n&quot;)
+        print(parent.frame())
+        cat(&quot;调用:&quot;, get(&quot;a&quot;, parent.frame()), &quot;\n&quot;)
+    }
+    g()
+}</pre>
+
+<pre class = 'prettyprint lang-r'>local({cat(&quot;.GlobalEnv\n&quot;)
+    print(environment())
+    cat(&quot;执行:&quot;, get(&quot;a&quot;, environment()), &quot;\n&quot;)
+    print(parent.frame())
+    cat(&quot;调用:&quot;, get(&quot;a&quot;, parent.frame()), &quot;\n&quot;)})</pre></div>
+
+<div class="col-2R">
+<pre >## .GlobalEnv
+## &lt;environment: R_GlobalEnv&gt;
+## 执行: 1 
+## &lt;environment: R_GlobalEnv&gt;
+## 调用: 1</pre>
+
+<pre class = 'prettyprint lang-r'>f()</pre>
+
+<pre >## f()
+## &lt;environment: 0x429f3f8&gt;
+## 执行: 2 
+## &lt;environment: R_GlobalEnv&gt;
+## 调用: 1 
+## 
+## g()
+## &lt;environment: 0x47890f8&gt;
+## 执行: 3 
+## &lt;environment: 0x429f3f8&gt;
+## 调用: 2</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>引用语义</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'># 函数modify_a将一个对象的元素&quot;a&quot;改为2
+modify_a &lt;- function(x) invisible(x$a &lt;- 2)</pre>
+
+<div class="col-2L">
+<ul>
+<li>列表采用&quot;复制后修改&quot;，原对象不改变</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>lst &lt;- list(a=1)
+lst$a</pre>
+
+<pre >## [1] 1</pre>
+
+<pre class = 'prettyprint lang-r'>modify_a(lst)
+lst$a</pre>
+
+<pre >## [1] 1</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>环境有引用语义，原对象会改变</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>env &lt;- new.env()
+env$a &lt;- 1
+ls.str(env)</pre>
+
+<pre >## a :  num 1</pre>
+
+<pre class = 'prettyprint lang-r'>modify_a(env)
+ls.str(env)</pre>
+
+<pre >## a :  num 2</pre></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

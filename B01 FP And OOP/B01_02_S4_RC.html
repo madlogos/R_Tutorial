@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>B01-02 S4系统和RC系统</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'B01-02 S4系统和RC系统',
+                        subtitle: 'R Engineer Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'B01_02_S4_RC_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(B01_02_S4_RC_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="B01_02_S4_RC_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-08-02 20:38:59</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>S4</a></li>
+<li><a href='#15' title=''>refClass(RC)</a></li>
+<li><a href='#25' title=''>R6</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴<strong>Hadley Wickham</strong> <a href='http://adv-r.had.co.nz' title=''>Advanced R</a>.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>S4</h2></hgroup><article  id="s4">
+
+</article></slide><slide class=''><hgroup><h2>S3 vs S4</h2></hgroup><article  id="s3-vs-s4">
+
+<table class = 'rmdtable'>
+<col width="6%" />
+<col width="46%" />
+<col width="47%" />
+<tr class="header">
+<th align="left">方面</th>
+<th align="left">S3</th>
+<th align="left">S4</th>
+</tr>
+<tr class="odd">
+<td align="left"><p>定义</p></td>
+<td align="left"><p>不需要正式定义，可直接创建对象</p></td>
+<td align="left"><p>必须先正式定义，再创建实例</p></td>
+</tr>
+<tr class="even">
+<td align="left"><p>封装</p></td>
+<td align="left"><ul>
+<li>封装性较差，可以自由修改类对象部件</li>
+<li>一般采用<code>$</code>访问内部部件</li>
+</ul></td>
+<td align="left"><ul>
+<li>封装更严谨，所有部件都可校验合法性</li>
+<li>需要用<code>@</code>访问内部部件(slot)</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td align="left"><p>继承</p></td>
+<td align="left"><p>继承关系松散</p></td>
+<td align="left"><p>继承更严谨，需要用contain正式定义</p></td>
+</tr>
+<tr class="even">
+<td align="left"><p>调度</p></td>
+<td align="left"><p>方法调度(dispatch)时只基于泛型函数的一个参数</p></td>
+<td align="left"><p>方法调度时可基于泛型函数的多个参数</p></td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>创建类</h2></hgroup><article >
+
+<ul>
+<li>创建Staff类
+
+<ul>
+<li>slots定义属性字段类型</li>
+<li>prototype定义字段初始值</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>setClass(&quot;Staff&quot;, slots=list(
+    name=&quot;character&quot;, age=&quot;numeric&quot;, gender=&quot;character&quot;, level=&quot;integer&quot;),
+    prototype=list(gender=&quot;Male&quot;))</pre>
+
+<ul>
+<li>setValidity控制取值合法性</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>setValidity(&quot;Staff&quot;, function(object) {
+    if (object@gender %in% c(&quot;Male&quot;, &quot;Female&quot;)) TRUE else 
+        print(&quot;Gender should always be `Male` or `Female`.&quot;)
+    if (object@age &gt;0) TRUE else print(&quot;Age should be positive.&quot;)
+}) %&gt;% invisible()</pre>
+
+</article></slide><slide class=''><hgroup><h2>实例化</h2></hgroup><article >
+
+<ul>
+<li>new()函数创建实例</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>aaron &lt;- new(&quot;Staff&quot;, name=&quot;Aaron&quot;, age=30, level=9L)</pre>
+
+<pre class = 'prettyprint lang-r'>alice &lt;- new(&quot;Staff&quot;, name=&quot;Alice&quot;, gender=&quot;F&quot;)  ## 未通过校验，返回报错信息</pre>
+
+<pre >[1] &quot;Gender should always be Male or Female.&quot;
+Error in if (object@age &gt; 0) TRUE else print(&quot;Age should be positive.&quot;) : 
+  argument is of length zero</pre>
+
+<pre class = 'prettyprint lang-r'>alice &lt;- new(&quot;Staff&quot;, name=&quot;Alice&quot;, age=29, gender=&quot;Female&quot;, level=5L)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<ul>
+<li>对象结构</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>pryr::otype(aaron)</pre>
+
+<pre >## [1] &quot;S4&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>str(aaron)</pre>
+
+<pre >## Formal class &#39;Staff&#39; [package &quot;.GlobalEnv&quot;] with 4 slots
+##   ..@ name  : chr &quot;Aaron&quot;
+##   ..@ age   : num 30
+##   ..@ gender: chr &quot;Male&quot;
+##   ..@ level : int 9</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<ul>
+<li>访问对象部件
+
+<ul>
+<li><code>@</code>(相当于$) 或 <code>slot()</code>(相当于[[)</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>aaron@name</pre>
+
+<pre >## [1] &quot;Aaron&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>slot(alice, &quot;age&quot;)</pre>
+
+<pre >## [1] 29</pre>
+
+</article></slide><slide class=''><hgroup><h2>类继承</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>创建子类
+
+<ul>
+<li>contains定义父类</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>setClass(&quot;Employee&quot;, slots=list(
+    leader=&quot;Staff&quot;, rate=&quot;numeric&quot;), 
+    prototype=list(rate=100),
+    contains=&quot;Staff&quot;)</pre>
+
+<ul>
+<li>子类实例化</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>adam &lt;- new(&quot;Employee&quot;, name=&quot;Adam&quot;, 
+    age=20, level=3L, leader=aaron)</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>访问部件</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>adam@leader</pre>
+
+<pre >## An object of class &quot;Staff&quot;
+## Slot &quot;name&quot;:
+## [1] &quot;Aaron&quot;
+## 
+## Slot &quot;age&quot;:
+## [1] 30
+## 
+## Slot &quot;gender&quot;:
+## [1] &quot;Male&quot;
+## 
+## Slot &quot;level&quot;:
+## [1] 9</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>定义泛型(generics)</h2></hgroup><article  id="generics">
+
+<ul>
+<li>需定义默认方法函数
+
+<ul>
+<li>后续定义方法时用到rate, index参数，故泛型中要先作定义</li>
+<li>def中定义函数，参数列表要包含该泛型所调度的方法中所有出现过的参数</li>
+<li>必须用standardGeneric函数</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(magrittr)
+setGeneric(&quot;calcBenefit&quot;, function(object, rate) {
+    standardGeneric(&quot;calcBenefit&quot;)
+}) %&gt;% invisible()</pre>
+
+</article></slide><slide class=''><hgroup><h2>定义方法(method)</h2></hgroup><article  id="method">
+
+<ul>
+<li>津贴计算公式为level*rate
+
+<ul>
+<li>如为Employee，提醒其与领导确认金额</li>
+<li>如为Staff，不指定rate的话，则为Employee类默认rate的1.2倍</li>
+</ul></li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>setMethod(
+    &quot;calcBenefit&quot;, signature(&quot;Staff&quot;), 
+    function(object, rate) {
+        o &lt;- object@level * 
+            if (missing(rate)) 
+                1.2 * new(&quot;Employee&quot;)@rate 
+            else rate
+        names(o) &lt;- object@name
+        return(o)
+}) %&gt;% invisible()</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>setMethod(
+    &quot;calcBenefit&quot;, signature(&quot;Employee&quot;), 
+    function(object, rate) {
+        o &lt;- object@level * 
+            if (missing(rate)) 
+                object@rate 
+            else rate
+        names(o) &lt;- c(paste(
+            object@name, &quot;: please confirm&quot;,
+            &quot;the amount with your leader&quot;, 
+            object@leader@name))
+        return(o)
+}) %&gt;% invisible()</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>检索</h2></hgroup><article  class="smaller">
+
+<pre class = 'prettyprint lang-r'>getSlots(&quot;Employee&quot;)</pre>
+
+<pre >##      leader        rate        name         age      gender       level 
+##     &quot;Staff&quot;   &quot;numeric&quot; &quot;character&quot;   &quot;numeric&quot; &quot;character&quot;   &quot;integer&quot;</pre>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>hasMethod(&quot;calcBenefit&quot;, &quot;Staff&quot;)</pre>
+
+<pre >## [1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>findMethod(&quot;calcBenefit&quot;, &quot;Staff&quot;)</pre>
+
+<pre >## [[1]]
+## &lt;environment: R_GlobalEnv&gt;</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>getMethod(&quot;calcBenefit&quot;, &quot;Staff&quot;)</pre>
+
+<pre >## Method Definition:
+## 
+## function (object, rate) 
+## {
+##     o &lt;- object@level * if (missing(rate)) 
+##         1.2 * new(&quot;Employee&quot;)@rate
+##     else rate
+##     names(o) &lt;- object@name
+##     return(o)
+## }
+## 
+## Signatures:
+##         object 
+## target  &quot;Staff&quot;
+## defined &quot;Staff&quot;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>方法调度</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>mapply(calcBenefit, object=c(aaron, adam, alice), rate=c(100, 50, 90))</pre>
+
+<pre >##                                                   Aaron 
+##                                                     900 
+## Adam : please confirm the amount with your leader Aaron 
+##                                                     150 
+##                                                   Alice 
+##                                                     450</pre>
+
+<pre class = 'prettyprint lang-r'>sapply(list(aaron, adam, alice), calcBenefit)</pre>
+
+<pre >##                                                   Aaron 
+##                                                    1080 
+## Adam : please confirm the amount with your leader Aaron 
+##                                                     300 
+##                                                   Alice 
+##                                                     600</pre>
+
+</article></slide><slide class=''><hgroup><h2>调度的是哪种方法?</h2></hgroup><article  class="smaller">
+
+<pre class = 'prettyprint lang-r'>selectMethod(&quot;calcBenefit&quot;, &quot;Employee&quot;)</pre>
+
+<pre >## Method Definition:
+## 
+## function (object, rate) 
+## {
+##     o &lt;- object@level * if (missing(rate)) 
+##         object@rate
+##     else rate
+##     names(o) &lt;- c(paste(object@name, &quot;: please confirm&quot;, &quot;the amount with your leader&quot;, 
+##         object@leader@name))
+##     return(o)
+## }
+## &lt;bytecode: 0x4e79800&gt;
+## 
+## Signatures:
+##         object    
+## target  &quot;Employee&quot;
+## defined &quot;Employee&quot;</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>refClass (RC)</h2></hgroup><article  id="refclass-rc">
+
+</article></slide><slide class=''><hgroup><h2>引用类(RC)</h2></hgroup><article  id="rc">
+
+<ul>
+<li>引用类是R 2.12开始引入的新OO系统，也叫R5</li>
+<li>RC与S3、S4完全不同:</li>
+</ul>
+
+<table class = 'rmdtable'>
+<col width="5%" />
+<col width="47%" />
+<col width="48%" />
+<tr class="header">
+<th align="left">#</th>
+<th align="left">S3,S4</th>
+<th align="left">RC</th>
+</tr>
+<tr class="odd">
+<td align="left"><p>1</p></td>
+<td align="left"><p>方法的实质是函数</p></td>
+<td align="left"><p>方法的实质是对象</p></td>
+</tr>
+<tr class="even">
+<td align="left"><p>2</p></td>
+<td align="left"><p>遵循R的&quot;修改副本&quot;设计，对象不能修改</p></td>
+<td align="left"><p>对象可以修改，其副本也一同修改</p></td>
+</tr>
+<tr class="odd">
+<td align="left"><p>3</p></td>
+<td align="left"><p>OO性质不典型</p></td>
+<td align="left"><p>与其他OO语言(Python, Java, C#)更为接近</p></td>
+</tr>
+</table>
+
+<ul>
+<li>RStudio的Winston Chang重写了RC，形成R6系统</li>
+<li>RC越来越受高级开发者欢迎，而S4的应用则存在争议</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>创建RC</h2></hgroup><article  id="rc">
+
+<ul>
+<li><code>setRefClass()</code>命令和<code>setClass()</code>很接近</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Car &lt;- setRefClass(&quot;Car&quot;, fields=list(
+    manuf=&quot;character&quot;, brand=&quot;character&quot;, status=&quot;character&quot;))</pre>
+
+<ul>
+<li>创建子类 (contains)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Manual &lt;- setRefClass(&quot;Manual&quot;, fields=list(auto=&quot;logical&quot;), contains=&quot;Car&quot;)
+Auto &lt;- setRefClass(&quot;Auto&quot;, fields=list(auto=&quot;logical&quot;), contains=&quot;Car&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>实例化</h2></hgroup><article  id="-1">
+
+<ul>
+<li>调用内置方法<code>$new()</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>car1 &lt;- Car$new(manuf=&quot;VW&quot;, brand=&quot;Golf&quot;)
+car2 &lt;- Manual$new(manuf=&quot;VW&quot;, brand=&quot;Santana&quot;, auto=FALSE)</pre>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>car1</pre>
+
+<pre >## Reference class object of class &quot;Car&quot;
+## Field &quot;manuf&quot;:
+## [1] &quot;VW&quot;
+## Field &quot;brand&quot;:
+## [1] &quot;Golf&quot;
+## Field &quot;status&quot;:
+## character(0)</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>car2</pre>
+
+<pre >## Reference class object of class &quot;Manual&quot;
+## Field &quot;manuf&quot;:
+## [1] &quot;VW&quot;
+## Field &quot;brand&quot;:
+## [1] &quot;Santana&quot;
+## Field &quot;status&quot;:
+## character(0)
+## Field &quot;auto&quot;:
+## [1] FALSE</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>专用的<code>$copy()</code>方法</h2></hgroup><article  id="copy">
+
+<div class="col-2L">
+<ul>
+<li>用赋值方法不能实现副本，而只是链接</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>car3 &lt;- car2
+car2$brand &lt;- &quot;Jetta&quot;
+c(car2=car2$brand, car3=car3$brand)</pre>
+
+<pre >##    car2    car3 
+## &quot;Jetta&quot; &quot;Jetta&quot;</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>必须用<code>$copy()</code>方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>car4 &lt;- car2$copy()
+car2$brand &lt;- &quot;Santana&quot;
+c(car2=car2$brand, car3=car3$brand, 
+  car4=car4$brand)</pre>
+
+<pre >##      car2      car3      car4 
+## &quot;Santana&quot; &quot;Santana&quot;   &quot;Jetta&quot;</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>定义方法</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>调用内置方法<code>$methods()</code></li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>charTime &lt;- function(time=Sys.time()) 
+    format(time, &quot;%F %T&quot;)
+Car$methods(
+    init=function() {
+        status &lt;&lt;- &quot;running&quot;
+        cat(charTime(), &quot;启动！&quot;, status)
+    },
+    end=function() {
+        status &lt;&lt;- &quot;stopped&quot;
+        cat(charTime(), &quot;停车!&quot;, status)
+    },
+    move=function(speed){
+        status &lt;&lt;- &quot;running&quot;
+        cat(charTime(), manuf, brand, 
+            &quot;时速&quot;, speed, &quot;前进...\n&quot;, status)
+    },
+    brake=function(){
+        status &lt;&lt;- &quot;stopped&quot;
+        cat(charTime(), &quot;刹车&quot;, status)
+    },
+    shiftGear=function(from, to) 
+        cat(&quot;不知道变速箱的类型&quot;, status)
+)</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>用超级赋值号<code>&lt;&lt;-</code>实现对象自我修改</li>
+<li>.self代表整个对象, .refClassRef代表类定义</li>
+<li>子类Manual和Auto创建在前，不能自动继承Car定义的方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Manual &lt;- setRefClass(&quot;Manual&quot;, fields=list(
+    auto=&quot;logical&quot;), contains=&quot;Car&quot;)
+Auto &lt;- setRefClass(&quot;Auto&quot;, fields=list(
+    auto=&quot;logical&quot;), contains=&quot;Car&quot;)
+Manual$methods(
+    move=function(speed) 
+        cat(&quot;\n注意及时换档!\n&quot;, callSuper(speed)),
+    shiftGear=function(from, to){
+        cat(paste(
+            charTime(), manuf, brand, &quot;从&quot;, from, 
+            &quot;档换到&quot;, to, &quot;档\n&quot;, status))
+    }
+)
+Auto$methods(
+    shiftGear=function(from, to) cat(&quot;不需手动换档&quot;)
+)</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>特殊的方法: $initialize()</h2></hgroup><article  id="-initialize" class="smaller">
+
+<ul>
+<li><code>$initialize()</code>方法: 对象初始化时运行(<code>?setRefClass</code>)</li>
+<li><code>$callSuper()</code>用于方法内部，调用父类的同名方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Manual$methods(initialize=function(...) {callSuper(...); auto &lt;&lt;- FALSE})
+Auto$methods(initialize=function(...) {callSuper(...); auto &lt;&lt;- TRUE})</pre>
+
+<pre class = 'prettyprint lang-r'>car5 &lt;- Manual$new(manuf=&quot;GM&quot;, brand=&quot;Buick&quot;)
+car6 &lt;- Auto$new(manuf=&quot;Tata&quot;, brand=&quot;RangeRover&quot;)</pre>
+
+<div class="columns-2">
+<pre class = 'prettyprint lang-r'>car5  # 自动给auto赋值FALSE</pre>
+
+<pre >## Reference class object of class &quot;Manual&quot;
+## Field &quot;manuf&quot;:
+## [1] &quot;GM&quot;
+## Field &quot;brand&quot;:
+## [1] &quot;Buick&quot;
+## Field &quot;status&quot;:
+## character(0)
+## Field &quot;auto&quot;:
+## [1] FALSE</pre>
+
+<pre class = 'prettyprint lang-r'>car6  # 自动给auto赋值TRUE</pre>
+
+<pre >## Reference class object of class &quot;Auto&quot;
+## Field &quot;manuf&quot;:
+## [1] &quot;Tata&quot;
+## Field &quot;brand&quot;:
+## [1] &quot;RangeRover&quot;
+## Field &quot;status&quot;:
+## character(0)
+## Field &quot;auto&quot;:
+## [1] TRUE</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>特殊的方法: $finalize()</h2></hgroup><article  id="-finalize">
+
+<ul>
+<li><code>$finalize()</code>方法: 删除对象并内存清理(<code>gc()</code>)时运行(<code>?setRefClass</code>)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Manual$methods(finalize=function() 
+    cat(paste(charTime(), &quot;:&quot;, manuf, brand, &quot;手动被摧毁!&quot;)))
+Auto$methods(finalize=function() 
+    cat(paste(charTime(), &quot;:&quot;, manuf, brand, &quot;自动被摧毁!&quot;)))</pre>
+
+<pre class = 'prettyprint lang-r'>rm(car5, car6)
+invisible(gc())</pre>
+
+<pre >## 2017-08-02 20:39:00 : GM Buick 手动被摧毁!</pre>
+
+<pre >## 2017-08-02 20:39:00 : Tata RangeRover 自动被摧毁!</pre>
+
+</article></slide><slide class=''><hgroup><h2>方法调度(1)</h2></hgroup><article  id="1" class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>car1$init(); Sys.sleep(1)</pre>
+
+<pre >## 2017-08-02 20:39:00 启动！ running</pre>
+
+<pre class = 'prettyprint lang-r'>cat(&quot;\n\n&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>car1$move(40); Sys.sleep(2)</pre>
+
+<pre >## 2017-08-02 20:39:01 VW Golf 时速 40 前进...
+##  running</pre>
+
+<pre class = 'prettyprint lang-r'>car1$brake(); Sys.sleep(0.5)</pre>
+
+<pre >## 2017-08-02 20:39:03 刹车 stopped</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>car1$init(); Sys.sleep(1)</pre>
+
+<pre >## 2017-08-02 20:39:04 启动！ running</pre>
+
+<pre class = 'prettyprint lang-r'>car1$shiftGear(1, 4); Sys.sleep(1)</pre>
+
+<pre >## 不知道变速箱的类型 running</pre>
+
+<pre class = 'prettyprint lang-r'>cat(&quot;\n\n&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>car1$end()</pre>
+
+<pre >## 2017-08-02 20:39:06 停车! stopped</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>方法调度(2)</h2></hgroup><article  id="2" class="smaller">
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>car2$init(); Sys.sleep(1)</pre>
+
+<pre >## 2017-08-02 20:39:06 启动！ running</pre>
+
+<pre class = 'prettyprint lang-r'>cat(&quot;\n\n&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>car2$move(40); Sys.sleep(2)</pre>
+
+<pre >## 2017-08-02 20:39:07 VW Santana 时速 40 前进...
+##  running
+## 注意及时换档!</pre>
+
+<pre class = 'prettyprint lang-r'>car2$brake(); Sys.sleep(0.5)</pre>
+
+<pre >## 2017-08-02 20:39:09 刹车 stopped</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>car2$init(); Sys.sleep(1)</pre>
+
+<pre >## 2017-08-02 20:39:09 启动！ running</pre>
+
+<pre class = 'prettyprint lang-r'>car2$shiftGear(1, 4); Sys.sleep(1)</pre>
+
+<pre >## 2017-08-02 20:39:10 VW Santana 从 1 档换到 4 档
+##  running</pre>
+
+<pre class = 'prettyprint lang-r'>cat(&quot;\n\n&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>car2$end()</pre>
+
+<pre >## 2017-08-02 20:39:11 停车! stopped</pre></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>R6</h2></hgroup><article  id="r6">
+
+</article></slide><slide class=''><hgroup><h2>R6</h2></hgroup><article  id="r6-1">
+
+<ul>
+<li><a href='https://github.com/wch/R6' title=''>R6</a>是Winston Chang (RStudio) 开发的OO系统</li>
+<li>RC是基于S4的，R6则重写了RC</li>
+<li>R6的用法基本和RC类似，但增加了一些优点:
+
+<ul>
+<li>支持公用(public)和私有(private)方法</li>
+<li>动态绑定(active)和继承(inheritance)</li>
+<li>速度更快(2-3倍)，占用内存更低</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>创建R6类</h2></hgroup><article  id="r6" class="smaller">
+
+<ul>
+<li>public和private均可包含字段(属性)和函数(方法)
+
+<ul>
+<li>private定义的字段和函数无法公开访问</li>
+</ul></li>
+<li><code>self$</code>代表当前对象公开部分，<code>private$</code>代表私有部分</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(R6)
+Cat &lt;- R6Class(&quot;Cat&quot;,
+    public=list(
+        name=NULL, color=NULL,
+        initialize=function(name=NA, color=NA){
+            self$name &lt;- name
+            self$color &lt;- color
+            private$dob &lt;- base::Sys.time()
+            self$mew()
+        },
+        mew=function() print(paste0(self$name, &quot;: mew~&quot;)),
+        chaseMouse=function() print(paste0(self$name, &quot;&#39;s chasing a mouse!&quot;))
+    ),
+    private=list(
+        dob=NULL
+    )
+)</pre>
+
+</article></slide><slide class=''><hgroup><h2>实例化</h2></hgroup><article  id="-2">
+
+<div class="col-2L">
+<ul>
+<li>实例化的同时即完成初始化</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>tom &lt;- Cat$new(&quot;Tom&quot;, &quot;grayblue&quot;)</pre>
+
+<pre >## [1] &quot;Tom: mew~&quot;</pre>
+
+<ul>
+<li>调用公开方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>tom$chaseMouse()</pre>
+
+<pre >## [1] &quot;Tom&#39;s chasing a mouse!&quot;</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>修改和访问公开属性</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>tom$color &lt;- &quot;black&quot;; tom$color</pre>
+
+<pre >## [1] &quot;black&quot;</pre>
+
+<ul>
+<li>私有属性/方法无法直接访问</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>tom$dob</pre>
+
+<pre >## NULL</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>增/改属性/方法: $set()</h2></hgroup><article  id="-set" class="smaller">
+
+<pre class = 'prettyprint lang-r'>Cat$set(&quot;public&quot;, &quot;weight&quot;, NA)
+Cat$set(&quot;public&quot;, &quot;run&quot;, function() print(paste0(self$name, &quot;&#39; running!&quot;)))
+Cat$set(&quot;public&quot;, &quot;initialize&quot;, function(name=NA, color=NA, weight=NA){
+    self$name &lt;- name
+    self$color &lt;- color
+    self$weight &lt;- weight
+    private$dob &lt;- base::Sys.time()
+    self$mew()
+}, overwrite=TRUE)</pre>
+
+<ul>
+<li>定义属性/方法后新增的对象获得新属性/方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>alice &lt;- Cat$new(&quot;Alice&quot;, &quot;white&quot;, 10)</pre>
+
+<pre >## [1] &quot;Alice: mew~&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>alice$run()</pre>
+
+<pre >## [1] &quot;Alice&#39; running!&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>动态绑定</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>动态绑定用起来像字段，但实际是一个钩子函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Cat$set(&quot;active&quot;, &quot;wgt2Kg&quot;, function(val) {
+    if (missing(val)) return(self$weight * 0.4536)
+    else self$weight &lt;- val/0.4536}, overwrite=TRUE)</pre>
+
+<div class="col-2L">
+<ul>
+<li>kitty是8磅的白猫，动态绑定自动换算为千克</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>kitty &lt;- Cat$new(&quot;Kitty&quot;, &quot;white&quot;, 8)</pre>
+
+<pre >## [1] &quot;Kitty: mew~&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>kitty$wgt2Kg</pre>
+
+<pre >## [1] 3.6288</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>如初始不给磅数，动态绑定千克数，可反推出磅数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>kitty &lt;- Cat$new(&quot;Kitty&quot;, &quot;white&quot;)</pre>
+
+<pre >## [1] &quot;Kitty: mew~&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>kitty$weight</pre>
+
+<pre >## [1] NA</pre>
+
+<pre class = 'prettyprint lang-r'>kitty$wgt2Kg &lt;- 3.63; kitty$weight</pre>
+
+<pre >## [1] 8.002646</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>继承</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>ExoticShorthair &lt;- R6Class(
+    inherit=Cat,
+    public=list(
+        behave=function() print(paste(self$name, &quot;simply eats and sleeps.&quot;)),
+        mew=function() print(paste0(self$name, &quot;: (too lazy to mew)&quot;))
+    )
+)</pre>
+
+<pre class = 'prettyprint lang-r'>garfield &lt;- ExoticShorthair$new(&quot;Garfield&quot;, &quot;orange&quot;, 30)</pre>
+
+<pre >## [1] &quot;Garfield: (too lazy to mew)&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>garfield$behave()</pre>
+
+<pre >## [1] &quot;Garfield simply eats and sleeps.&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

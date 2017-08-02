@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>B01-06 泛函和函数算子</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'B01-06 泛函和函数算子',
+                        subtitle: 'R Engineer Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'B01_06_funl_opr_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(B01_06_funl_opr_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="B01_06_funl_opr_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-08-02 20:41:47</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>泛函(Functionals)</a></li>
+<li><a href='#12' title=''>函数算子(Function Operators)</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴<strong>Hadley Wickham</strong> <a href='http://adv-r.had.co.nz' title=''>Advanced R</a>.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>泛函 (Functionals)</h2></hgroup><article  id="-functionals">
+
+</article></slide><slide class=''><hgroup><h2>什么是泛函</h2></hgroup><article >
+
+<ul>
+<li>泛函: 输入参数为函数，输出结果为向量的一类函数</li>
+<li>最典型的泛函就是<code>apply</code>家族函数</li>
+<li>上节讲到的高阶函数<code>Reduce</code>、<code>Filter</code>等也都是泛函</li>
+<li>泛函常用于迭代循环、数值计算</li>
+</ul>
+
+<img src='B01_06_funl_opr_files/figure-html/functionals.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>典型的泛函: lapply</h2></hgroup><article  id="-lapply">
+
+<div class="col-2L">
+<p>把传统的循环结构</p>
+
+<pre class = 'prettyprint lang-r'>for (x in xs) fun(x)</pre>
+
+<p>转化为更紧凑的形式</p>
+
+<pre class = 'prettyprint lang-r'>lapply(xs, fun)</pre>
+
+<img src='B01_06_funl_opr_files/figure-html/lapply.png' title='fig:'/></div>
+
+<div class="col-2R">
+<h3>优点</h3>
+
+<ul>
+<li>lapply用C语言编写，更高效</li>
+<li>代码语义更贴近解题意图</li>
+<li>将过程函数化，减少bug</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>自己写一个泛函</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>对向量x算一下n位移动平均/中位/&#8230;</li>
+<li>对xts的模拟股价数据算日均线</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>moveN &lt;- function(x, n, fun=mean, ...){
+    stopifnot(length(x)&gt;n)
+    o &lt;- sapply(n:(length(x)), 
+        function(i) fun(x[(i-n+1):i]), ...)
+    c(rep(NA, n-1), o)
+}
+library(xts); data(sample_matrix)
+mvAvg &lt;- sapply(
+    c(5, 10, 30, 60), function(n)
+        moveN(sample_matrix[,4], n, mean))
+dimnames(mvAvg) &lt;- list(
+    dimnames(sample_matrix)[[1]],
+    c(&quot;d5&quot;, &quot;d10&quot;, &quot;d30&quot;, &quot;d60&quot;))</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>plot(as.xts(sample_matrix[,&#39;Close&#39;]))
+for (i in 1:4) print(
+    lines(as.xts(mvAvg[,i]), col=i+1))
+legend(&#39;bottomleft&#39;, 
+       legend=colnames(mvAvg), 
+       text.col=2:5)</pre>
+
+<img src='B01_06_funl_opr_files/figure-html/moveavg.png' title='fig:'/></div>
+
+</article></slide><slide class=''><hgroup><h2>并行</h2></hgroup><article  class="smaller">
+
+<ul>
+<li>函数式编程的一个重大优势就是便于并行</li>
+<li>可用parallel包提供的并行版<code>apply</code>家族函数进行并行计算</li>
+<li>并行计算并不总能提高效率，因为分配队列和多核调度本身也产生开销</li>
+</ul>
+
+<div class="col-2L">
+<p>扩充diamonds数据集，然后建模</p>
+
+<pre class = 'prettyprint lang-r'>library(ggplot2)
+diamonds1 &lt;- as.data.frame(do.call(&quot;rbind&quot;, 
+    rep(list(diamonds), 100)))  ## &quot;349.8 Mb&quot;
+df.lst &lt;- split(diamonds1, diamonds1$clarity)
+models &lt;- lapply(df.lst, function(df) 
+    lm(price~carat, df))</pre>
+
+<p>(结果略。)</p>
+
+<p><strong>按&quot;p&quot;查看传统方法和并行方法的耗时对比</strong></p></div>
+
+<div class="col-2R">
+<ul>
+<li>(多CPU核计算机) 可用<code>lapply</code>的并行版<code>mclapply</code> (Linux/OSX) 或<code>parLapply</code> (Windows) 优化</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(parallel)
+cl &lt;- makeCluster(detectCores()) # 创建集群
+models &lt;- parLapply(cl, df.lst, function(df) 
+        lm(price~carat, df))
+sapply(models, function(m) coef(m)[[2]])</pre>
+
+<pre >       I1       SI2       SI1       VS2       
+ 4209.793  7870.255  8090.348  8626.157
+      VS1      VVS2      VVS1        IF 
+ 9000.726 10077.188 10469.250 11625.441 </pre>
+
+<pre class = 'prettyprint lang-r'>stopCluster(cl)  # 最后记得关闭集群</pre></div>
+
+<aside class='note'><section><ul>
+<li>传统方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>system.time(lapply(df.lst, function(df) 
+    lm(price~carat, df)))</pre>
+
+<pre >   user  system elapsed 
+   7.42    1.29   61.20 </pre>
+
+<ul>
+<li>并行方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>system.time(parLapply(
+    cl, df.lst, function(df) lm(price~carat, df)))</pre>
+
+<pre >   user  system elapsed 
+  15.82   22.62   50.90</pre></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>扩展: <code>plyr</code>包</h2></hgroup><article  id="-plyr">
+
+<ul>
+<li>plyr包提供了一套apply家族的衍生函数，贯彻SAC(split-apply-combine)策略</li>
+</ul>
+
+<div class="col-2L">
+<ul>
+<li>base包</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">in\out</th>
+<th align="left">list</th>
+<th align="left">data frame</th>
+<th align="left">array</th>
+</tr>
+<tr class="odd">
+<td align="left">list</td>
+<td align="left"><code>lapply)</code></td>
+<td align="left"></td>
+<td align="left"><code>sapply()</code></td>
+</tr>
+<tr class="even">
+<td align="left">data frame</td>
+<td align="left"><code>by()</code></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">array</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><code>apply()</code></td>
+</tr>
+</table></div>
+
+<div class="col-2R">
+<ul>
+<li>plyr包</li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">in\out</th>
+<th align="left">list</th>
+<th align="left">data frame</th>
+<th align="left">array</th>
+</tr>
+<tr class="odd">
+<td align="left">list</td>
+<td align="left"><code>llply()</code></td>
+<td align="left"><code>ldply()</code></td>
+<td align="left"><code>laply()</code></td>
+</tr>
+<tr class="even">
+<td align="left">data frame</td>
+<td align="left"><code>dlply()</code></td>
+<td align="left"><code>ddply()</code></td>
+<td align="left"><code>daply()</code></td>
+</tr>
+<tr class="odd">
+<td align="left">array</td>
+<td align="left"><code>alply()</code></td>
+<td align="left"><code>adply()</code></td>
+<td align="left"><code>aaply()</code></td>
+</tr>
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>数值计算</h2></hgroup><article >
+
+<ul>
+<li>泛函常用于数值计算，如
+
+<ul>
+<li><code>integrate()</code>: f()函数的曲线下面积</li>
+<li><code>uniroot()</code>: f()何时取值为零</li>
+<li><code>optimise()</code>: f()取最大/小值的位置</li>
+</ul></li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>integrate(dnorm, -1.96, 1.96)</pre>
+
+<pre >## 0.9500042 with absolute error &lt; 1e-11</pre>
+
+<pre class = 'prettyprint lang-r'>uniroot(function(x) cos(x) - x, lower = -pi, 
+        upper = pi, tol = 1e-9)$root</pre>
+
+<pre >## [1] 0.7390851</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>unlist(optimise(cos, c(0, 2 * pi)))</pre>
+
+<pre >##   minimum objective 
+##  3.141593 -1.000000</pre>
+
+<pre class = 'prettyprint lang-r'>unlist(optimise(sin, c(0, 2 * pi), 
+                maximum=TRUE))</pre>
+
+<pre >##   maximum objective 
+##  1.570794  1.000000</pre></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<p>(按&quot;p&quot;看代码)</p>
+
+<div class="col-2L">
+<p><img src="B01_06_funl_opr_files/figure-html/integrate-1.png" width="480" /></p>
+
+<p><img src="B01_06_funl_opr_files/figure-html/uniroot-1.png" width="480" /></p></div>
+
+<div class="col-2R">
+<p><img src="B01_06_funl_opr_files/figure-html/optimise1-1.png" width="480" /></p>
+
+<p><img src="B01_06_funl_opr_files/figure-html/optimise2-1.png" width="480" /></p></div>
+
+<aside class='note'><section><p>请自行分别运行下面的命令</p>
+
+<pre class = 'prettyprint lang-r'>cord.x &lt;- c(-1.96, seq(-1.96, 1.96, 0.01), 1.96) 
+cord.y &lt;- c(0, dnorm(seq(-1.96, 1.96, 0.01)), 0) 
+curve(dnorm(x, 0, 1), xlim=c(-3, 3)) 
+polygon(cord.x, cord.y, col=&#39;skyblue&#39;)</pre>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(x) cos(x) - x
+uroot &lt;- uniroot(f, lower = -pi, upper = pi, tol = 1e-9)$root
+curve(f, xlim=c(-pi, pi))
+rect(-pi, f(pi), uroot, 0, col=rgb(1, 0, 0, 0.25), border=2, lwd=0.1)
+points(uroot, 0, cex=1, pch=19, col=2)</pre>
+
+<pre class = 'prettyprint lang-r'>min &lt;- optimise(sin, c(0, 2 * pi))[[2]]
+where.min &lt;- optimise(sin, c(0, 2 * pi))[[1]]
+curve(sin, xlim=c(0, 2*pi))
+rect(0, min, where.min, min, col=rgb(1, 0, 0, 0.25), border=2, lwd=0.1)
+points(where.min, min, cex=1, pch=19, col=2)</pre>
+
+<pre class = 'prettyprint lang-r'>max &lt;- optimise(sin, c(0, 2 * pi), maximum=TRUE)[[2]]
+where.max &lt;- optimise(sin, c(0, 2 * pi), maximum=TRUE)[[1]]
+curve(sin, xlim=c(0, 2*pi))
+rect(0, min, where.max, max, col=rgb(1, 0, 0, 0.25), border=2, lwd=0.1)
+points(where.max, max, cex=1, pch=19, col=2)</pre></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>例子: 家族函数</h2></hgroup><article  id="-" class="smaller">
+
+<p>Hadley Wickham的一个例子: 基于核心工作函数，通过泛函繁衍出整个家族</p>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>rm_na &lt;- function(x, y, identity) {
+    if (is.na(x) &amp;&amp; is.na(y)) {
+        identity
+    } else if (is.na(x)) {
+        y
+    } else {
+        x
+    }
+}</pre>
+
+<pre class = 'prettyprint lang-r'>add &lt;- function(x, y, na.rm = FALSE) {
+    if (na.rm &amp;&amp; (is.na(x) || is.na(y))) 
+        rm_na(x, y, 0) 
+    else x + y
+}</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'>r_add &lt;- function(xs, na.rm = TRUE) {
+    Reduce(function(x, y) 
+        add(x, y, na.rm = na.rm), xs, init = 0)
+}  # r_add 等价于sum()</pre>
+
+<pre class = 'prettyprint lang-r'>c_add &lt;- function(xs, na.rm = FALSE) {
+    Reduce(function(x, y) 
+        add(x, y, na.rm = na.rm), xs,
+            accumulate = TRUE)
+}  # c_add 等价于cumsum()</pre>
+
+<pre class = 'prettyprint lang-r'>row_sum &lt;- function(x, na.rm = FALSE) {
+    apply(x, 1, r_add, na.rm = na.rm)
+}  # row_sum等价于rowSums()</pre>
+
+<pre class = 'prettyprint lang-r'>col_sum &lt;- function(x, na.rm = FALSE) {
+    apply(x, 2, r_add, na.rm = na.rm)
+}  # col_sum等价于colSums()</pre></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>函数算子 (Function Operators)</h2></hgroup><article  id="-function-operators">
+
+</article></slide><slide class=''><hgroup><h2>什么叫函数算子 (FO)</h2></hgroup><article  id="-fo">
+
+<ul>
+<li>函数算子: 输入参数为（一个或多个）函数，输出结果也为函数的一类函数</li>
+<li>函数算子和泛函一样，可以锦上添花，但并不必需
+
+<ul>
+<li>让代码更易读、更表义</li>
+<li>帮助代码写得更快</li>
+</ul></li>
+<li>函数算子和泛函的差别
+
+<ul>
+<li>泛函: 提取<strong>循环结构</strong>的模式</li>
+<li>函数算子: 提取<strong>匿名函数</strong>的模式</li>
+</ul></li>
+<li>函数算子和工厂函数的差别
+
+<ul>
+<li>工厂函数: 低阶函数，<strong>接受向量</strong>，返回函数</li>
+<li>函数算子: 高阶函数，<strong>接受函数</strong>，返回函数</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>函数算子的主要类型</h2></hgroup><article >
+
+<ul>
+<li>行为函数算子 (Behavioral FO)
+
+<ul>
+<li>不改变输入和输出的函数，但会添加一些行为
+
+<ul>
+<li>捕获函数运行细节</li>
+<li>延时和缓存</li>
+</ul></li>
+</ul></li>
+<li>输出函数算子 (Output FO)
+
+<ul>
+<li>修改输出函数
+
+<ul>
+<li><code>Negate()</code>, <code>failwith()</code></li>
+<li><code>capture_it()</code>, <code>time_it()</code></li>
+</ul></li>
+</ul></li>
+<li>输入函数算子 (Input FO)
+
+<ul>
+<li>修改输入函数
+
+<ul>
+<li>部分应用<code>partial</code></li>
+</ul></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>行为FO: 捕获细节</h2></hgroup><article  id="fo-" class="smaller">
+
+<ul>
+<li>最常见的行为FO是在函数内部捕获运行细节</li>
+</ul>
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>ignore &lt;- function(...) NULL
+# 构造行为FO tee
+tee &lt;- function(fun, on_input = ignore, 
+            on_output = ignore) {
+    function(...) {
+        on_input(...)
+        output &lt;- fun(...)
+        on_output(output)
+    output
+    }
+}</pre>
+
+<pre class = 'prettyprint lang-r'># 求解函数g的单位根
+g &lt;- function(x) cos(x) - x
+zero &lt;- uniroot(g, c(-5, 5))
+show_x &lt;- function(x, ...) 
+    cat(sprintf(&quot;%+.08f&quot;, x), &quot;\n&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>zero$root  ## 0.739</pre></div>
+
+<div class="col-2R">
+<pre class = 'prettyprint lang-r'># 函数求解的位置
+zero &lt;- uniroot(tee(
+    g, on_input = show_x), c(-5, 5))</pre>
+
+<pre >## -5.00000000  +5.00000000  +0.28366219 
+## +0.87520341  +0.72298040  +0.73863091 
+## +0.73908529  +0.73902425  +0.73908529</pre>
+
+<pre class = 'prettyprint lang-r'># 函数的值
+zero &lt;- uniroot(tee(
+    g, on_output = show_x), c(-5, 5))</pre>
+
+<pre >## +5.28366219  -4.71633781  +0.67637474 
+## -0.23436269  +0.02685676  +0.00076012 
+## -0.00000026  +0.00010189  -0.00000026</pre>
+
+<p>(按p看notes)</p></div>
+
+<aside class='note'><section><p>求解过程的9步迭代细节</p>
+
+<p><img src="B01_06_funl_opr_files/figure-html/tee-1.png" width="576" /><img src="B01_06_funl_opr_files/figure-html/tee-2.png" width="576" /></p></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>行为FO - 延时</h2></hgroup><article  id="fo---" class="smaller">
+
+<pre class = 'prettyprint lang-r'>delay_by &lt;- function(sec.delay, f) {
+  function(...) {
+    Sys.sleep(sec.delay)
+    f(...)
+  }
+}
+delayed_sample &lt;- delay_by(1, sample)
+sapply(1:2, function(size) delayed_sample(1:10, size))</pre>
+
+<pre >[[1]]
+[1] 5
+
+[[2]]
+[1] 2 4</pre>
+
+<pre class = 'prettyprint lang-r'>system.time(sapply(1:2, function(size) delayed_sample(1:10, size)))</pre>
+
+<pre >   user  system elapsed 
+   0.00    0.03    2.14 </pre>
+
+</article></slide><slide class=''><hgroup><h2>输出FO - 简单案例</h2></hgroup><article  id="fo---" class="smaller">
+
+<div class="col-2L">
+<h4>Negate</h4>
+
+<pre class = 'prettyprint lang-r'>lst &lt;- list(a=1:2, b=list(c(3, 4)), 
+    c=NULL，NULL)</pre>
+
+<ul>
+<li>无法用<code>lst[!is.null(lst)]</code>清除NULL</li>
+<li>但可以用高阶函数</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>rmNulls &lt;- function(x) 
+    Filter(Negate(is.null), x)
+rmNulls(lst)</pre>
+
+<pre >$a
+[1] 1 2
+
+$b
+$b[[1]]
+[1] 3 4</pre></div>
+
+<div class="col-2R">
+<h4>plyr::failwith</h4>
+
+<p>使用泛函时，一处出错，则整体退出</p>
+
+<pre class = 'prettyprint lang-r'>sapply(list(1, pi, &#39;a&#39;), log)</pre>
+
+<pre >Error in FUN(X[[i]], ...) : non-numeric 
+argument to mathematical function</pre>
+
+<p>用<code>failwith</code>可以增加容错性</p>
+
+<pre class = 'prettyprint lang-r'>sapply(list(1, pi, &#39;a&#39;), plyr::failwith(
+    NA, log))</pre>
+
+<pre >Error in f(...) : non-numeric argument 
+to mathematical function
+[1] 0.00000 1.14473      NA</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>输出FO - 复杂案例</h2></hgroup><article  id="fo---" class="smaller">
+
+<div class="col-2L">
+<h4>capture_it</h4>
+
+<pre class = 'prettyprint lang-r'>capture_it &lt;- function(f) {
+    function(...) 
+        capture.output(f(...))
+}</pre>
+
+<pre class = 'prettyprint lang-r'>str_it &lt;- capture_it(str)
+str_it(Titanic)[3]</pre>
+
+<pre >[1] &quot; table [1:4, 1:2, 1:2, 1:2] 
+    0 0 35 0 0 0 17 0 118 154 ...&quot; 
+[2] &quot; - attr(*, \&quot;dimnames\&quot;)=List of 4&quot;                        
+[3] &quot;  ..$ Class   : 
+    chr [1:4] \&quot;1st\&quot; \&quot;2nd\&quot; \&quot;3rd\&quot; \&quot;Crew\&quot;&quot;
+[4] &quot;  ..$ Sex     : 
+    chr [1:2] \&quot;Male\&quot; \&quot;Female\&quot;&quot;             
+[5] &quot;  ..$ Age     : 
+    chr [1:2] \&quot;Child\&quot; \&quot;Adult\&quot;&quot;             
+[6] &quot;  ..$ Survived: 
+    chr [1:2] \&quot;No\&quot; \&quot;Yes\&quot;&quot;</pre></div>
+
+<div class="col-2R">
+<h4>time_it</h4>
+
+<pre class = 'prettyprint lang-r'>time_it &lt;- function(f) {
+    function(...) system.time(f(...))
+}</pre>
+
+<pre class = 'prettyprint lang-r'>compute_mean &lt;- list(
+  base = function(x) mean(x),
+  sum = function(x) sum(x) / length(x)
+)
+x &lt;- runif(1e6)
+call_fun &lt;- function(f, ...) f(...)
+lapply(compute_mean, time_it(call_fun), x)</pre>
+
+<pre >## $base
+##    user  system elapsed 
+##   0.000   0.000   0.002 
+## 
+## $sum
+##    user  system elapsed 
+##   0.000   0.000   0.001</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>输入FO</h2></hgroup><article  id="fo" class="smaller">
+
+<ul>
+<li>部分应用: <code>pryr::partial</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>rmNulls &lt;- partial(Filter, Negate(is.null))
+mean2 &lt;- partial(mean, na.rm=TRUE)</pre>
+
+<ul>
+<li>改变输入参数的类型</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>splat &lt;- function(f) {
+    function(args) do.call(f, args)
+}</pre>
+
+<pre class = 'prettyprint lang-r'>x &lt;- c(NA, runif(100), 1000)
+args &lt;- list(
+  list(x),
+  list(x, na.rm = TRUE),
+  list(x, na.rm = TRUE, trim = 0.1)
+)
+sapply(args, splat(mean))</pre>
+
+<pre >[1]       NA 10.4307917  0.5433686</pre>
+
+</article></slide><slide class=''><hgroup><h2>合并FO</h2></hgroup><article  id="fo">
+
+<ul>
+<li><code>pryr::compose</code>或<code>pryr::%.%</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(pryr)
+sapply(mtcars, compose(length, unique))</pre>
+
+<pre > mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+  25    3   27   22   22   29   30    2    2    3    6 </pre>
+
+<pre class = 'prettyprint lang-r'>square &lt;- function(x) x^2
+deviation &lt;- function(x) x - mean(x)
+sd2 &lt;- sqrt %.% mean %.% square %.% deviation
+sd2(1:10)
+# 同 1:10 %&gt;% deviation %&gt;% square %&gt;% mean %&gt;% sqrt</pre>
+
+<pre >## [1] 2.872281</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

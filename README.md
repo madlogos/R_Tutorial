@@ -1,3 +1,5 @@
+>>>[中文版](README_cn.md)
+
 # [Applied R Tutorial](https://madlogos.github.io/R_Tutorial)
 
 This is a series of very basic R tutorial presentations comprising of three major tracks: analyst, data scientist and data engineer. It focused on applied R skills, instead of statistics principles or software engineering mechanisms, majorly aiming to serve as a starting point to promote R within a business organization that wants to be data-smart. 

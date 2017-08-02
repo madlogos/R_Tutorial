@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>B01-05 函数式编程</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'B01-05 函数式编程',
+                        subtitle: 'R Engineer Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'B01_05_funcProg_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(B01_05_funcProg_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="B01_05_funcProg_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-08-02 20:40:27</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>函数式编程(Functional Programming)</a></li>
+<li><a href='#11' title=''>FP的常用技术</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴<strong>Hadley Wickham</strong> <a href='http://adv-r.had.co.nz' title=''>Advanced R</a>.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>函数式编程(Functional Programming)</h2></hgroup><article  id="functional-programming">
+
+</article></slide><slide class=''><hgroup><h2>简介</h2></hgroup><article >
+
+<ul>
+<li><p><a href='https://en.wikipedia.org/wiki/Functional_programming' title=''>函数式编程(functional programming)</a>，与指令性编程(imperative programming)相对，是以函数为核心的编程范式(paradigm)</p></li>
+<li><p>在FP范式中，函数是一等公民 (像变量一样，可以被创建，被作为参数，被作为返回结果)</p></li>
+<li><p>FP思想起源于Princeton Univ的 <em>Alonzo Church</em> 提出的\(\lambda\)演算</p></li>
+<li><p>FP最早应用在Lisp语言，如今Python、JavaScript、Haskell、Erlang、Clojure、R、Mathematica等均支持FP</p></li>
+<li><p>FP是学术界为数值计算而设计出来的，尤其适合数值计算</p></li>
+<li><p>R在本质上是一种FP语言 (回忆一下apply家族)</p></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>一个例子</h2></hgroup><article >
+
+<blockquote>
+<p>一个调查问卷，采集了5个人对a-f六个问题的答案。部分答案为-9，表示漏填<br/><strong>要求</strong>: 将df数据集里的-9都改为NA</p>
+</blockquote>
+
+<pre class = 'prettyprint lang-r'>set.seed(1234)
+df &lt;- as.data.frame(matrix(sample(c(1:5, -9), 30, replace=TRUE), ncol=6))
+names(df) &lt;- letters[1:6]; print(df)</pre>
+
+<pre >##    a b  c  d e  f
+## 1  1 4  5 -9 2  5
+## 2  4 1  4  2 2  4
+## 3  4 2  2  2 1 -9
+## 4  4 4 -9  2 1  5
+## 5 -9 4  2  2 2  1</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>传统指令性编程思路</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>df$a[df$a == -9] &lt;- NA
+df$b[df$b == -9] &lt;- NA
+df$c[df$c == -9] &lt;- NA
+df$d[df$d == -9] &lt;- NA
+df$e[df$e == -9] &lt;- NA
+df$f[df$f == -9] &lt;- NA</pre>
+
+<p>问题来了</p>
+
+<ul>
+<li>如果有一万列怎么办？</li>
+<li>如果拷贝错了怎么办？</li>
+</ul></div>
+
+<div class="col-2R">
+<ul>
+<li>来个循环?</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>for (col in letters[1:6]){
+    df[df[, col] == -9, col] &lt;- NA
+}</pre>
+
+<p>或</p>
+
+<pre class = 'prettyprint lang-r'>for (col in letters[1:6]){
+    df[, col][df[, col] == -9] &lt;- NA
+}</pre>
+
+<ul>
+<li>代码表达太繁琐</li>
+<li>执行效率不高(显式循环)</li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>写个函数?</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>symb2na &lt;- function(x) {
+    x[x == -9] &lt;- NA; x
+}
+df$a &lt;- symb2na(df$a)
+df$b &lt;- symb2na(df$b)
+df$c &lt;- symb2na(df$c)
+df$d &lt;- symb2na(df$d)
+df$e &lt;- symb2na(df$e)
+df$f &lt;- symb2na(df$f)</pre>
+
+<ul>
+<li>看起来还是那么繁琐</li>
+</ul></div>
+
+<div class="col-2R">
+<ul>
+<li>正宗的FP</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>symb2na &lt;- function(x) {
+    x[x == -9] &lt;- NA
+    x
+}
+df[] &lt;- lapply(df, symb2na)</pre>
+
+<p>或用匿名函数，连函数名都省了</p>
+
+<pre class = 'prettyprint lang-r'>df[] &lt;- lapply(df, function(x) {
+    x[x == -9] &lt;- NA
+    x
+})</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>进一步扩展</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li>假如-9、-99都表示NA，如何扩展symb2na函数，使它适应性更广?</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>symb2na &lt;- function(x, symb){
+    x[x %in% symb] &lt;- NA
+    x
+}
+df[] &lt;- lapply(df, symb2na, 
+    symb=c(-9, -99))</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>假如不光-9转NA，允许自定义转换方式(如-9、-99转9)，怎样扩展?</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>replaceVal &lt;- function(x, v1, v2){
+    x[x %in% v1] &lt;- v2
+    x
+}
+df[] &lt;- lapply(df, replaceVal, 
+    v1=c(-9, -99), v2=9)</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>FP的特点</h2></hgroup><article  id="fp">
+
+<ul>
+<li>不修改状态(status)、数据不可变(immutable data)
+
+<ul>
+<li>调用环境内对象的状态和变量不会变化: 没有副作用(side effect)</li>
+<li>不需要维护状态、修改变量，减少了bug</li>
+</ul></li>
+<li>函数可以当对象用 (一等公民)
+
+<ul>
+<li>可以用函数来产生函数 (工厂函数)</li>
+<li>可以把函数组成列表投入运算</li>
+</ul></li>
+<li>用表达式(expression)，而不是语句(statement)
+
+<ul>
+<li>关注求值，减少读写(I/O)</li>
+</ul></li>
+<li>引用透明(referential transparency)
+
+<ul>
+<li>函数输出只依赖于输入参数: 结果确定性更高</li>
+<li>R并不是纯函数式编程语言，不能做到完全的引用透明</li>
+</ul></li>
+<li>惰性求值(lazy evaluation)</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>FP的优缺点</h2></hgroup><article  id="fp">
+
+<div class="col-2L">
+<h4>优点</h4>
+
+<ul>
+<li>代码简洁优雅</li>
+<li>便于模块化设计
+
+<ul>
+<li>函数封装</li>
+<li>可复用性增强</li>
+</ul></li>
+<li>接近自然语言，更加易读</li>
+<li>利于并行开发和部署</li>
+<li>便于调试(debug)</li>
+<li>便于单元测试(unit test)</li>
+</ul></div>
+
+<div class="col-2R">
+<h4>缺点</h4>
+
+<ul>
+<li>相对难学</li>
+<li>纯函数式编程有时并不合理
+
+<ul>
+<li>有时候就是需要I/O，副作用难以避免</li>
+<li>R的函数无法避免外环境影响，做不到纯函数</li>
+</ul></li>
+</ul>
+
+<p>R是多范式的，应当灵活综合OOP和FP的优点</p></div>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>FP的常用技术</h2></hgroup><article  id="fp">
+
+</article></slide><slide class=''><hgroup><h2>常用技术包括</h2></hgroup><article >
+
+<ul>
+<li>匿名函数 (anonymous function)
+
+<ul>
+<li>map和reduce: <code>apply</code>家族</li>
+</ul></li>
+<li>函数闭包 (closure): 函数写出的函数
+
+<ul>
+<li>高阶函数 (high order function): 以函数为形参</li>
+</ul></li>
+<li>函数列表 (lists of functions)</li>
+<li>管道化 (pipeline): <code>%&gt;%</code></li>
+<li>递归 (recursing): 简化代码，描述问题本身</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>匿名函数</h2></hgroup><article >
+
+<div class="col-2L">
+<p>匿名函数同样有头、体、环境</p>
+
+<pre class = 'prettyprint lang-r'>formals(function(x) mean(x)+c(1,-1)*sd(x))</pre>
+
+<pre >## $x</pre>
+
+<pre class = 'prettyprint lang-r'>body(function(x) mean(x)+c(1,-1)*sd(x))</pre>
+
+<pre >## mean(x) + c(1, -1) * sd(x)</pre>
+
+<pre class = 'prettyprint lang-r'>environment(function(x) 
+    mean(x)+c(1, -1)*sd(x))</pre>
+
+<pre >## &lt;environment: R_GlobalEnv&gt;</pre></div>
+
+<div class="col-2R">
+<p>匿名函数最常用于<code>apply</code>家族函数</p>
+
+<pre class = 'prettyprint lang-r'>lapply(iris[,1:4], function(x) 
+    mean(x)+c(1, -1)*sd(x))</pre>
+
+<pre >## $Sepal.Length
+## [1] 6.671399 5.015267
+## 
+## $Sepal.Width
+## [1] 3.493200 2.621467
+## 
+## $Petal.Length
+## [1] 5.523298 1.992702
+## 
+## $Petal.Width
+## [1] 1.9615710 0.4370957</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>函数闭包</h2></hgroup><article  class="smaller">
+
+<div class="col-2L">
+<p><code>square</code>和<code>cube</code>都是函数闭包</p>
+
+<pre class = 'prettyprint lang-r'>power &lt;- function(exp){
+    function(x) x ^ exp
+}
+square &lt;- power(2)
+cube &lt;- power(3)</pre>
+
+<p><code>power</code>用来生成函数闭包，叫<strong>工厂函数</strong>(function factory)</p>
+
+<pre class = 'prettyprint lang-r'>c(square(3), cube(3))</pre>
+
+<pre >## [1]  9 27</pre>
+
+<pre class = 'prettyprint lang-r'>c(power(2)(3), power(3)(3))</pre>
+
+<pre >## [1]  9 27</pre></div>
+
+<div class="col-2R">
+<p><code>square</code>和<code>cube</code>函数定义是一样的</p>
+
+<pre class = 'prettyprint lang-r'>all.equal(square, cube)</pre>
+
+<pre >## [1] TRUE</pre>
+
+<p>unenclose后则不同</p>
+
+<pre class = 'prettyprint lang-r'>library(pryr)
+c(unenclose(square), unenclose(cube))</pre>
+
+<pre >## [[1]]
+## function (x) 
+## x^2
+## 
+## [[2]]
+## function (x) 
+## x^3</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>FP不改变状态，但闭包可以</h2></hgroup><article  id="fp">
+
+<div class="col-2L">
+<p>函数闭包会保留数据</p>
+
+<pre class = 'prettyprint lang-r'>new_counter &lt;- function() {
+  i &lt;- 0
+  function() {
+    i &lt;&lt;- i + 1
+    i
+  }
+}
+counter1 &lt;- new_counter()
+counter2 &lt;- new_counter()</pre>
+
+<ul>
+<li>通过函数闭包修改父环境数据，可以实现状态改变</li>
+<li>复杂的情形，建议通过设置refClass来实现</li>
+</ul></div>
+
+<div class="col-2R">
+<p>测一下</p>
+
+<pre class = 'prettyprint lang-r'>counter1()</pre>
+
+<pre >## [1] 1</pre>
+
+<pre class = 'prettyprint lang-r'>counter1()</pre>
+
+<pre >## [1] 2</pre>
+
+<pre class = 'prettyprint lang-r'>counter1()</pre>
+
+<pre >## [1] 3</pre>
+
+<pre class = 'prettyprint lang-r'>counter2()</pre>
+
+<pre >## [1] 1</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>高阶函数 - Reduce &amp; Map</h2></hgroup><article  id="---reduce-map" class="smaller">
+
+<div class="col-2L">
+<ul>
+<li>有4个列表，各包含mtcars的一列参数和型号名</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(magrittr)
+a &lt;- lapply(1:4, function(i) data.frame(
+    I(rownames(mtcars)[1:5]), mtcars[1:5,i]) %&gt;% 
+        `names&lt;-`(c(&quot;Car&quot;, names(mtcars)[i])))
+str(a, vec.len=1)</pre>
+
+<pre >## List of 4
+##  $ :&#39;data.frame&#39;:    5 obs. of  2 variables:
+##   ..$ Car:Class &#39;AsIs&#39;  chr [1:5] &quot;Mazda RX4&quot; ...
+##   ..$ mpg: num [1:5] 21 21 ...
+##  $ :&#39;data.frame&#39;:    5 obs. of  2 variables:
+##   ..$ Car:Class &#39;AsIs&#39;  chr [1:5] &quot;Mazda RX4&quot; ...
+##   ..$ cyl: num [1:5] 6 6 ...
+##  $ :&#39;data.frame&#39;:    5 obs. of  2 variables:
+##   ..$ Car :Class &#39;AsIs&#39;  chr [1:5] &quot;Mazda RX4&quot; ...
+##   ..$ disp: num [1:5] 160 160 ...
+##  $ :&#39;data.frame&#39;:    5 obs. of  2 variables:
+##   ..$ Car:Class &#39;AsIs&#39;  chr [1:5] &quot;Mazda RX4&quot; ...
+##   ..$ hp : num [1:5] 110 110 ...</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>进行merge合并，普通用法需要三次merge</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>merge(merge(merge(a[[1]], a[[2]]), 
+    a[[3]]), a[[4]])</pre>
+
+<ul>
+<li>直接用<code>Reduce</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Reduce(merge, a)</pre>
+
+<pre >                Car  mpg cyl disp  hp
+1        Datsun 710 22.8   4  108  93
+2    Hornet 4 Drive 21.4   6  258 110
+3 Hornet Sportabout 18.7   8  360 175
+4         Mazda RX4 21.0   6  160 110
+5     Mazda RX4 Wag 21.0   6  160 110</pre>
+
+<ul>
+<li><code>Map</code> 就等于 <code>mapply</code></li>
+</ul></div>
+
+</article></slide><slide class=''><hgroup><h2>高阶函数 - Filter &amp; Find/Position</h2></hgroup><article  id="---filter-findposition">
+
+<div class="col-2L">
+<ul>
+<li>a的四个列表中，第二列最小值超过100的是</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Filter(function(df) min(df[,2]&gt;100), a)</pre>
+
+<pre >## [[1]]
+##                 Car disp
+## 1         Mazda RX4  160
+## 2     Mazda RX4 Wag  160
+## 3        Datsun 710  108
+## 4    Hornet 4 Drive  258
+## 5 Hornet Sportabout  360</pre>
+
+<ul>
+<li><code>Find</code>返回第一个满足条件的元素</li>
+<li><code>Position</code>返回第一个满足条件的元素的索引号</li>
+</ul></div>
+
+<div class="col-2R">
+<ul>
+<li>a的四个列表中，第二列最大值不超过10的列表是</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>Filter(Negate(function(df) max(df[,2]&gt;10)), 
+       a)</pre>
+
+<pre >## [[1]]
+##                 Car cyl
+## 1         Mazda RX4   6
+## 2     Mazda RX4 Wag   6
+## 3        Datsun 710   4
+## 4    Hornet 4 Drive   6
+## 5 Hornet Sportabout   8</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>自定义高阶函数</h2></hgroup><article >
+
+<div class="col-2L">
+<ul>
+<li><a href='B01_06_funl_opr.html' title=''>泛函(functional)</a></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>set.seed(12345)
+f &lt;- function(fun, ...){
+    stopifnot(is.function(fun))
+    fun(...)
+}
+f(mean, 1:10)</pre>
+
+<pre >## [1] 5.5</pre>
+
+<pre class = 'prettyprint lang-r'>matrix(f(rnorm, 6, 0, 1), nrow=2)</pre>
+
+<pre >##           [,1]       [,2]       [,3]
+## [1,] 0.5855288 -0.1093033  0.6058875
+## [2,] 0.7094660 -0.4534972 -1.8179560</pre></div>
+
+<div class="col-2R">
+<ul>
+<li><a href='B02_06_funl_opr.html' title=''>函数算子(FO)</a></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>set.seed(12345)
+hiOrdFun &lt;- function(fun, ...){
+    stopifnot(is.function(fun))
+    function(...) fun(...)
+}
+hiOrdFun(mean)(1:10)</pre>
+
+<pre >## [1] 5.5</pre>
+
+<pre class = 'prettyprint lang-r'>matrix(hiOrdFun(rnorm)(6, 0, 1), nrow=2)</pre>
+
+<pre >##           [,1]       [,2]       [,3]
+## [1,] 0.5855288 -0.1093033  0.6058875
+## [2,] 0.7094660 -0.4534972 -1.8179560</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>函数列表 List of functions</h2></hgroup><article  id="-list-of-functions">
+
+<p>将函数组成列表，结合高阶函数，可以套用<code>apply</code>家族函数</p>
+
+<div class="col-2L">
+<p>求一组数据的mean、sd、fivenum:</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- c(sample(1:100, 10), NA)
+list(mean(x, na.rm=TRUE), 
+     sd(x, na.rm=TRUE), fivenum(x))</pre>
+
+<pre >## [[1]]
+## [1] 47.3
+## 
+## [[2]]
+## [1] 30.86188
+## 
+## [[3]]
+## [1]  1.0 30.0 40.5 74.0 98.0</pre></div>
+
+<div class="col-2R">
+<p>函数列表解决方案</p>
+
+<pre class = 'prettyprint lang-r'>f.lst &lt;- list(mean, sd, fivenum)
+lapply(f.lst, f, x, na.rm=TRUE)</pre>
+
+<pre >## [[1]]
+## [1] 47.3
+## 
+## [[2]]
+## [1] 30.86188
+## 
+## [[3]]
+## [1]  1.0 30.0 40.5 74.0 98.0</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>进一步应用</h2></hgroup><article >
+
+<p>工厂函数 + 函数列表 + 高阶函数 + 匿名函数</p>
+
+<pre class = 'prettyprint lang-r'>lst.fun &lt;- lapply(f.lst, hiOrdFun)
+lapply(lst.fun, function(f) f(x, na.rm=TRUE))</pre>
+
+<pre >## [[1]]
+## [1] 47.3
+## 
+## [[2]]
+## [1] 30.86188
+## 
+## [[3]]
+## [1]  1.0 30.0 40.5 74.0 98.0</pre>
+
+</article></slide><slide class=''><hgroup><h2>函数列表全局化</h2></hgroup><article >
+
+<div class="col-2L">
+<pre class = 'prettyprint lang-r'>power.fun &lt;- function(exp, ...)
+    function(...) list(...)[[1]] ^ exp
+f.lst &lt;- c(square=2, cube=3, powfour=4)
+pow &lt;- lapply(f.lst, power.fun)</pre>
+
+<pre class = 'prettyprint lang-r'>c(pow$square(4), pow$cube(4), 
+    pow$powfour(4))</pre>
+
+<p>或</p>
+
+<pre class = 'prettyprint lang-r'>sapply(pow, function(f) f(4))</pre>
+
+<pre >##  square    cube powfour 
+##      16      64     256</pre></div>
+
+<div class="col-2R">
+<p>用<code>list2env</code>将函数列表pow提取到环境中</p>
+
+<pre class = 'prettyprint lang-r'>list2env(pow, environment())</pre>
+
+<pre >## &lt;environment: R_GlobalEnv&gt;</pre>
+
+<pre class = 'prettyprint lang-r'>c(square(3), cube(3), powfour(3))</pre>
+
+<pre >## [1]  9 27 81</pre>
+
+<p>即实现了函数的批量生成</p></div>
+
+</article></slide><slide class=''><hgroup><h2>递归: 一个函数调用其自身</h2></hgroup><article  id="-">
+
+<p><a href='#17' title=''><code>Reduce</code>的例子</a>中，合并四个列表也可以用递归法</p>
+
+<pre class = 'prettyprint lang-r'>f &lt;- function(dfs, ...) {
+    if (length(dfs) == 2) merge(dfs[[1]], dfs[[2]], ...)
+    else  merge(dfs[[1]], f(dfs[-1]), ...)}
+print(f(a))</pre>
+
+<pre >##                 Car  mpg cyl disp  hp
+## 1        Datsun 710 22.8   4  108  93
+## 2    Hornet 4 Drive 21.4   6  258 110
+## 3 Hornet Sportabout 18.7   8  360 175
+## 4         Mazda RX4 21.0   6  160 110
+## 5     Mazda RX4 Wag 21.0   6  160 110</pre>
+
+<ul>
+<li>递归代码中，可以用Recall代替函数名f</li>
+<li>R不支持尾递归(tail recursion)，故递归不能过深</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

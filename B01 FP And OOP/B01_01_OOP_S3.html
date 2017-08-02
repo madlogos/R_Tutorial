@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>B01-01 面向对象编程和S3系统</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'B01-01 面向对象编程和S3系统',
+                        subtitle: 'R Engineer Track',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                        favIcon: 'B01_01_OOP_S3_files/logo.png',
+              },
+
+      // Author information
+      presenters: [
+            {
+        name:  '<a href="http://blog.sina.com.cn/madlogos">Yiying Wang</a>' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="../libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="../libs/pagedtable-1.1/js/pagedtable.js"></script>
+  <link href="../libs/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="../libs/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="../libs/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="../libs/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+    slides > slide:not(.nobackground):before {
+      font-size: 12pt;
+      content: "";
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      background: url(B01_01_OOP_S3_files/logo.png) no-repeat 0 50%;
+      -webkit-background-size: 30px 30px;
+      -moz-background-size: 30px 30px;
+      -o-background-size: 30px 30px;
+      background-size: 30px 30px;
+      padding-left: 40px;
+      height: 30px;
+      line-height: 1.9;
+    }
+  </style>
+
+  <link rel="stylesheet" href="../pres.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="B01_01_OOP_S3_files/logo.png"></aside>
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-08-02 20:37:35</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>目录</h2></hgroup><article >
+
+<ul>
+<li><a href='#3' title=''>面向对象编程(Object-oriented Programming)</a></li>
+<li><a href='#9' title=''>S3系统</a></li>
+<li><a href='#19' title=''>实例</a></li>
+</ul>
+
+<p class="footer">
+
+部分内容借鉴<strong>Hadley Wickham</strong> <a href='http://adv-r.had.co.nz' title=''>Advanced R</a>.
+
+</p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>面向对象编程(Object-oriented Programming)</h2></hgroup><article  id="object-oriented-programming">
+
+</article></slide><slide class=''><hgroup><h2>面向过程(POP) vs 面向对象(OOP)</h2></hgroup><article  id="pop-vs-oop" class="smaller">
+
+<table class = 'rmdtable'>
+<col width="6%" />
+<col width="45%" />
+<col width="47%" />
+<tr class="header">
+<th align="left">方面</th>
+<th align="left">面向过程 (以事件过程为中心)</th>
+<th align="left">面向对象 (以对象为中心)</th>
+</tr>
+<tr class="odd">
+<td align="left"><p>特点</p></td>
+<td align="left"><ul>
+<li>传统的编程思维，适合较简单/底层的线性事务</li>
+<li>自顶而下，流程化、线性、步骤化</li>
+</ul></td>
+<td align="left"><ul>
+<li>较为抽象，更接近人类的思维特点</li>
+<li>高度抽象，封装、继承、多态</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td align="left"><p>优点</p></td>
+<td align="left"><ul>
+<li>流程明确</li>
+<li>效率高</li>
+</ul></td>
+<td align="left"><ul>
+<li>结构清晰，易模块化</li>
+<li>易扩展、易维护，代码重用率高</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td align="left"><p>缺点</p></td>
+<td align="left"><ul>
+<li>扩展性差</li>
+<li>维护难度大</li>
+</ul></td>
+<td align="left"><ul>
+<li>效率低</li>
+<li>复杂性高</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td align="left"><p>举例</p></td>
+<td align="left"><ul>
+<li>(菜) -&gt; 洗菜过程 -&gt; (干净的菜)</li>
+<li>(干净的菜) -&gt; 炒菜过程 -&gt; (成品)</li>
+<li>先后调用洗菜和炒菜过程，输出成品</li>
+</ul></td>
+<td align="left"><ul>
+<li>厨师[类]，定义<洗菜>和<炒菜>方法</li>
+<li>菜[类]，定义<干净>、<成品>等属性</li>
+<li>厨师实例A.洗菜，厨师实例B.炒菜</li>
+</ul></td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<img src='B01_01_OOP_S3_files/figure-html/OOP.png' title='fig:'/>
+
+</article></slide><slide class=''><hgroup><h2>OOP的特征</h2></hgroup><article  id="oop">
+
+<ul>
+<li><strong>封装</strong>(Encapsulation)
+
+<ul>
+<li>把客观事物封装成抽象的类(class)，不同的类有不同的静态(属性attribute)及动态(方法method)特性</li>
+<li>类的属性和方法只开放给可信的类操作，对不可信的类隐藏</li>
+<li><em>例: 主厨有特别封装的方法（如“炒菜”），帮厨和杂工等都不能使用该方法</em></li>
+</ul></li>
+<li><strong>继承</strong>(Inheritance)
+
+<ul>
+<li>子类自动共享父类数据结构和方法的机制</li>
+<li>无需重写原来的类，即可对该类的功能进行扩展</li>
+<li><em>例：主厨和帮厨都继承厨师的通用方法，如“进入后厨”</em></li>
+</ul></li>
+<li><strong>多态</strong>(Polymorphism)
+
+<ul>
+<li>由继承产生的相关的不同类，其对象对同一消息会做出不同的响应</li>
+<li><em>例：同样的“拿薪水”方法，主厨和帮厨适用不同的计薪体系</em></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>基本操作</h2></hgroup><article >
+
+<ul>
+<li>定义
+
+<ul>
+<li>声明类(class): <code>汽车</code></li>
+<li>定义类的属性(颜色、厂牌、发动机等)和方法(启动、加速、刹车等)</li>
+</ul></li>
+<li>使用
+
+<ul>
+<li>初始化一个对象: 一辆汽车A</li>
+<li>对该对象应用方法: A.启动()</li>
+</ul></li>
+<li>扩展
+
+<ul>
+<li>根据需要创建子类(自动档、手动档)</li>
+<li>重写/扩展子类属性/方法(换档等)</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>OOP的设计原则: SOLID</h2></hgroup><article  id="oop-solid" class="smaller">
+
+<blockquote>
+<p>高内聚，低耦合。High cohesion and low couping.</p>
+</blockquote>
+
+<ul>
+<li><strong>S</strong>ingle Responsibility Principle 单一职责原则
+
+<ul>
+<li>一个类应该有且只有一个去改变它的理由(一个类应该只有一项工作)</li>
+</ul></li>
+<li><strong>O</strong>pen-Close Principle 开放封闭原则
+
+<ul>
+<li>对象或实体应该对扩展开放，对修改封闭</li>
+</ul></li>
+<li><strong>L</strong>iskov Substitution Principle 里氏替换原则
+
+<ul>
+<li>子类必须能够替换其父类，否则不应当设计为其子类</li>
+</ul></li>
+<li><strong>I</strong>nterface Segration Principle 接口隔离原则
+
+<ul>
+<li>将大的接口打散成多个小的独立的接口</li>
+</ul></li>
+<li><strong>D</strong>ependence Inversion Principle 依赖倒置原则
+
+<ul>
+<li>实体必须依靠抽象而不是具体实现(高层次的模块不应该依赖于低层次的模块，它们都应该依赖于抽象)</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>S3系统</h2></hgroup><article  id="s3">
+
+</article></slide><slide class=''><hgroup><h2>S3</h2></hgroup><article  id="s3-1">
+
+<ul>
+<li>S3源于S语言，是基于泛型函数(generic function)而非类层次结构的的独特的OO系统
+
+<ul>
+<li>泛型函数用法: <code>函数(对象, 参数列表)</code>
+
+<ul>
+<li>函数(如<code>summary</code>, <code>plot</code>)根据对象的类，自动调用适用的方法</li>
+</ul></li>
+<li>类层次结构的用法: <code>对象.方法(参数列表)</code></li>
+</ul></li>
+<li>R有三种OO系统: S3, S4和RC
+
+<ul>
+<li>可利用<code>pryr::otype</code>和<code>pryr::ftype</code>判定对象/函数属于哪个OO系统</li>
+</ul></li>
+<li>S3非常自由，不需要专门对类作出定义
+
+<ul>
+<li>直接创建对象，并定义类</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>创建类</h2></hgroup><article  class="smaller">
+
+<p>在S3中，创建和初始化可以同时完成</p>
+
+<pre class = 'prettyprint lang-r'>library(pryr)
+car1 &lt;- structure(list(manuf=&quot;VW&quot;, color=&quot;white&quot;, brand=&quot;Golf&quot;), class=&quot;Car&quot;)
+otype(car1)</pre>
+
+<pre >## [1] &quot;S3&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>str(car1)</pre>
+
+<pre >## List of 3
+##  $ manuf: chr &quot;VW&quot;
+##  $ color: chr &quot;white&quot;
+##  $ brand: chr &quot;Golf&quot;
+##  - attr(*, &quot;class&quot;)= chr &quot;Car&quot;</pre>
+
+<p>或</p>
+
+<pre class = 'prettyprint lang-r'>car1 &lt;- list(manuf=&quot;VW&quot;, color=&quot;white&quot;, brand=&quot;Golf&quot;)
+class(car1) &lt;- &quot;Car&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>创建子类</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>car2 &lt;- structure(list(manuf=&quot;VW&quot;, color=&quot;red&quot;, brand=&quot;Audi&quot;), 
+                  class=c(&quot;Auto&quot;, &quot;Car&quot;))
+car3 &lt;- structure(list(manuf=&quot;VW&quot;, color=&quot;black&quot;, brand=&quot;Santana&quot;), 
+                  class=c(&quot;Manual&quot;, &quot;Car&quot;))
+bike1 &lt;- structure(list(manuf=&quot;Yongjiu&quot;, color=&quot;yellow&quot;, brand=&quot;ofo&quot;), class=&quot;Bike&quot;)
+## 是否属于Car类?
+sapply(list(car2, car3, bike1), inherits, what=&quot;Car&quot;)</pre>
+
+<pre >## [1]  TRUE  TRUE FALSE</pre>
+
+</article></slide><slide class=''><hgroup><h2>方法: 泛型函数</h2></hgroup><article  id="-">
+
+<pre class = 'prettyprint lang-r'>## 泛型函数shiftGear，采取&quot;shiftGear&quot;方法
+shiftGear &lt;- function(x, from, to, ...) {
+    ## 校验数据结构
+    stopifnot(all(c(&quot;manuf&quot;, &quot;color&quot;, &quot;brand&quot;) %in% names(x)))
+    ## 调用shiftGear方法
+    UseMethod(&quot;shiftGear&quot;)
+}
+ftype(shiftGear)</pre>
+
+<pre >## [1] &quot;s3&quot;      &quot;generic&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>封装和多态</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>shiftGear.Manual &lt;- function(x, from, to, ...) {
+    if (from == to) {  ## 针对Manual类对象，定义专用的shiftGear方法
+        print(paste(class(x)[1], &quot;类: 不需要换档&quot;))
+    }else{
+        print(paste(class(x)[1], &quot;类:&quot;, x$color, x$manuf, x$brand, 
+                    &quot;踩离合，再从&quot;, from, &quot;档隔级换到&quot;, to))
+    }
+}
+shiftGear.Car &lt;- function(x, from, to, ...) {  ## Car类的通用shiftGear方法
+    paste(&quot;我不知道怎么给&quot;, class(x)[1], &quot;类&quot;, x$color, x$manuf, x$brand, &quot;换档&quot;)
+}
+shiftGear.default &lt;- function(x, ...) paste(class(x)[1], &quot;类: 无法换档&quot;)  ## 默认的shiftGear方法
+methods(shiftGear)</pre>
+
+<pre >## [1] shiftGear.Car     shiftGear.default shiftGear.Manual 
+## see &#39;?methods&#39; for accessing help and source code</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section" class="smaller">
+
+<ul>
+<li>不同类的车，对换档方法的响应是不同的</li>
+<li>换档方法被封装到手动档类，自动档的车不能使用换档方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>shiftGear(car2, 2, 4)</pre>
+
+<pre >## [1] &quot;我不知道怎么给 Auto 类 red VW Audi 换档&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>shiftGear(car3, 2, 2)</pre>
+
+<pre >## [1] &quot;Manual 类: 不需要换档&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>shiftGear(car3, 5, 2)</pre>
+
+<pre >## [1] &quot;Manual 类: black VW Santana 踩离合，再从 5 档隔级换到 2&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>shiftGear(bike1, 1, 2)</pre>
+
+<pre >## [1] &quot;Bike 类: 无法换档&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>继承</h2></hgroup><article >
+
+<ul>
+<li>定义Auto类下的一个子类</li>
+<li>该类对象自动继承Auto及Car类的所有属性和方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>notACar &lt;- list(manuf=&quot;Nobody&quot;, color=&quot;opaque&quot;, brand=&quot;Nobrand&quot;)
+class(notACar) &lt;- c(&quot;NotACar&quot;, class(car2))
+shiftGear(notACar)</pre>
+
+<pre >## [1] &quot;我不知道怎么给 NotACar 类 opaque Nobody Nobrand 换档&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>magrittr::%&gt;%</code></h2></hgroup><article  id="magrittr">
+
+<ul>
+<li>可以用magrittr包的%&gt;%实现管道化</li>
+<li>将OOP语法改为更主流的主谓格式: 对象.方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>x %&gt;% f(y)  ## 等价于
+f(x, y)</pre>
+
+<pre class = 'prettyprint lang-r'>library(magrittr)
+car3 %&gt;% shiftGear(4, 2)</pre>
+
+<pre >## [1] &quot;Manual 类: black VW Santana 踩离合，再从 4 档隔级换到 2&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>定义类的同时定义方法</h2></hgroup><article >
+
+<p>将方法定义在类内部 (建议用RC)</p>
+
+<pre class = 'prettyprint lang-r'>move &lt;- function(car, speed, ...) UseMethod(&quot;move&quot;)
+move.Car &lt;- function(car, speed, ...) 
+    print(paste(car$color, car$manuf, car$brand, &quot;时速&quot;, speed, &quot;行驶&quot;))
+car4 &lt;- structure(list(manuf=&quot;Toyota&quot;, color=&quot;white&quot;, brand=&quot;Accord&quot;,
+                       move=function(speed, ...) move(car4, speed, ...)),
+                  class=c(&quot;Auto&quot;, &quot;Car&quot;))
+car4$move(40)</pre>
+
+<pre >## [1] &quot;white Toyota Accord 时速 40 行驶&quot;</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>实例</h2></hgroup><article >
+
+</article></slide><slide class=''><hgroup><h2>需求</h2></hgroup><article >
+
+<div class="columns-2">
+<blockquote>
+<p>计算右表图形的面积<br> 部分计算公式重温如下:</p>
+</blockquote>
+
+<ul>
+<li>三角形面积 = 边 * 邻边 * sin(夹角) / 2
+
+<ul>
+<li>等边三角形面积 = 边 ^ 2 * sin(pi/3)</li>
+</ul></li>
+<li>平行四边形面积 = 边 * 邻边 * sin(夹角)</li>
+<li>矩形面积 = 边 * 邻边</li>
+<li>菱形面积 = 边 ^ 2 * sin(夹角)</li>
+</ul>
+
+<p class="forceBreak">
+
+</p>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left"></th>
+<th align="left">shape</th>
+<th align="right">edge</th>
+<th align="right">neighbor</th>
+<th align="right">angle</th>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">三角形</td>
+<td align="right">10</td>
+<td align="right">20</td>
+<td align="right">45</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">平行四边形</td>
+<td align="right">10</td>
+<td align="right">20</td>
+<td align="right">60</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">矩形</td>
+<td align="right">10</td>
+<td align="right">20</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">菱形</td>
+<td align="right">10</td>
+<td align="right">NA</td>
+<td align="right">45</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">正方形</td>
+<td align="right">10</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">等边三角形</td>
+<td align="right">10</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>一般解决方案</h2></hgroup><article >
+
+<ul>
+<li>笨拙，但是实现起来非常直观
+
+<ul>
+<li>逐行套用公式硬算</li>
+<li>循环: 遍历各行，根据shape套用公式</li>
+<li>向量计算: 根据shape分割数据，矢量化套用函数</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>areas &lt;- c(with(shapes[1,], edge * neighbor * sin(pi*angle/180) / 2),
+           with(shapes[2,], edge * neighbor * sin(pi*angle/180)),
+           with(shapes[3,], edge * neighbor),
+           with(shapes[4,], edge ^ 2 * sin(pi*angle/180)),
+           with(shapes[5,], edge ^ 2),
+           with(shapes[6,], edge ^ 2 * sin(pi*60/180)) / 2)
+areas</pre>
+
+<pre >## [1]  70.71068 173.20508 200.00000  70.71068 100.00000  43.30127</pre>
+
+</article></slide><slide class=''><hgroup><h2>建模思路</h2></hgroup><article >
+
+<ol>
+<li>建立三角形&quot;Triangle&quot;、平行四边形&quot;Parallelogram&quot;两个大类
+
+<ul>
+<li>建立calcArea方法，分别对两个大类计算面积</li>
+</ul></li>
+<li>在两个大类下建立等边三角形、矩形、菱形等子类
+
+<ul>
+<li>建立imputeNeighbor方法，对各个子类作邻边补全</li>
+<li>建立imputeAngle方法，对各个子类作夹角补全</li>
+</ul></li>
+<li>给所有对象正确赋类</li>
+<li>应用imputeNeighbor、imputeAngle和calcArea方法</li>
+</ol>
+
+</article></slide><slide class=''><hgroup><h2>实现-1</h2></hgroup><article  id="-1" class="smaller">
+
+<ul>
+<li>建立calcArea方法</li>
+<li>注意计算sin时，角度转为弧度</li>
+<li>为避免类型错误，外置一个工具函数toNum，将edge, neighbor, angle转为数值</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>toNum &lt;- function(shape, ...){
+    shape$neighbor &lt;- as.numeric(shape$neighbor)
+    shape$edge &lt;- as.numeric(shape$edge)
+    shape$angle &lt;- as.numeric(shape$angle)
+    return(shape)
+}</pre>
+
+<pre class = 'prettyprint lang-r'>calcArea &lt;- function(shape, ...) UseMethod(&quot;calcArea&quot;)  ## 泛型函数
+calcArea.Triangle &lt;- function(shape, ...)   ## 三角形通用公式
+    with(toNum(shape), edge * neighbor * abs(sin(pi * angle / 180)) / 2)
+calcArea.Parallelogram &lt;- function(shape, ...)   ## 平四通用公式
+    with(toNum(shape), edge * neighbor * abs(sin(pi * angle / 180)))
+calcArea.default &lt;- function(shape, ...) NA  ## 默认不计算面积</pre>
+
+</article></slide><slide class=''><hgroup><h2>实现-2</h2></hgroup><article  id="-2" class="smaller">
+
+<ul>
+<li>编写工具函数ifNA (如为NA，则返回替补值)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>ifNA &lt;- function(x, y) if (is.na(x)) y else x</pre>
+
+<div class="col-2L">
+<ul>
+<li>建立imputeNeighbor方法(如为NA，用edge替补)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>imputeNeighbor &lt;- function(shape, ...)   ## 泛型函数
+    UseMethod(&quot;imputeNeighbor&quot;)
+
+imputeNeighbor.default &lt;- function(shape, ...){  
+    shape$neighbor &lt;- with(
+        shape, ifNA(neighbor, edge))
+    return(shape)
+}</pre></div>
+
+<div class="col-2R">
+<ul>
+<li>建立imputeAngle方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>imputeAngle &lt;- function(shape, ...)   ## 泛型函数
+    UseMethod(&quot;imputeAngle&quot;)
+
+imputeAngle.RegularTriangle &lt;- function(shape, ...) {
+    shape$angle &lt;- ifNA(shape$angle, 60)
+    return(shape)
+}
+imputeAngle.Square &lt;- function(shape, ...) {
+    shape$angle &lt;- ifNA(shape$angle, 90)
+    return(shape)
+}
+imputeAngle.ExactSquare &lt;- imputeAngle.Square
+imputeAngle.default &lt;- function(shape, ...) 
+    return(shape)</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>实现-3</h2></hgroup><article  id="-3" class="smaller">
+
+<div class="columns-2">
+<ul>
+<li>类名</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>newshapes &lt;- shapes
+newshapes$shapeclass &lt;- c(
+    &quot;Triangle&quot;, rep(&quot;Parallelogram&quot;, 4), &quot;Triangle&quot;)
+newshapes$shape &lt;- c(
+    &quot;Triangle&quot;, &quot;Parallelogram&quot;, &quot;Square&quot;, &quot;Rhombus&quot;, 
+    &quot;ExactSquare&quot;, &quot;RegularTriangle&quot;)</pre>
+
+<ul>
+<li>赋类、赋子类</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>newshapes &lt;- apply(newshapes, 1, function(x) 
+    structure(as.list(x), class=unname(
+        x[c(&#39;shape&#39;, &#39;shapeclass&#39;)])))</pre>
+
+<ul>
+<li>调整后的数据结构</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>str(newshapes)</pre>
+
+<p class="forceBreak">
+
+</p>
+
+<pre >List of 6
+ $ :List of 5
+  ..$ shape     : chr &quot;Triangle&quot;
+  ..$ edge      : chr &quot;10&quot;
+  ..$ neighbor  : chr &quot;20&quot;
+  ..$ angle     : chr &quot;45&quot;
+  ..$ shapeclass: chr &quot;Triangle&quot;
+  ..- attr(*, &quot;class&quot;)= chr [1:2] 
+        &quot;Triangle&quot; &quot;Triangle&quot;
+ $ :List of 5
+  ..$ shape     : chr &quot;Parallelogram&quot;
+  ..$ edge      : chr &quot;10&quot;
+  ..$ neighbor  : chr &quot;20&quot;
+  ..$ angle     : chr &quot;60&quot;
+  ..$ shapeclass: chr &quot;Parallelogram&quot;
+  ..- attr(*, &quot;class&quot;)= chr [1:2] 
+        &quot;Parallelogram&quot; &quot;Parallelogram&quot;
+ $ :List of 5
+  ..$ shape     : chr &quot;Square&quot;
+  ..$ edge      : chr &quot;10&quot;
+  ..$ neighbor  : chr &quot;20&quot;
+  ..$ angle     : chr NA
+  ..$ shapeclass: chr &quot;Parallelogram&quot;
+  ..- attr(*, &quot;class&quot;)= chr [1:2] 
+        &quot;Square&quot; &quot;Parallelogram&quot;
+ ...</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>实现-4</h2></hgroup><article  id="-4">
+
+<ul>
+<li>补全参数，计算面积</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>newareas &lt;- newshapes %&gt;% lapply(imputeNeighbor) %&gt;% lapply(imputeAngle) %&gt;% 
+    sapply(calcArea)</pre>
+
+<ul>
+<li>和传统解法结果相同</li>
+<li>如类型增/改，只需补充impute和calc过程，即可扩展，框架不变</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>rbind(legacySolution=areas, oopSolution=newareas)</pre>
+
+<pre >##                    [,1]     [,2] [,3]     [,4] [,5]     [,6]
+## legacySolution 70.71068 173.2051  200 70.71068  100 43.30127
+## oopSolution    70.71068 173.2051  200 70.71068  100 43.30127</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1" class="grayblue">
+
+<p style="font-size:100px;font-family:'Arial Black'">
+
+<br/>Thank you!
+
+</p>
+
+<p><br/><a href='http://madlogos.github.io/R_Tutorial' title=''>回到主目录</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
