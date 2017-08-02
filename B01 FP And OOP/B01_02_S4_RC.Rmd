@@ -1,0 +1,618 @@
+---
+title: B01-02 S4系统和RC系统
+subtitle: R Engineer Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+Sys.setlocale("LC_CTYPE", "Chs")
+library(magrittr)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "B01_02_S4_RC_files/figure-html/")
+```
+
+## 目录
+
+- [S4](#3)
+- [refClass(RC)](#15)
+- [R6](#25)
+
+<p class="footer">Copyright © 2016-2017 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span><br>部分内容借鉴**Hadley Wickham** [Advanced R](http://adv-r.had.co.nz).</p>
+
+# S4
+
+## S3 vs S4
+
++------+----------------------------------------------+-----------------------------------------------+
+| 方面 | S3                                           | S4                       |
++======+==============================================+===============================================+
+| 定义 | 不需要正式定义，可直接创建对象               | 必须先正式定义，再创建实例 |
++------+----------------------------------------------+-----------------------------------------------+
+| 封装 | - 封装性较差，可以自由修改类对象部件         | - 封装更严谨，所有部件都可校验合法性 |
+|      | - 一般采用`$`访问内部部件                    | - 需要用`@`访问内部部件(slot) |
++------+----------------------------------------------+-----------------------------------------------+
+| 继承 | 继承关系松散                                 | 继承更严谨，需要用contain正式定义 |
++------+----------------------------------------------+-----------------------------------------------+
+| 调度 | 方法调度(dispatch)时只基于泛型函数的一个参数 | 方法调度时可基于泛型函数的多个参数 |
++------+----------------------------------------------+-----------------------------------------------+
+
+## 创建类
+
+- 创建Staff类
+    - slots定义属性字段类型
+    - prototype定义字段初始值
+
+```{r}
+setClass("Staff", slots=list(
+    name="character", age="numeric", gender="character", level="integer"),
+    prototype=list(gender="Male"))
+```
+
+- setValidity控制取值合法性
+
+```{r}
+setValidity("Staff", function(object) {
+    if (object@gender %in% c("Male", "Female")) TRUE else 
+        print("Gender should always be `Male` or `Female`.")
+    if (object@age >0) TRUE else print("Age should be positive.")
+}) %>% invisible()
+```
+
+## 实例化
+
+- new()函数创建实例
+
+```{r}
+aaron <- new("Staff", name="Aaron", age=30, level=9L)
+```
+
+```r
+alice <- new("Staff", name="Alice", gender="F")  ## 未通过校验，返回报错信息
+```
+
+```
+[1] "Gender should always be Male or Female."
+Error in if (object@age > 0) TRUE else print("Age should be positive.") : 
+  argument is of length zero
+```
+
+```{r}
+alice <- new("Staff", name="Alice", age=29, gender="Female", level=5L)
+```
+
+---
+
+- 对象结构
+
+```{r}
+pryr::otype(aaron)
+str(aaron)
+```
+
+---
+
+- 访问对象部件
+    - `@`(相当于$) 或 `slot()`(相当于[[)
+
+```{r}
+aaron@name
+slot(alice, "age")
+```
+
+## 类继承
+
+<div class="col-2L">
+
+- 创建子类
+    - contains定义父类
+
+```{r}
+setClass("Employee", slots=list(
+    leader="Staff", rate="numeric"), 
+    prototype=list(rate=100),
+    contains="Staff")
+```
+
+- 子类实例化
+
+```{r}
+adam <- new("Employee", name="Adam", 
+    age=20, level=3L, leader=aaron)
+```
+
+</div><div class="col-2R">
+
+- 访问部件
+
+```{r}
+adam@leader
+```
+
+</div>
+
+## 定义泛型(generics)
+
+- 需定义默认方法函数
+    - 后续定义方法时用到rate, index参数，故泛型中要先作定义
+    - def中定义函数，参数列表要包含该泛型所调度的方法中所有出现过的参数
+    - 必须用standardGeneric函数
+
+```{r}
+library(magrittr)
+setGeneric("calcBenefit", function(object, rate) {
+    standardGeneric("calcBenefit")
+}) %>% invisible()
+```
+
+## 定义方法(method)
+
+- 津贴计算公式为level*rate
+    - 如为Employee，提醒其与领导确认金额
+    - 如为Staff，不指定rate的话，则为Employee类默认rate的1.2倍
+
+<div class="col-2L">
+
+```{r}
+setMethod(
+    "calcBenefit", signature("Staff"), 
+    function(object, rate) {
+        o <- object@level * 
+            if (missing(rate)) 
+                1.2 * new("Employee")@rate 
+            else rate
+        names(o) <- object@name
+        return(o)
+}) %>% invisible()
+```
+
+</div><div class="col-2R">
+
+```{r}
+setMethod(
+    "calcBenefit", signature("Employee"), 
+    function(object, rate) {
+        o <- object@level * 
+            if (missing(rate)) 
+                object@rate 
+            else rate
+        names(o) <- c(paste(
+            object@name, ": please confirm",
+            "the amount with your leader", 
+            object@leader@name))
+        return(o)
+}) %>% invisible()
+```
+
+</div>
+
+## 检索 {.smaller}
+
+```{r}
+getSlots("Employee")
+```
+
+<div class="col-2L">
+
+```{r}
+hasMethod("calcBenefit", "Staff")
+```
+
+```{r}
+findMethod("calcBenefit", "Staff")
+```
+
+</div><div class="col-2R">
+
+```{r}
+getMethod("calcBenefit", "Staff")
+```
+
+</div>
+
+## 方法调度
+
+```{r}
+mapply(calcBenefit, object=c(aaron, adam, alice), rate=c(100, 50, 90))
+sapply(list(aaron, adam, alice), calcBenefit)
+```
+
+## 调度的是哪种方法? {.smaller}
+
+```{r}
+selectMethod("calcBenefit", "Employee")
+```
+
+# refClass (RC)
+
+## 引用类(RC)
+
+- 引用类是R 2.12开始引入的新OO系统，也叫R5
+- RC与S3、S4完全不同:
+    
++----+----------------------------------------------+-----------------------------------------------+
+| #  | S3,S4                                        | RC                       |
++====+==============================================+===============================================+
+| 1  | 方法的实质是函数                             | 方法的实质是对象 |
++----+----------------------------------------------+-----------------------------------------------+
+| 2  | 遵循R的"修改副本"设计，对象不能修改          | 对象可以修改，其副本也一同修改 |
++----+----------------------------------------------+-----------------------------------------------+
+| 3  | OO性质不典型                                 | 与其他OO语言(Python, Java, C#)更为接近 |
++----+----------------------------------------------+-----------------------------------------------+
+
+- RStudio的Winston Chang重写了RC，形成R6系统
+- RC越来越受高级开发者欢迎，而S4的应用则存在争议
+
+## 创建RC
+
+- `setRefClass()`命令和`setClass()`很接近
+
+```{r}
+Car <- setRefClass("Car", fields=list(
+    manuf="character", brand="character", status="character"))
+```
+
+- 创建子类 (contains)
+
+```{r}
+Manual <- setRefClass("Manual", fields=list(auto="logical"), contains="Car")
+Auto <- setRefClass("Auto", fields=list(auto="logical"), contains="Car")
+```
+
+## 实例化
+
+- 调用内置方法`$new()`
+
+```{r}
+car1 <- Car$new(manuf="VW", brand="Golf")
+car2 <- Manual$new(manuf="VW", brand="Santana", auto=FALSE)
+```
+
+<div class="col-2L">
+
+```{r}
+car1
+```
+
+</div><div class="col-2R">
+
+```{r}
+car2
+```
+
+</div>
+
+## 专用的`$copy()`方法
+
+<div class="col-2L">
+
+- 用赋值方法不能实现副本，而只是链接
+
+```{r}
+car3 <- car2
+car2$brand <- "Jetta"
+c(car2=car2$brand, car3=car3$brand)
+```
+
+</div><div class="col-2R">
+
+- 必须用`$copy()`方法
+
+```{r}
+car4 <- car2$copy()
+car2$brand <- "Santana"
+c(car2=car2$brand, car3=car3$brand, 
+  car4=car4$brand)
+```
+
+</div>
+
+## 定义方法 {.smaller}
+
+- 调用内置方法`$methods()`
+
+<div class="col-2L">
+
+```{r}
+charTime <- function(time=Sys.time()) 
+    format(time, "%F %T")
+Car$methods(
+    init=function() {
+        status <<- "running"
+        cat(charTime(), "启动！", status)
+    },
+    end=function() {
+        status <<- "stopped"
+        cat(charTime(), "停车!", status)
+    },
+    move=function(speed){
+        status <<- "running"
+        cat(charTime(), manuf, brand, 
+            "时速", speed, "前进...\n", status)
+    },
+    brake=function(){
+        status <<- "stopped"
+        cat(charTime(), "刹车", status)
+    },
+    shiftGear=function(from, to) 
+        cat("不知道变速箱的类型", status)
+)
+```
+
+</div><div class="col-2R">
+
+- 用超级赋值号`<<-`实现对象自我修改
+- .self代表整个对象, .refClassRef代表类定义
+- 子类Manual和Auto创建在前，不能自动继承Car定义的方法
+
+```{r}
+Manual <- setRefClass("Manual", fields=list(
+    auto="logical"), contains="Car")
+Auto <- setRefClass("Auto", fields=list(
+    auto="logical"), contains="Car")
+Manual$methods(
+    move=function(speed) 
+        cat("\n注意及时换档!\n", callSuper(speed)),
+    shiftGear=function(from, to){
+        cat(paste(
+            charTime(), manuf, brand, "从", from, 
+            "档换到", to, "档\n", status))
+    }
+)
+Auto$methods(
+    shiftGear=function(from, to) cat("不需手动换档")
+)
+```
+
+</div>
+
+## 特殊的方法: $initialize() {.smaller}
+
+- `$initialize()`方法: 对象初始化时运行(`?setRefClass`)
+- `$callSuper()`用于方法内部，调用父类的同名方法
+
+```{r}
+Manual$methods(initialize=function(...) {callSuper(...); auto <<- FALSE})
+Auto$methods(initialize=function(...) {callSuper(...); auto <<- TRUE})
+```
+
+```{r}
+car5 <- Manual$new(manuf="GM", brand="Buick")
+car6 <- Auto$new(manuf="Tata", brand="RangeRover")
+```
+
+<div class="columns-2">
+
+```{r}
+car5  # 自动给auto赋值FALSE
+```
+
+```{r}
+car6  # 自动给auto赋值TRUE
+```
+
+</div>
+
+## 特殊的方法: $finalize()
+
+- `$finalize()`方法: 删除对象并内存清理(`gc()`)时运行(`?setRefClass`)
+
+```{r}
+Manual$methods(finalize=function() 
+    cat(paste(charTime(), ":", manuf, brand, "手动被摧毁!")))
+Auto$methods(finalize=function() 
+    cat(paste(charTime(), ":", manuf, brand, "自动被摧毁!")))
+```
+
+```r
+rm(car5, car6)
+invisible(gc())
+```
+
+```{r, echo=FALSE}
+car5$finalize()
+car6$finalize()
+```
+
+## 方法调度(1) {.smaller}
+
+<div class="col-2L">
+
+```{r}
+car1$init(); Sys.sleep(1)
+cat("\n\n")
+car1$move(40); Sys.sleep(2)
+car1$brake(); Sys.sleep(0.5)
+```
+
+</div><div class="col-2R">
+
+```{r}
+car1$init(); Sys.sleep(1)
+car1$shiftGear(1, 4); Sys.sleep(1)
+cat("\n\n")
+car1$end()
+```
+
+</div>
+
+## 方法调度(2) {.smaller}
+
+<div class="col-2L">
+
+```{r}
+car2$init(); Sys.sleep(1)
+cat("\n\n")
+car2$move(40); Sys.sleep(2)
+car2$brake(); Sys.sleep(0.5)
+```
+
+</div><div class="col-2R">
+
+```{r}
+car2$init(); Sys.sleep(1)
+car2$shiftGear(1, 4); Sys.sleep(1)
+cat("\n\n")
+car2$end()
+```
+
+</div>
+
+# R6
+
+## R6
+
+- [R6](https://github.com/wch/R6)是Winston Chang (RStudio) 开发的OO系统
+- RC是基于S4的，R6则重写了RC
+- R6的用法基本和RC类似，但增加了一些优点:
+    - 支持公用(public)和私有(private)方法
+    - 动态绑定(active)和继承(inheritance)
+    - 速度更快(2-3倍)，占用内存更低
+
+## 创建R6类 {.smaller}
+
+- public和private均可包含字段(属性)和函数(方法)
+    - private定义的字段和函数无法公开访问
+- `self$`代表当前对象公开部分，`private$`代表私有部分
+
+```{r}
+library(R6)
+Cat <- R6Class("Cat",
+    public=list(
+        name=NULL, color=NULL,
+        initialize=function(name=NA, color=NA){
+            self$name <- name
+            self$color <- color
+            private$dob <- base::Sys.time()
+            self$mew()
+        },
+        mew=function() print(paste0(self$name, ": mew~")),
+        chaseMouse=function() print(paste0(self$name, "'s chasing a mouse!"))
+    ),
+    private=list(
+        dob=NULL
+    )
+)
+```
+
+## 实例化 
+
+<div class="col-2L">
+
+- 实例化的同时即完成初始化
+
+```{r}
+tom <- Cat$new("Tom", "grayblue")
+```
+
+- 调用公开方法
+
+```{r}
+tom$chaseMouse()
+```
+
+</div><div class="col-2R">
+
+- 修改和访问公开属性
+
+```{r}
+tom$color <- "black"; tom$color
+```
+
+- 私有属性/方法无法直接访问
+
+```{r}
+tom$dob
+```
+
+</div>
+
+## 增/改属性/方法: $set() {.smaller}
+
+```{r}
+Cat$set("public", "weight", NA)
+Cat$set("public", "run", function() print(paste0(self$name, "' running!")))
+Cat$set("public", "initialize", function(name=NA, color=NA, weight=NA){
+    self$name <- name
+    self$color <- color
+    self$weight <- weight
+    private$dob <- base::Sys.time()
+    self$mew()
+}, overwrite=TRUE)
+```
+
+- 定义属性/方法后新增的对象获得新属性/方法
+
+```{r}
+alice <- Cat$new("Alice", "white", 10)
+alice$run()
+```
+
+## 动态绑定 {.smaller}
+
+- 动态绑定用起来像字段，但实际是一个钩子函数
+
+```{r}
+Cat$set("active", "wgt2Kg", function(val) {
+    if (missing(val)) return(self$weight * 0.4536)
+    else self$weight <- val/0.4536}, overwrite=TRUE)
+```
+
+<div class="col-2L">
+
+- kitty是8磅的白猫，动态绑定自动换算为千克
+
+```{r}
+kitty <- Cat$new("Kitty", "white", 8)
+kitty$wgt2Kg
+```
+
+</div><div class="col-2R">
+
+- 如初始不给磅数，动态绑定千克数，可反推出磅数
+
+```{r}
+kitty <- Cat$new("Kitty", "white")
+kitty$weight
+kitty$wgt2Kg <- 3.63; kitty$weight
+```
+
+</div>
+
+## 继承
+
+```{r}
+ExoticShorthair <- R6Class(
+    inherit=Cat,
+    public=list(
+        behave=function() print(paste(self$name, "simply eats and sleeps.")),
+        mew=function() print(paste0(self$name, ": (too lazy to mew)"))
+    )
+)
+```
+
+```{r}
+garfield <- ExoticShorthair$new("Garfield", "orange", 30)
+garfield$behave()
+```
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+
+

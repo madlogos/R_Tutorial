@@ -1,0 +1,520 @@
+---
+title: B01-05 函数式编程
+subtitle: R Engineer Track
+author: 
+  name: "HMS"
+  company: "[Aetna International](https://www.aetnainternational.com)"
+date: "`r Sys.time()`"
+output: 
+  ioslides_presentation: 
+    css: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/rdeck_Violet.css
+    df_print: paged
+    fig_caption: yes
+    fig_height: 5.5
+    fig_width: 8
+    highlight: pygments
+    lib_dir: libs
+    logo: //ship-oa-001/China_Health_Advisory/Analytics/GUIDE And TOOLS/css/icons/AetnaIcons/Violet.png
+    self_contained: no
+    widescreen: yes
+    mathjax: local
+---
+
+```{r setup, include=FALSE}
+## User-defined options come here
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.path = "B01_05_funcProg_files/figure-html/")
+```
+
+## 目录
+
+- [函数式编程(Functional Programming)](#3)
+- [FP的常用技术](#11)
+
+<p class="footer">Copyright © 2016-2017 Aetna Inc. <span class="cranberry">内部使用，请勿外传。</span><br>部分内容借鉴**Hadley Wickham** [Advanced R](http://adv-r.had.co.nz).</p>
+
+# 函数式编程(Functional Programming)
+
+## 简介
+
+- [函数式编程(functional programming)](https://en.wikipedia.org/wiki/Functional_programming)，与指令性编程(imperative programming)相对，是以函数为核心的编程范式(paradigm)
+
+- 在FP范式中，函数是一等公民 (像变量一样，可以被创建，被作为参数，被作为返回结果)
+
+- FP思想起源于Princeton Univ的 _Alonzo Church_ 提出的$\lambda$演算
+
+- FP最早应用在Lisp语言，如今Python、JavaScript、Haskell、Erlang、Clojure、R、Mathematica等均支持FP
+
+- FP是学术界为数值计算而设计出来的，尤其适合数值计算
+
+- R在本质上是一种FP语言 (回忆一下apply家族)
+
+## 一个例子
+
+> 一个调查问卷，采集了5个人对a-f六个问题的答案。部分答案为-9，表示漏填    
+> **要求**: 将df数据集里的-9都改为NA
+
+```{r}
+set.seed(1234)
+df <- as.data.frame(matrix(sample(c(1:5, -9), 30, replace=TRUE), ncol=6))
+names(df) <- letters[1:6]; print(df)
+```
+
+------
+
+<div class="col-2L">
+
+- 传统指令性编程思路
+
+```r
+df$a[df$a == -9] <- NA
+df$b[df$b == -9] <- NA
+df$c[df$c == -9] <- NA
+df$d[df$d == -9] <- NA
+df$e[df$e == -9] <- NA
+df$f[df$f == -9] <- NA
+```
+
+问题来了
+
+- 如果有一万列怎么办？
+- 如果拷贝错了怎么办？
+
+</div><div class="col-2R">
+
+- 来个循环?
+
+```r
+for (col in letters[1:6]){
+    df[df[, col] == -9, col] <- NA
+}
+```
+
+或
+
+```r
+for (col in letters[1:6]){
+    df[, col][df[, col] == -9] <- NA
+}
+```
+
+- 代码表达太繁琐
+- 执行效率不高(显式循环)
+
+</div>
+
+----
+
+<div class="col-2L">
+
+- 写个函数?
+
+```r
+symb2na <- function(x) {
+    x[x == -9] <- NA; x
+}
+df$a <- symb2na(df$a)
+df$b <- symb2na(df$b)
+df$c <- symb2na(df$c)
+df$d <- symb2na(df$d)
+df$e <- symb2na(df$e)
+df$f <- symb2na(df$f)
+```
+
+- 看起来还是那么繁琐
+
+</div><div class="col-2R">
+
+- 正宗的FP
+
+```r
+symb2na <- function(x) {
+    x[x == -9] <- NA
+    x
+}
+df[] <- lapply(df, symb2na)
+```
+
+或用匿名函数，连函数名都省了
+
+```r
+df[] <- lapply(df, function(x) {
+    x[x == -9] <- NA
+    x
+})
+```
+
+</div>
+
+
+## 进一步扩展
+
+<div class="col-2L">
+
+- 假如-9、-99都表示NA，如何扩展symb2na函数，使它适应性更广?
+
+```r
+symb2na <- function(x, symb){
+    x[x %in% symb] <- NA
+    x
+}
+df[] <- lapply(df, symb2na, 
+    symb=c(-9, -99))
+```
+
+</div><div class="col-2R">
+
+- 假如不光-9转NA，允许自定义转换方式(如-9、-99转9)，怎样扩展?
+
+```r
+replaceVal <- function(x, v1, v2){
+    x[x %in% v1] <- v2
+    x
+}
+df[] <- lapply(df, replaceVal, 
+    v1=c(-9, -99), v2=9)
+```
+
+</div>
+
+## FP的特点
+
+- 不修改状态(status)、数据不可变(immutable data)
+    - 调用环境内对象的状态和变量不会变化: 没有副作用(side effect) 
+    - 不需要维护状态、修改变量，减少了bug
+- 函数可以当对象用 (一等公民)
+    - 可以用函数来产生函数 (工厂函数)
+    - 可以把函数组成列表投入运算
+- 用表达式(expression)，而不是语句(statement)
+    - 关注求值，减少读写(I/O)
+- 引用透明(referential transparency)
+    - 函数输出只依赖于输入参数: 结果确定性更高
+    - R并不是纯函数式编程语言，不能做到完全的引用透明
+- 惰性求值(lazy evaluation)
+
+## FP的优缺点
+
+<div class="col-2L">
+
+#### 优点
+
+- 代码简洁优雅
+- 便于模块化设计
+    - 函数封装
+    - 可复用性增强
+- 接近自然语言，更加易读
+- 利于并行开发和部署
+- 便于调试(debug)
+- 便于单元测试(unit test)
+
+</div><div class="col-2R">
+
+#### 缺点
+
+- 相对难学
+- 纯函数式编程有时并不合理
+    - 有时候就是需要I/O，副作用难以避免
+    - R的函数无法避免外环境影响，做不到纯函数
+
+R是多范式的，应当灵活综合OOP和FP的优点
+
+</div>
+
+# FP的常用技术
+
+## 常用技术包括
+
+- 匿名函数 (anonymous function)
+    - map和reduce: `apply`家族
+- 函数闭包 (closure): 函数写出的函数
+    - 高阶函数 (high order function): 以函数为形参
+- 函数列表 (lists of functions)
+- 管道化 (pipeline): `%>%`
+- 递归 (recursing): 简化代码，描述问题本身
+
+## 匿名函数 
+
+<div class="col-2L">
+
+匿名函数同样有头、体、环境
+
+
+```{r}
+formals(function(x) mean(x)+c(1,-1)*sd(x))
+body(function(x) mean(x)+c(1,-1)*sd(x))
+environment(function(x) 
+    mean(x)+c(1, -1)*sd(x))
+```
+
+</div><div class="col-2R">
+
+匿名函数最常用于`apply`家族函数
+
+```{r}
+lapply(iris[,1:4], function(x) 
+    mean(x)+c(1, -1)*sd(x))
+```
+
+</div>
+
+## 函数闭包 {.smaller}
+
+<div class="col-2L">
+
+`square`和`cube`都是函数闭包
+
+```{r}
+power <- function(exp){
+    function(x) x ^ exp
+}
+square <- power(2)
+cube <- power(3)
+```
+
+`power`用来生成函数闭包，叫**工厂函数**(function factory)
+
+```{r}
+c(square(3), cube(3))
+c(power(2)(3), power(3)(3))
+```
+
+</div><div class="col-2R">
+
+`square`和`cube`函数定义是一样的
+
+```{r}
+all.equal(square, cube)
+```
+
+unenclose后则不同
+
+```{r}
+library(pryr)
+c(unenclose(square), unenclose(cube))
+```
+
+</div>
+
+## FP不改变状态，但闭包可以
+
+<div class="col-2L">
+
+函数闭包会保留数据
+
+```{r}
+new_counter <- function() {
+  i <- 0
+  function() {
+    i <<- i + 1
+    i
+  }
+}
+counter1 <- new_counter()
+counter2 <- new_counter()
+```
+
+- 通过函数闭包修改父环境数据，可以实现状态改变
+- 复杂的情形，建议通过设置refClass来实现
+
+</div><div class="col-2R">
+
+测一下
+
+```{r}
+counter1()
+counter1()
+counter1()
+counter2()
+```
+
+</div>
+
+## 高阶函数 - Reduce & Map {.smaller}
+
+<div class="col-2L">
+
+- 有4个列表，各包含mtcars的一列参数和型号名
+
+```{r}
+library(magrittr)
+a <- lapply(1:4, function(i) data.frame(
+    I(rownames(mtcars)[1:5]), mtcars[1:5,i]) %>% 
+        `names<-`(c("Car", names(mtcars)[i])))
+str(a, vec.len=1)
+```
+
+</div><div class="col-2R">
+
+- 进行merge合并，普通用法需要三次merge
+
+```r
+merge(merge(merge(a[[1]], a[[2]]), 
+    a[[3]]), a[[4]])
+```
+
+
+- 直接用`Reduce`
+
+```r
+Reduce(merge, a)
+```
+
+```
+                Car  mpg cyl disp  hp
+1        Datsun 710 22.8   4  108  93
+2    Hornet 4 Drive 21.4   6  258 110
+3 Hornet Sportabout 18.7   8  360 175
+4         Mazda RX4 21.0   6  160 110
+5     Mazda RX4 Wag 21.0   6  160 110
+```
+
+- `Map` 就等于 `mapply`
+
+</div>
+
+## 高阶函数 - Filter & Find/Position
+
+<div class="col-2L">
+
+- a的四个列表中，第二列最小值超过100的是
+
+```{r}
+Filter(function(df) min(df[,2]>100), a)
+```
+
+- `Find`返回第一个满足条件的元素
+- `Position`返回第一个满足条件的元素的索引号
+
+</div><div class="col-2R">
+
+- a的四个列表中，第二列最大值不超过10的列表是
+
+```{r}
+Filter(Negate(function(df) max(df[,2]>10)), 
+       a)
+```
+
+</div>
+
+## 自定义高阶函数
+
+<div class="col-2L">
+
+- [泛函(functional)](B01_06_funl_opr.html)
+
+```{r}
+set.seed(12345)
+f <- function(fun, ...){
+    stopifnot(is.function(fun))
+    fun(...)
+}
+f(mean, 1:10)
+matrix(f(rnorm, 6, 0, 1), nrow=2)
+```
+
+</div><div class="col-2R">
+
+- [函数算子(FO)](B02_06_funl_opr.html)
+
+```{r}
+set.seed(12345)
+hiOrdFun <- function(fun, ...){
+    stopifnot(is.function(fun))
+    function(...) fun(...)
+}
+hiOrdFun(mean)(1:10)
+matrix(hiOrdFun(rnorm)(6, 0, 1), nrow=2)
+```
+
+</div>
+
+## 函数列表 List of functions
+
+将函数组成列表，结合高阶函数，可以套用`apply`家族函数
+
+<div class="col-2L">
+
+求一组数据的mean、sd、fivenum:
+
+```{r}
+x <- c(sample(1:100, 10), NA)
+list(mean(x, na.rm=TRUE), 
+     sd(x, na.rm=TRUE), fivenum(x))
+```
+
+</div><div class="col-2R">
+
+函数列表解决方案
+
+```{r}
+f.lst <- list(mean, sd, fivenum)
+lapply(f.lst, f, x, na.rm=TRUE)
+```
+
+</div>
+
+## 进一步应用
+
+工厂函数 + 函数列表 + 高阶函数 + 匿名函数
+
+```{r}
+lst.fun <- lapply(f.lst, hiOrdFun)
+lapply(lst.fun, function(f) f(x, na.rm=TRUE))
+```
+
+## 函数列表全局化
+
+<div class="col-2L">
+
+```{r}
+power.fun <- function(exp, ...)
+    function(...) list(...)[[1]] ^ exp
+f.lst <- c(square=2, cube=3, powfour=4)
+pow <- lapply(f.lst, power.fun)
+```
+
+```r
+c(pow$square(4), pow$cube(4), 
+    pow$powfour(4))
+```
+
+或 
+
+```{r}
+sapply(pow, function(f) f(4))
+```
+
+</div><div class="col-2R">
+
+用`list2env`将函数列表pow提取到环境中
+
+```{r}
+list2env(pow, environment())
+c(square(3), cube(3), powfour(3))
+```
+
+即实现了函数的批量生成
+
+</div>
+
+## 递归: 一个函数调用其自身
+
+[`Reduce`的例子](#17)中，合并四个列表也可以用递归法
+
+```{r}
+f <- function(dfs, ...) {
+    if (length(dfs) == 2) merge(dfs[[1]], dfs[[2]], ...)
+    else  merge(dfs[[1]], f(dfs[-1]), ...)}
+print(f(a))
+```
+
+- 递归代码中，可以用Recall代替函数名f
+- R不支持尾递归(tail recursion)，故递归不能过深
+
+
+
+## {.teal}
+
+<p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+
+
