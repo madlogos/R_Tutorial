@@ -27,6 +27,7 @@ Directly visit the [Github project intro site](https://madlogos.github.io/R_Tuto
     - [03 Calculation and functions](https://madlogos.github.io/R_Tutorial/A01%20R%20Basics/A01_03_calc.html)
     - [04 Control structure](https://madlogos.github.io/R_Tutorial/A01%20R%20Basics/A01_04_ctrl.html)
     - [05 Code style](https://madlogos.github.io/R_Tutorial/A01%20R%20Basics/A01_05_style.html)
+    
 - **A02 Data Manipulation**
     - [01 Directory and files](https://madlogos.github.io/R_Tutorial/A02%20Data%20Manipulation/A02_01_file.html)
     - [02 Input Output](https://madlogos.github.io/R_Tutorial/A02%20Data%20Manipulation/A02_02_io.html)
@@ -35,6 +36,7 @@ Directly visit the [Github project intro site](https://madlogos.github.io/R_Tuto
     - [05 Dataframe shaping](https://madlogos.github.io/R_Tutorial/A02%20Data%20Manipulation/A02_05_df_shaping.html)
     - [06 String and regex](https://madlogos.github.io/R_Tutorial/A02%20Data%20Manipulation/A02_06_string_regex.html)
     - [07 Date and time](https://madlogos.github.io/R_Tutorial/A02%20Data%20Manipulation/A02_07_date_time.html)
+    
 - **A03 Visualization**
     - [01 Graphic Device & Graphic System](https://madlogos.github.io/R_Tutorial/A03%20Visualization/A03_01_graphicDevice.html)
     - [02 Visual Design](https://madlogos.github.io/R_Tutorial/A03%20Visualization/A03_02_visualDesign.html)
@@ -43,6 +45,7 @@ Directly visit the [Github project intro site](https://madlogos.github.io/R_Tuto
     - [05 ggplot2 Plotting System](https://madlogos.github.io/R_Tutorial/A03%20Visualization/A03_05_ggplot2.html)
     - [06 Maps](https://madlogos.github.io/R_Tutorial/A03%20Visualization/A03_06_map.html)
     - [07 Interactive Charts](https://madlogos.github.io/R_Tutorial/A03%20Visualization/A03_07_interactive.html)
+    
 - **A04 Basic Analysis**
     - [01 Descriptive Analysis](https://madlogos.github.io/R_Tutorial/A04%20Basic%20Analysis/A04_01_descriptive.html)
     - [02 Quantitative Inference](https://madlogos.github.io/R_Tutorial/A04%20Basic%20Analysis/A04_02_quantitative.html)
@@ -50,6 +53,7 @@ Directly visit the [Github project intro site](https://madlogos.github.io/R_Tuto
     - [04 Exploratory Analysis (1)](https://madlogos.github.io/R_Tutorial/A04%20Basic%20Analysis/A04_04_exploratory1.html)
     - [05 Exploratory Analysis (2)](https://madlogos.github.io/R_Tutorial/A04%20Basic%20Analysis/A04_05_exploratory2.html)
     - [06 Time Series Analysis](https://madlogos.github.io/R_Tutorial/A04%20Basic%20Analysis/A04_06_timeseries.html)
+    
 - **A05 Repeated Reporting**
     - [01 Organization of An Analytic Project](https://madlogos.github.io/R_Tutorial/A05%20Repeated%20Reporting/A05_01_organization.html)
     - [02 Git And Version Control System](https://madlogos.github.io/R_Tutorial/A05%20Repeated%20Reporting/A05_02_git.html)
@@ -59,6 +63,17 @@ Directly visit the [Github project intro site](https://madlogos.github.io/R_Tuto
     - [06 R Notebook](https://madlogos.github.io/R_Tutorial/A05%20Repeated%20Reporting/A05_06_notebook.html)
     - [07 Microsoft Office Automation](https://madlogos.github.io/R_Tutorial/A05%20Repeated%20Reporting/A05_07_msDoc.html)
     - [08 Case Study](https://madlogos.github.io/R_Tutorial/A05%20Repeated%20Reporting/A05_08_caseStudy.html)
+
+### Engineer Track
+
+- **[B01 Functional Programming And Object-oriented Programming]**
+    - [01 OOP And S3](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_01_OOP_S3.html)
+    - [02 S4 And RefClass](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_02_S4_RC.html)
+    - [03 Advanced Function](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_03_advFunc.html)
+    - [04 Environment And Scoping](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_04_env.html)
+    - [05 Functional Programming](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_05_funcProg.html)
+    - [06 Functionals And Function Operators](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_06_funl_opr.html)
+    - [07 Exceptions And Debugging](https://madlogos.github.io/R_Tutorial/B01%20FP%20And%20OOP/B01_07_debug.html)
 
 ## Offline
 
