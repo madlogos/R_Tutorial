@@ -510,5 +510,6 @@ plot(x, y, xlab=substitute(bar(x) == k, list(k=mean(x))),
 ## {.grayblue}
 
 <p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
-
+<br><br>
+[返回目录](http://madlogos.github.io/R_Tutorial)
 

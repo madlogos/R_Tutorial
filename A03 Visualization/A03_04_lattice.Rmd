@@ -252,5 +252,6 @@ cloud(Ozone ~ Wind * Temp, data=airquality, panel.3d.cloud=panel.3dbars)
 ## {.grayblue}
 
 <p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
-
+<br><br>
+[返回目录](http://madlogos.github.io/R_Tutorial)
 

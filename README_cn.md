@@ -1,4 +1,4 @@
->>>[English Version](README.md)
+\>\>\> [English Version](README.md)
 
 # [应用R教程](https://madlogos.github.io/R_Tutorial)
 

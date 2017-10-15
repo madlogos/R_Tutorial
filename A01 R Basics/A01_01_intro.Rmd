@@ -38,7 +38,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 一种<ora>开源</ora>的<ora>解释型统计分析</ora>程序语言/[软件工具包](http://www.r-project.org)
 
-<div class="columns-2">
+<div class="col-2L">
 
 ### 历史
 
@@ -46,7 +46,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 - 由**R**oss Ihaka & **R**obert Gentleman开发(U Aucland, 1990s)
 - R Core Team成立，维护R核心代码(1997)
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 ### 现状
 
@@ -61,7 +61,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 ## R有何用？ {.smaller}
 
-<div class='columns-2'>
+<div class='col-2L'>
 
 ### 数据科学
 - 数据抽取
@@ -76,7 +76,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
     + 统计推断
     + 挖掘预测
     
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 - 可视化
     + 制图
@@ -101,7 +101,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 </div>
 
-<div class='columns-2'>
+<div class='col-2L'>
 
 ### <gre>优点</gre>
 
@@ -115,7 +115,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
     + 背靠附加包，代码产出率高
     + 胶水语言，便于混搭其他工具
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 ### <crb>缺点</crb>
 
@@ -132,7 +132,8 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 ## R适合谁学？
 
-<div class="columns-2">
+<div class="col-2L">
+
 ### 这些人适合学R
 
 - 日常业务需求
@@ -144,7 +145,8 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
     + 对数据/算法/结构有兴趣
     + 有一点黑客精神
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
+
 ### 你可能关心的问题
 
 - <gbl>Q: 需要编程经验吗？</gbl>
@@ -177,7 +179,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 ## 30%的时间 - 书本和课堂 {.smaller}
 
-<div class="columns-2">
+<div class="col-2L">
 
 ### 书本(供参考) 
 
@@ -191,7 +193,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
     + R语言编程艺术 (*Norman Matloff*)
     + 高级R语言编程指南 (*H. Wickham*)
     + Software for data analysis programming with R (*J. Chambers*)
-    
+
+</div><div class="col-2R">
+
 ### 在线课堂
 
 - **M**assive **O**pen **O**nline **C**ourses
@@ -205,7 +209,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 ## 70%的时间 - 社区和实战
 
-<div class="columns-2">
+<div class="col-2L">
 
 ### 社区
 
@@ -218,7 +222,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 - 竞赛
     + [Kaggle](http://www.kaggle.com), [Euler Project](https://projecteuler.net)
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 ### 实战
 
@@ -275,7 +279,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 ## 一些初始配置 (RStudio) {.smaller}
 
-<div class="columns-2">
+<div class="col-2L">
 
 ### 全局设置
 (Tools -> Global Options) 
@@ -288,7 +292,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
     - 修改CRAN Mirror
     - 修改外观主题
         
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 ### 环境配置
 (Control Panel\All Control Panel Items\System -> Change settings -> Advanced -> Environment variables)
@@ -320,7 +324,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 ### 推荐一些常用包 
 
-<div class="columns-2">
+<div class="col-2L">
 
 - 数据抽取
     + 数据库: `RODBC`, `RMySQL`, `RPostgresSQL`
@@ -334,7 +338,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
     + 金融/时序: `quantmod`, `xts`, `zoo`
     + 地理: `sp`, `maps`, `maptools`, `ggmap`
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 - 数据挖掘
     + 机器学习: `caret`, `e1071`, `kernlab`
@@ -354,7 +358,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 
 通过Rcmdr或rattle包调用`tcltk`库，驱动图形界面，进行整理、分析、挖掘
 
-<div class="columns-2">
+<div class="col-2L">
 
 #### R Commander (经典分析利器)
 
@@ -362,9 +366,10 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 library(Rcmdr)  ## 加载Rcmdr包
 Commander()  ## Rcmdr主函数
 ```
+
 ![](A01_01_intro_files/figure-html/rcmdr.png)
 
-<p class="forceBreak"> </p>
+</div><div class="col-2R">
 
 #### rattle (整合数据挖掘功能)
 
@@ -372,13 +377,14 @@ Commander()  ## Rcmdr主函数
 library(rattle)  ## 加载rattle包
 rattle()  ## rattle主函数
 ```
+
 ![](A01_01_intro_files/figure-html/rattle.png)
 
 </div>
 
 ## 交互命令行 {.smaller}
 
-<div class="columns-2">
+<div class="col-2L">
 
 #### 用法
 
@@ -391,7 +397,7 @@ rattle()  ## rattle主函数
 | 1 | 直观 | 结果杂乱 |
 | 2 | 便捷 | 无法复用 |
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 #### 例子
 ```{r scatter_cars, fig.cap='scatter cars', fig.width=4.5, fig.height=2.5, warning=FALSE, message=FALSE}
@@ -404,7 +410,7 @@ plot_ly(cars, x=~speed, y=~dist) %>% add_markers()
 
 ## 脚本 {.smaller}
 
-<div class="columns-2">
+<div class="col-2L">
 
 #### 用法
 
@@ -418,7 +424,8 @@ plot_ly(cars, x=~speed, y=~dist) %>% add_markers()
 | 1 | 可复用  | 需脚本管理 |
 | 2 | 代码逻辑 | 结果欠结构 |
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
+
 #### 例子  
 
 保存一个[intro.R](A01_01_intro_files/file/intro.R)脚本
@@ -447,7 +454,7 @@ Rscript.exe intro.R
 
 ## 可重复报告
 
-<div class="columns-2">
+<div class="col-2L">
 
 #### 用法
 
@@ -461,7 +468,7 @@ Rscript.exe intro.R
 | 1 | 可反复运行 | 有一定学习成本 |
 | 2 | 文学化编程 | 需要一定的构思 |
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 #### 例子
 
@@ -478,7 +485,7 @@ Rscript.exe intro.R
 
 ## 入门仪式: Hello, world! {.smaller}
 
-<div class="columns-2">
+<div class="col-2L">
 
 #### Java
 
@@ -504,7 +511,7 @@ public class HelloWorld
 </html>
 ```
 
-<p class="forceBreak"></p>
+</div><div class="col-2R">
 
 #### JavaScript
 
@@ -535,3 +542,5 @@ print("Hello, world!")
 ## {.grayblue}
 
 <p style="font-size:100px;font-family:'Arial Black'"><br/>Thank you! </p>
+<br><br>
+[返回目录](http://madlogos.github.io/R_Tutorial)
